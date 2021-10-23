@@ -26,4 +26,4 @@ if __name__ == "__main__":
     # call the main function
     main()
 
-# 2021.10.23.20.23 수정 pull 요청 테스트
+print("2021.10.23.20.23 수정 pull 요청 테스트")
