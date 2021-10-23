@@ -26,4 +26,4 @@ if __name__ == "__main__":
     # call the main function
     main()
 
-print("test")
+print("test2")
