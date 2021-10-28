@@ -19,8 +19,7 @@
 
 - 게임별 디렉토리 나누어 청사진 작성
 - 폰트 사용. SIL 오픈폰트 프리텐다드 폰트. (https://noonnu.cc/font_page/694)
-
-
+- "무궁화 꽃이 피었습니다" 게임 베이스코드 찾아 업로드. (https://github.com/AidenBurgess/CrossGame)
 
 
 
