@@ -1,1 +1,2 @@
-print("git branch 테스트")
+for i in range(6):
+    print(i,end=' ')
