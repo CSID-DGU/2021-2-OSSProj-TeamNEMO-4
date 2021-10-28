@@ -63,7 +63,7 @@ class Game:
         pygame.display.set_caption(title)
         background_image = pygame.image.load(image_path)
         self.image = pygame.transform.scale(background_image, (width, height))
-        self.start_ticks = pygame.time.get_ticks()
+        self.stop_timer = False
 
     def start_game(self):
         slime_0 = game_object.NPC(random.randrange(20, 700), 500, 50, 50)
@@ -202,6 +202,7 @@ class Game:
         # 진행요원
         treasure = game_object.GameObject(self.width / 2 - 45, 30, 100, 70)
         treasure.sprite_image('NPC/Treasure.png')
+        start_ticks = pygame.time.get_ticks()
         while not game_over:
             for event in pygame.event.get():
                 # Quit if player tries to exit
@@ -226,8 +227,8 @@ class Game:
             player.move(dir_x, dir_y, self.width, self.height, boost)
             player.draw(self.game_screen, dir_x, dir_y)
 
-            # 무궁화 타이머 설정
-            elapsed_time = (pygame.time.get_ticks() - self.start_ticks) / 1000
+            # 무궁화 타이머 설정 stop 이 false 일 때만 진행.
+            elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
             timer = round(float(self.TIMER_TIME - elapsed_time), 2)
 
             # Render boost effects
@@ -240,8 +241,12 @@ class Game:
             # Display level counter in corner
             message_to_screen_left(
                 self.game_screen, 'Level ' + str(int((level - 1) * 2 + 1)), WHITE, level_font, 0, 0)
-            message_to_screen_left(
-                self.game_screen, f'Timer: {timer}', BLACK, level_font, 0, 40)
+            if not self.stop_timer:
+                message_to_screen_left(
+                    self.game_screen, f'Timer: {timer}', BLACK, level_font, 0, 40)
+            else:
+                message_to_screen_left(
+                    self.game_screen, f'Timer: 0.00', BLACK, level_font, 0, 40)
 
             # Detect collision
             try:
@@ -254,9 +259,26 @@ class Game:
                 except:
                     collision = self.detect_all_collisions(
                         level, player, slime_0, 0, 0, treasure)
+
+            # 무궁화 발동
             if timer <= 0:
+                # 3초 타이머 걸고 지나면 해제. & 타이머 리셋.
+                self.stop_timer = True
+                time = 3
+                stop_timer = round(time - (timer) * (-1), 1)
                 message_to_screen_center(
-                    self.game_screen, "S T O P", RED, large_font, self.height / 2)
+                    self.game_screen, "S T O P !", RED, large_font, self.height / 2)
+                message_to_screen_center(
+                    self.game_screen, f'{stop_timer}', RED, large_font, self.height / 3)
+                if stop_timer <= 0:
+                    self.stop_timer = False
+                    start_ticks = pygame.time.get_ticks()
+                    elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
+                    timer = round(float(self.TIMER_TIME - elapsed_time), 2)
+                else:
+                    if event.type == 768:  # keydown 감지되면 끝.
+                        did_win = False
+                        break
 
             if collision == 'dead':
                 did_win = False
