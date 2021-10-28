@@ -22,6 +22,7 @@ clock = pygame.time.Clock()
 pygame.font.init()
 # Initiate fonts
 large_font = pygame.font.SysFont('comicsans', 75)
+STOP_font = pygame.font.SysFont('comicsans', 120)
 level_font = pygame.font.SysFont('calibri', 30)
 korean_font = pygame.font.Font('../../Font/Pretendard-Medium.otf', 60)
 korean_font_small_size = pygame.font.Font('../../Font/Pretendard-Light.otf', 30)
@@ -50,6 +51,7 @@ class Game:
     MEDIUM_LEVEL = 2
     HARD_LEVEL = 3
     WIN_LEVEL = 4 + 1.5
+    TIMER_TIME = 4  # 무궁화 꽃이 피었습니다 카운터.
 
     def __init__(self, image_path, title, width, height):
         self.title = title
@@ -61,6 +63,7 @@ class Game:
         pygame.display.set_caption(title)
         background_image = pygame.image.load(image_path)
         self.image = pygame.transform.scale(background_image, (width, height))
+        self.start_ticks = pygame.time.get_ticks()
 
     def start_game(self):
         slime_0 = game_object.NPC(random.randrange(20, 700), 500, 50, 50)
@@ -183,7 +186,7 @@ class Game:
         boost = 1
 
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        print('LEVEL: ', level)
+        print('LEVEL: ', int((level - 1) * 2 + 1))
 
         # 플레이어, 진행요원, 목표물 렌더링.
         particle = game_object.AnimatedSprite(500, 500, 50, 50, 'particle/Particle', 10, 6)
@@ -199,17 +202,6 @@ class Game:
         # 진행요원
         treasure = game_object.GameObject(self.width / 2 - 45, 30, 100, 70)
         treasure.sprite_image('NPC/Treasure.png')
-        """
-        # Draw harder slimes
-        if level > self.MEDIUM_LEVEL:
-            slime_1 = game_object.NPC(random.randrange(20, 700), 300, 50, 50)
-            slime_1.BASE_SPEED *= level
-        if level > self.HARD_LEVEL:
-            slime_2 = game_object.NPC(random.randrange(20, 700), 150, 50, 50)
-            slime_2.BASE_SPEED *= level
-            slime_2.move(self.width)
-            slime_2.draw(self.game_screen)
-        """
         while not game_over:
             for event in pygame.event.get():
                 # Quit if player tries to exit
@@ -223,7 +215,7 @@ class Game:
             # Redraw screen
             self.game_screen.fill(WHITE)
             self.game_screen.blit(self.image, (0, 0))
-            # Draw GameObjects
+            # 게임 오브젝트 render
             treasure.draw(self.game_screen)
             slime_0.move(self.width)
             slime_0.draw(self.game_screen)
@@ -231,15 +223,13 @@ class Game:
             slime_1.draw(self.game_screen)
             slime_2.move(self.width)
             slime_2.draw(self.game_screen)
-            # if level > self.MEDIUM_LEVEL:
-            #     slime_1.move(self.width)
-            #     slime_1.draw(self.game_screen)
-            # if level > self.HARD_LEVEL:
-            #     slime_2.move(self.width)
-            #     slime_2.draw(self.game_screen)
-            # Draw player
             player.move(dir_x, dir_y, self.width, self.height, boost)
             player.draw(self.game_screen, dir_x, dir_y)
+
+            # 무궁화 타이머 설정
+            elapsed_time = (pygame.time.get_ticks() - self.start_ticks) / 1000
+            timer = round(float(self.TIMER_TIME - elapsed_time), 2)
+
             # Render boost effects
             if boost > 1:
                 particle.next_sprite()
@@ -250,6 +240,9 @@ class Game:
             # Display level counter in corner
             message_to_screen_left(
                 self.game_screen, 'Level ' + str(int((level - 1) * 2 + 1)), WHITE, level_font, 0, 0)
+            message_to_screen_left(
+                self.game_screen, f'Timer: {timer}', BLACK, level_font, 0, 40)
+
             # Detect collision
             try:
                 collision = self.detect_all_collisions(
@@ -261,23 +254,25 @@ class Game:
                 except:
                     collision = self.detect_all_collisions(
                         level, player, slime_0, 0, 0, treasure)
+            if timer <= 0:
+                message_to_screen_center(
+                    self.game_screen, "S T O P", RED, large_font, self.height / 2)
 
             if collision == 'dead':
                 did_win = False
                 break
             elif collision == 'treasure':
+                # 목표물 도달시 did_win = True 상태로 while 문 탈
                 break
-
             pygame.display.update()
             clock.tick(self.TICK_RATE)
-        # Increment game or return to level one or go to main menu
+        # did_win 이용해 승패 판단 후 다음 프로세스 진행.
         if did_win:
             if level >= self.WIN_LEVEL:
                 self.win_game()
             else:
                 message_to_screen_left(
                     self.game_screen, 'Level ' + str(int((level - 1) * 2 + 1)), WHITE, level_font, 0, 0)
-
                 self.run_game_loop(level + 0.5)
         elif self.game_restart():
             self.run_game_loop(1)
@@ -299,12 +294,11 @@ class Game:
         return (dir_x, dir_y, boost)
 
     def detect_all_collisions(self, level, player, slime_0, slime_1, slime_2, treasure):
-        '''Detect collision between player and (slimes and treasure)'''
         dead = 0
-        if level > self.HARD_LEVEL:
-            dead += player.detect_collision(slime_2)
-        if level > self.MEDIUM_LEVEL:
-            dead += player.detect_collision(slime_1)
+        # if level > self.HARD_LEVEL:
+        dead += player.detect_collision(slime_2)
+        # if level > self.MEDIUM_LEVEL:
+        dead += player.detect_collision(slime_1)
         dead += player.detect_collision(slime_0)
         if dead:
             self.lose_game()
@@ -312,7 +306,7 @@ class Game:
 
         if player.detect_collision(treasure):
             message_to_screen_center(self.game_screen, 'Next Up, Level ' + str(
-                int(level * 2)), WHITE, large_font, self.height / 2)
+                int(level * 2)), WHITE, STOP_font, self.height / 2)
             pygame.display.update()
             clock.tick(1)
             return 'treasure'

@@ -90,8 +90,8 @@ class PC(GameObject):  # 플레이어 캐릭터
         # 부스트 사용시 속도 증가.
         MOVE_BY *= boost
         # Define X and Y  movement
-        self.y_pos += MOVE_BY * -dir_y
-        self.x_pos += MOVE_BY * dir_x
+        self.y_pos += MOVE_BY * -dir_y * (2 / 3)
+        self.x_pos += MOVE_BY * dir_x * (2 / 3)
         # Boundary detection
         if self.y_pos > max_height - self.height:
             self.y_pos = max_height - self.height
