@@ -16,13 +16,14 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
+PINK = (227, 62, 126)
 # Clock of game
 clock = pygame.time.Clock()
 pygame.font.init()
 # Initiate fonts
 large_font = pygame.font.SysFont('comicsans', 75)
 level_font = pygame.font.SysFont('calibri', 30)
-korean_font = pygame.font.Font('../../Font/static/Pretendard-Medium.otf', 30)
+korean_font = pygame.font.Font('../../Font/Pretendard-Medium.otf', 60)
 level_font.set_bold(True)
 
 
@@ -76,10 +77,8 @@ class Game:
             self.game_screen.fill(WHITE)
             self.game_screen.blit(self.image, (0, 0))
             # Display main menu text
-            message_to_screen_left(
-                self.game_screen, '무궁화 꽃이 피었습니다', BLACK, korean_font, 150, 150)
-            message_to_screen_left(
-                self.game_screen, 'Try and cross the road', BLACK, level_font, 150, 230)
+            message_to_screen_center(
+                self.game_screen, '무궁화 꽃이 피었습니다', PINK, korean_font, self.height / 4)
             message_to_screen_left(
                 self.game_screen, 'Controls: ', BLACK, level_font, 150, 300)
             message_to_screen_left(
