@@ -1,5 +1,6 @@
 import pygame
 
+
 # 메인 함수 정의
 def main():
     # 파이게임 모듈 초기화
@@ -22,8 +23,8 @@ def main():
 
 # 현재 모듈이 메인 스크립트라면 메인 함수 실행
 # (이 모듈을 임포트하면 아무것도 실행하지 않는다)
+
+
 if __name__ == "__main__":
     # call the main function
     main()
-
-print("test2")
