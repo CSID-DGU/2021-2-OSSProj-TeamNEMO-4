@@ -24,6 +24,7 @@ pygame.font.init()
 large_font = pygame.font.SysFont('comicsans', 75)
 level_font = pygame.font.SysFont('calibri', 30)
 korean_font = pygame.font.Font('../../Font/Pretendard-Medium.otf', 60)
+korean_font_small_size = pygame.font.Font('../../Font/Pretendard-Light.otf', 30)
 level_font.set_bold(True)
 
 
@@ -58,7 +59,6 @@ class Game:
         self.game_screen = pygame.display.set_mode((width, height))
         self.game_screen.fill(WHITE)
         pygame.display.set_caption(title)
-
         background_image = pygame.image.load(image_path)
         self.image = pygame.transform.scale(background_image, (width, height))
 
@@ -80,17 +80,15 @@ class Game:
             message_to_screen_center(
                 self.game_screen, '무궁화 꽃이 피었습니다', PINK, korean_font, self.height / 4)
             message_to_screen_left(
-                self.game_screen, 'Controls: ', BLACK, level_font, 150, 300)
+                self.game_screen, '[ 조작법 ]', BLACK, korean_font_small_size, 150, 300)
             message_to_screen_left(
-                self.game_screen, 'Arrow Keys - Move Link ', BLACK, level_font, 150, 330)
+                self.game_screen, '방향키로 이동 ', BLACK, korean_font_small_size, 150, 350)
             message_to_screen_left(
-                self.game_screen, 'Esc or Q - Pause', BLACK, level_font, 150, 360)
+                self.game_screen, 'Esc 또는 Q - 일시정지', BLACK, korean_font_small_size, 150, 400)
             message_to_screen_left(
-                self.game_screen, 'X - Boost', BLACK, level_font, 150, 390)
+                self.game_screen, 'X - 부스트', BLACK, korean_font_small_size, 150, 450)
             message_to_screen_left(
-                self.game_screen, 'Press X to start', BLACK, large_font, 150, 450)
-            message_to_screen_left(
-                self.game_screen, 'Press Q or esc to quit', BLACK, large_font, 150, 550)
+                self.game_screen, 'X 로 시작, Q 로 종료.', BLACK, korean_font_small_size, 150, 500)
             slime_0.move(self.width)
             slime_0.draw(self.game_screen)
             pygame.display.update()

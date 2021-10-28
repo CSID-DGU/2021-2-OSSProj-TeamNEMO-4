@@ -47,9 +47,8 @@ class NPC(GameObject):
         self.direction = self.BASE_SPEED < 0
 
 
-class PC(GameObject):
+class PC(GameObject):  # 플레이어 캐릭터
     BASE_SPEED = 5
-
     object_image = pygame.image.load('PC/LinkFront.png')
     prev_sprite = pygame.transform.scale(object_image, (50, 70))
 
@@ -65,7 +64,7 @@ class PC(GameObject):
         object_image = pygame.image.load('PC/LinkRight.png')
         self.ri_image = pygame.transform.scale(object_image, (width, height))
 
-    # Special drawing based on sprite movement
+    # move() 를 통해 바뀐 direction 으로 캐릭터를 계속 그려낸다.
     def draw(self, background, dir_x, dir_y):
         if dir_y > 0:
             background.blit(self.fr_image, (self.x_pos, self.y_pos))
@@ -82,13 +81,13 @@ class PC(GameObject):
         else:
             background.blit(self.prev_sprite, (self.x_pos, self.y_pos))
 
-    # Move character method
+    # 키 입력에 따른 방향변경
     def move(self, dir_x, dir_y, max_width, max_height, boost):
         MOVE_BY = self.BASE_SPEED
-        # Moving diagonally should be 1/sqrt(2)
+        # 대각선 이동시 1/sqrt(2) 이동
         if dir_x != 0 and dir_y != 0:
             MOVE_BY *= 0.707
-        # Calculate how much to move by
+        # 부스트 사용시 속도 증가.
         MOVE_BY *= boost
         # Define X and Y  movement
         self.y_pos += MOVE_BY * -dir_y
