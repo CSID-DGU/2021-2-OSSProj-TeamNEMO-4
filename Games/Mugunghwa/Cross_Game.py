@@ -45,8 +45,8 @@ def message_to_screen_left(surface, msg, color, font, x, y):
 
 
 class Game:
-    # Tick rate AKA FPS
-    TICK_RATE = 120
+    # 클래스변수
+    TICK_RATE = 120  # FPS
     MEDIUM_LEVEL = 2
     HARD_LEVEL = 3
     WIN_LEVEL = 4 + 1.5
@@ -185,14 +185,21 @@ class Game:
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         print('LEVEL: ', level)
 
-        # Draw player + first slime+ treasure
+        # 플레이어, 진행요원, 목표물 렌더링.
         particle = game_object.AnimatedSprite(500, 500, 50, 50, 'particle/Particle', 10, 6)
         count = 1
         player = game_object.PC(self.width / 2 - 25, self.height * 0.85, 50, 70)
+        # 진행요원
         slime_0 = game_object.NPC(random.randrange(20, 300), 500, 50, 50)
         slime_0.BASE_SPEED *= level
+        slime_1 = game_object.NPC(random.randrange(20, 700), 300, 50, 50)
+        slime_1.BASE_SPEED *= level
+        slime_2 = game_object.NPC(random.randrange(20, 700), 150, 50, 50)
+        slime_2.BASE_SPEED *= level
+        # 진행요원
         treasure = game_object.GameObject(self.width / 2 - 45, 30, 100, 70)
         treasure.sprite_image('NPC/Treasure.png')
+        """
         # Draw harder slimes
         if level > self.MEDIUM_LEVEL:
             slime_1 = game_object.NPC(random.randrange(20, 700), 300, 50, 50)
@@ -202,7 +209,7 @@ class Game:
             slime_2.BASE_SPEED *= level
             slime_2.move(self.width)
             slime_2.draw(self.game_screen)
-
+        """
         while not game_over:
             for event in pygame.event.get():
                 # Quit if player tries to exit
@@ -220,12 +227,16 @@ class Game:
             treasure.draw(self.game_screen)
             slime_0.move(self.width)
             slime_0.draw(self.game_screen)
-            if level > self.MEDIUM_LEVEL:
-                slime_1.move(self.width)
-                slime_1.draw(self.game_screen)
-            if level > self.HARD_LEVEL:
-                slime_2.move(self.width)
-                slime_2.draw(self.game_screen)
+            slime_1.move(self.width)
+            slime_1.draw(self.game_screen)
+            slime_2.move(self.width)
+            slime_2.draw(self.game_screen)
+            # if level > self.MEDIUM_LEVEL:
+            #     slime_1.move(self.width)
+            #     slime_1.draw(self.game_screen)
+            # if level > self.HARD_LEVEL:
+            #     slime_2.move(self.width)
+            #     slime_2.draw(self.game_screen)
             # Draw player
             player.move(dir_x, dir_y, self.width, self.height, boost)
             player.draw(self.game_screen, dir_x, dir_y)
