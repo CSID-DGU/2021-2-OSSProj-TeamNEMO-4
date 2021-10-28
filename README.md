@@ -12,4 +12,15 @@
 **Team Leader**: [오한음](https://github.com/0hhanum)
 **Team Member**: [이준영](https://github.com/JunYoung3682), [윤종연](https://github.com/YJY189)
 
+<hr>
+추후 정리 필요
+
+[10.28]
+
+- 게임별 디렉토리 나누어 청사진 작성
+- 폰트 사용. SIL 오픈폰트 프리텐다드 폰트. (https://noonnu.cc/font_page/694)
+
+
+
+
 
