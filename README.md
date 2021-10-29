@@ -21,5 +21,10 @@
 - 폰트 사용. SIL 오픈폰트 프리텐다드 폰트. (https://noonnu.cc/font_page/694)
 - "무궁화 꽃이 피었습니다" 게임 베이스코드 찾아 업로드. (https://github.com/AidenBurgess/CrossGame)
 
+[10.29]
+
+- 무궁화게임 NPC 개수 추가, 속도 및 크기 조절
+- 무궁화게임 타이머 추가 & 무궁화 타이머 추가
+- 무궁화게임 로직 완성
 
 

@@ -48,7 +48,7 @@ class NPC(GameObject):
 
 
 class PC(GameObject):  # 플레이어 캐릭터
-    BASE_SPEED = 5
+    BASE_SPEED = 3
     object_image = pygame.image.load('PC/LinkFront.png')
     prev_sprite = pygame.transform.scale(object_image, (50, 70))
 

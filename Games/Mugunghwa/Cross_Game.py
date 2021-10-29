@@ -265,12 +265,12 @@ class Game:
                 # 3초 타이머 걸고 지나면 해제. & 타이머 리셋.
                 self.stop_timer = True
                 time = 3
-                stop_timer = round(time - (timer) * (-1), 1)
+                time_checker = round(time - (timer) * (-1), 1)
                 message_to_screen_center(
                     self.game_screen, "S T O P !", RED, large_font, self.height / 2)
                 message_to_screen_center(
-                    self.game_screen, f'{stop_timer}', RED, large_font, self.height / 3)
-                if stop_timer <= 0:
+                    self.game_screen, f'{time_checker}', RED, large_font, self.height / 3)
+                if time_checker <= 0:
                     self.stop_timer = False
                     start_ticks = pygame.time.get_ticks()
                     elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
@@ -278,20 +278,21 @@ class Game:
                 else:
                     if event.type == 768:  # keydown 감지되면 끝.
                         did_win = False
+                        self.stop_timer = False  # 재시작을 위한 stop_timer 원상복귀.
                         break
 
             if collision == 'dead':
                 did_win = False
                 break
             elif collision == 'treasure':
-                # 목표물 도달시 did_win = True 상태로 while 문 탈
+                # 목표물 도달시 did_win = True 상태로 while 문 탈출.
                 break
             pygame.display.update()
             clock.tick(self.TICK_RATE)
         # did_win 이용해 승패 판단 후 다음 프로세스 진행.
         if did_win:
             if level >= self.WIN_LEVEL:
-                self.win_game()
+                self.win_game()  # 전체 게임 클리어.
             else:
                 message_to_screen_left(
                     self.game_screen, 'Level ' + str(int((level - 1) * 2 + 1)), WHITE, level_font, 0, 0)
