@@ -193,11 +193,11 @@ class Game:
         count = 1
         player = game_object.PC(self.width / 2 - 25, self.height * 0.85, 50, 70)
         # 진행요원 -> 사이즈 비율로 다 맞춰야함. 나중에
-        slime_0 = game_object.NPC(random.randrange(20, 300), 500, 150, 80)
+        slime_0 = game_object.NPC(random.randrange(20, 300), 500, 120, 70)
         slime_0.BASE_SPEED *= level * 1.8
-        slime_1 = game_object.NPC(random.randrange(20, 700), 300, 320, 160)
+        slime_1 = game_object.NPC(random.randrange(20, 700), 300, 160, 100)
         slime_1.BASE_SPEED *= level * 1.5
-        slime_2 = game_object.NPC(random.randrange(20, 700), 150, 200, 100)
+        slime_2 = game_object.NPC(random.randrange(20, 700), 150, 170, 100)
         slime_2.BASE_SPEED *= level * 2
         # 술래
         treasure = game_object.GameObject(self.width / 2 - 45, 30, 100, 70)

@@ -31,10 +31,10 @@ class NPC(GameObject):
 
     def draw(self, background):
         if self.direction:
-            background.blit(self.image, (self.x_pos, self.y_pos))
+            background.blit(self.image, (self.x_pos - self.width / 5, self.y_pos))
         else:
             background.blit(pygame.transform.flip(
-                self.image, 1, 0), (self.x_pos, self.y_pos))
+                self.image, 1, 0), (self.x_pos + self.width / 5, self.y_pos))
 
     # Move character method - moves left to right across the screen
 
