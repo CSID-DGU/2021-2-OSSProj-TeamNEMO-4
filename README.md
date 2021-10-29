@@ -27,5 +27,6 @@
 - 무궁화게임 타이머 추가 & 무궁화 타이머 추가
 - 무궁화게임 로직 완성
 - 게임 재시작시 타이머 리셋 안되는 버그 수
-- 진행요원 이미지 추가
-  출처: https://pixabay.com/ko/illustrations/%ec%98%a4%ec%a7%95%ec%96%b4-%ea%b2%8c%ec%9e%84-%ea%b2%bd%eb%b9%84%ec%9b%90-%ec%82%bc%ea%b0%81%ed%98%95-6723707/
+- 진행요원 이미지 추가 출처: https://pixabay.com
+- 게임 요소 이미지 출처 :https://opengameart.org [오픈소스 게임 이미지 공유 사이트]
+

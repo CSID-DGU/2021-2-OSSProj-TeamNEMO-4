@@ -66,7 +66,7 @@ class Game:
         self.stop_timer = False
 
     def start_game(self):
-        slime_0 = game_object.NPC(random.randrange(20, 700), 500, 50, 50)
+        slime_0 = game_object.NPC(random.randrange(20, 300), 500, 120, 70)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -127,7 +127,7 @@ class Game:
                         return False
 
     def win_game(self):
-        slime_0 = game_object.NPC(random.randrange(20, 700), 500, 50, 50)
+        slime_0 = game_object.NPC(random.randrange(20, 300), 500, 120, 70)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -159,7 +159,7 @@ class Game:
         clock.tick(1)
 
     def game_restart(self):
-        slime_0 = game_object.NPC(random.randrange(20, 700), 500, 50, 50)
+        slime_0 = game_object.NPC(random.randrange(20, 300), 500, 120, 70)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN
