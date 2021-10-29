@@ -66,7 +66,7 @@ class Game:
         self.stop_timer = False
 
     def start_game(self):
-        slime_0 = game_object.NPC(random.randrange(20, 300), 500, 120, 70)
+        NPC_1 = game_object.NPC(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -92,8 +92,8 @@ class Game:
                 self.game_screen, 'X - 부스트', BLACK, korean_font_small_size, 150, 450)
             message_to_screen_left(
                 self.game_screen, 'X 로 시작, Q 로 종료.', BLACK, korean_font_small_size, 150, 500)
-            slime_0.move(self.width)
-            slime_0.draw(self.game_screen)
+            NPC_1.move(self.width)
+            NPC_1.draw(self.game_screen)
             pygame.display.update()
 
     def pause(self):
@@ -127,7 +127,7 @@ class Game:
                         return False
 
     def win_game(self):
-        slime_0 = game_object.NPC(random.randrange(20, 300), 500, 120, 70)
+        NPC_1 = game_object.NPC(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -148,8 +148,8 @@ class Game:
             message_to_screen_left(
                 self.game_screen, 'to go to main menu', RED, large_font, 150, 400)
             # Display the winner slime
-            slime_0.move(self.width)
-            slime_0.draw(self.game_screen)
+            NPC_1.move(self.width)
+            NPC_1.draw(self.game_screen)
             pygame.display.update()
 
     def lose_game(self):
@@ -159,7 +159,7 @@ class Game:
         clock.tick(1)
 
     def game_restart(self):
-        slime_0 = game_object.NPC(random.randrange(20, 300), 500, 120, 70)
+        NPC_1 = game_object.NPC(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN
@@ -174,8 +174,8 @@ class Game:
             message_to_screen_center(
                 self.game_screen, '메뉴로 돌아가려면 Q', WHITE, korean_font, 280)
             # Have the loser slime dance around lol
-            slime_0.move(self.width)
-            slime_0.draw(self.game_screen)
+            NPC_1.move(self.width)
+            NPC_1.draw(self.game_screen)
             pygame.display.update()
 
     def run_game_loop(self, level):
@@ -191,15 +191,15 @@ class Game:
         count = 1
         player = game_object.PC(self.width / 2 - 25, self.height * 0.85, 50, 70)
         # 진행요원 -> 사이즈 비율로 다 맞춰야함. 나중에
-        slime_0 = game_object.NPC(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
-        slime_0.BASE_SPEED *= level * 1.8
-        slime_1 = game_object.NPC(random.randrange(20, 700), self.width * (2 / 5), 80, 80, 2)
-        slime_1.BASE_SPEED *= level * 1.5
-        slime_2 = game_object.NPC(random.randrange(20, 700), self.width * (2 / 3), 160, 150)
-        slime_2.BASE_SPEED *= level * 2
+        NPC_1 = game_object.NPC(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
+        NPC_1.BASE_SPEED *= level * 1.8
+        NPC_2 = game_object.NPC(random.randrange(20, 700), self.width * (3 / 7), 80, 80, 2)
+        NPC_2.BASE_SPEED *= level * 1.5
+        NPC_3 = game_object.NPC(random.randrange(20, 700), self.width * (2 / 3), 160, 150)
+        NPC_3.BASE_SPEED *= level * 2
         # 술래
-        treasure = game_object.GameObject(self.width / 2 - 45, 30, 100, 70)
-        treasure.sprite_image('NPC/Treasure.png')
+        DOLL = game_object.GameObject(self.width / 2 - 45, 10, 130, 130)
+        DOLL.sprite_image('NPC/back.png')
         start_ticks = pygame.time.get_ticks()
         while not game_over:
             for event in pygame.event.get():
@@ -215,13 +215,13 @@ class Game:
             self.game_screen.fill(WHITE)
             self.game_screen.blit(self.image, (0, 0))
             # 게임 오브젝트 render
-            treasure.draw(self.game_screen)
-            slime_0.move(self.width)
-            slime_0.draw(self.game_screen)
-            slime_1.move(self.width)
-            slime_1.draw(self.game_screen)
-            slime_2.move(self.width)
-            slime_2.draw(self.game_screen)
+            DOLL.draw(self.game_screen)
+            NPC_1.move(self.width)
+            NPC_1.draw(self.game_screen)
+            NPC_2.move(self.width)
+            NPC_2.draw(self.game_screen)
+            NPC_3.move(self.width)
+            NPC_3.draw(self.game_screen)
             player.move(dir_x, dir_y, self.width, self.height, boost)
             player.draw(self.game_screen, dir_x, dir_y)
 
@@ -242,25 +242,23 @@ class Game:
             if not self.stop_timer:
                 message_to_screen_center(
                     self.game_screen, f'Timer: {timer}', BLACK, level_font, self.width * (1 / 2))
-            else:
-                message_to_screen_left(
-                    self.game_screen, f'Timer: 0.00', BLACK, level_font, 0, 40)
 
             # Detect collision
             try:
                 collision = self.detect_all_collisions(
-                    level, player, slime_0, slime_1, slime_2, treasure)
+                    level, player, NPC_1, NPC_2, NPC_3, DOLL)
             except:
                 try:
                     collision = self.detect_all_collisions(
-                        level, player, slime_0, slime_1, 0, treasure)
+                        level, player, NPC_1, NPC_2, 0, DOLL)
                 except:
                     collision = self.detect_all_collisions(
-                        level, player, slime_0, 0, 0, treasure)
+                        level, player, NPC_1, 0, 0, DOLL)
 
             # 무궁화 발동
             if timer <= 0:
                 # 3초 타이머 걸고 지나면 해제. & 타이머 리셋.
+                DOLL.sprite_image('NPC/front.png')
                 self.stop_timer = True
                 time = 3
                 time_checker = round(time - (timer) * (-1), 1)
@@ -269,6 +267,7 @@ class Game:
                 message_to_screen_center(
                     self.game_screen, f'{time_checker}', RED, large_font, self.height / 3)
                 if time_checker <= 0:
+                    DOLL.sprite_image('NPC/back.png')
                     self.stop_timer = False
                     start_ticks = pygame.time.get_ticks()
                     elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
@@ -277,12 +276,13 @@ class Game:
                     if event.type == 768:  # keydown 감지되면 끝.
                         did_win = False
                         self.stop_timer = False  # 재시작을 위한 stop_timer 원상복귀.
+                        DOLL.sprite_image('NPC/back.png')
                         break
 
             if collision == 'dead':
                 did_win = False
                 break
-            elif collision == 'treasure':
+            elif collision == 'DOLL':
                 # 목표물 도달시 did_win = True 상태로 while 문 탈출.
                 break
             pygame.display.update()
@@ -314,23 +314,23 @@ class Game:
             boost = 2
         return (dir_x, dir_y, boost)
 
-    def detect_all_collisions(self, level, player, slime_0, slime_1, slime_2, treasure):
+    def detect_all_collisions(self, level, player, NPC_1, NPC_2, NPC_3, DOLL):
         dead = 0
         # if level > self.HARD_LEVEL:
-        dead += player.detect_collision(slime_2)
+        dead += player.detect_collision(NPC_3)
         # if level > self.MEDIUM_LEVEL:
-        dead += player.detect_collision(slime_1)
-        dead += player.detect_collision(slime_0)
+        dead += player.detect_collision(NPC_2)
+        dead += player.detect_collision(NPC_1)
         if dead:
             self.lose_game()
             return 'dead'
 
-        if player.detect_collision(treasure):
+        if player.detect_collision(DOLL):
             message_to_screen_center(self.game_screen, 'Next Up, Level ' + str(
                 int(level * 2)), WHITE, STOP_font, self.height / 2)
             pygame.display.update()
             clock.tick(1)
-            return 'treasure'
+            return 'DOLL'
 
 
 # Start the game up
