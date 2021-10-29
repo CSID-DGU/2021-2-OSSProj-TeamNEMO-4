@@ -24,24 +24,30 @@ class NPC(GameObject):
     # True  = right, False = Left
     direction = True
 
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, kind_of_npc=3):
         super().__init__(x, y, width, height)
-        object_image = pygame.image.load('NPC/Slime.png')
-        self.image = pygame.transform.scale(object_image, (width, height))
+        if kind_of_npc == 1:
+            object_image = pygame.image.load('NPC/NPC1.png')
+        elif kind_of_npc == 2:
+            object_image = pygame.image.load('NPC/NPC2.png')
+        else:
+            object_image = pygame.image.load('NPC/NPC3.png')
+
+        self.image = pygame.transform.scale(object_image, (width * (3 / 4), height))
 
     def draw(self, background):
         if self.direction:
-            background.blit(self.image, (self.x_pos, self.y_pos))
+            background.blit(self.image, (self.x_pos - self.width / 5, self.y_pos))
         else:
             background.blit(pygame.transform.flip(
-                self.image, 1, 0), (self.x_pos, self.y_pos))
+                self.image, 1, 0), (self.x_pos + self.width / 5, self.y_pos))
 
     # Move character method - moves left to right across the screen
 
     def move(self, max_width, ):
-        if self.x_pos <= 10:
+        if self.x_pos <= -100:
             self.BASE_SPEED = abs(self.BASE_SPEED)
-        elif self.x_pos >= (max_width - 25):
+        elif self.x_pos >= (max_width - 70):
             self.BASE_SPEED = -abs(self.BASE_SPEED)
         self.x_pos += self.BASE_SPEED
         self.direction = self.BASE_SPEED < 0
