@@ -51,7 +51,7 @@ class Game:
     MEDIUM_LEVEL = 2
     HARD_LEVEL = 3
     WIN_LEVEL = 4 + 1.5
-    TIMER_TIME = 4  # 무궁화 꽃이 피었습니다 카운터.
+    TIMER_TIME = 4  # 술래 뒤도는 카운터.
 
     def __init__(self, image_path, title, width, height):
         self.title = title
@@ -192,14 +192,14 @@ class Game:
         particle = game_object.AnimatedSprite(500, 500, 50, 50, 'particle/Particle', 10, 6)
         count = 1
         player = game_object.PC(self.width / 2 - 25, self.height * 0.85, 50, 70)
-        # 진행요원
-        slime_0 = game_object.NPC(random.randrange(20, 300), 500, 50, 50)
-        slime_0.BASE_SPEED *= level * 2.5
-        slime_1 = game_object.NPC(random.randrange(20, 700), 300, 80, 80)
+        # 진행요원 -> 사이즈 비율로 다 맞춰야함. 나중에
+        slime_0 = game_object.NPC(random.randrange(20, 300), 500, 150, 80)
+        slime_0.BASE_SPEED *= level * 1.8
+        slime_1 = game_object.NPC(random.randrange(20, 700), 300, 320, 160)
         slime_1.BASE_SPEED *= level * 1.5
-        slime_2 = game_object.NPC(random.randrange(20, 700), 150, 50, 50)
+        slime_2 = game_object.NPC(random.randrange(20, 700), 150, 200, 100)
         slime_2.BASE_SPEED *= level * 2
-        # 진행요원
+        # 술래
         treasure = game_object.GameObject(self.width / 2 - 45, 30, 100, 70)
         treasure.sprite_image('NPC/Treasure.png')
         start_ticks = pygame.time.get_ticks()

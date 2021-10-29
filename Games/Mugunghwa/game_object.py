@@ -39,9 +39,9 @@ class NPC(GameObject):
     # Move character method - moves left to right across the screen
 
     def move(self, max_width, ):
-        if self.x_pos <= 10:
+        if self.x_pos <= -100:
             self.BASE_SPEED = abs(self.BASE_SPEED)
-        elif self.x_pos >= (max_width - 25):
+        elif self.x_pos >= (max_width - 70):
             self.BASE_SPEED = -abs(self.BASE_SPEED)
         self.x_pos += self.BASE_SPEED
         self.direction = self.BASE_SPEED < 0
