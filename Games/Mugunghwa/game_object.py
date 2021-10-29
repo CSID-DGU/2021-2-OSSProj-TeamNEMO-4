@@ -24,10 +24,16 @@ class NPC(GameObject):
     # True  = right, False = Left
     direction = True
 
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, kind_of_npc=3):
         super().__init__(x, y, width, height)
-        object_image = pygame.image.load('NPC/Slime.png')
-        self.image = pygame.transform.scale(object_image, (width, height))
+        if kind_of_npc == 1:
+            object_image = pygame.image.load('NPC/NPC1.png')
+        elif kind_of_npc == 2:
+            object_image = pygame.image.load('NPC/NPC2.png')
+        else:
+            object_image = pygame.image.load('NPC/NPC3.png')
+
+        self.image = pygame.transform.scale(object_image, (width * (3 / 4), height))
 
     def draw(self, background):
         if self.direction:

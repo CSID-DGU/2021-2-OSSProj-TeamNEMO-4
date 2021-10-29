@@ -153,8 +153,8 @@ class Game:
             pygame.display.update()
 
     def lose_game(self):
-        message_to_screen_left(
-            self.game_screen, 'You lost sorry...', RED, large_font, 200, 350)
+        message_to_screen_center(
+            self.game_screen, '탈 락', RED, korean_font, self.width / 2)
         pygame.display.update()
         clock.tick(1)
 
@@ -168,13 +168,11 @@ class Game:
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
                     return True
             # Display text for losing
-            self.game_screen.fill(WHITE)
+            self.game_screen.fill(PINK)
             message_to_screen_center(
-                self.game_screen, 'You lost...', RED, large_font, 75)
+                self.game_screen, '재시작 하려면 R ', WHITE, korean_font, 180)
             message_to_screen_center(
-                self.game_screen, 'Press R to Restart', RED, large_font, 200)
-            message_to_screen_center(
-                self.game_screen, 'Press Q or esc to quit', RED, large_font, 300)
+                self.game_screen, '메뉴로 돌아가려면 Q', WHITE, korean_font, 280)
             # Have the loser slime dance around lol
             slime_0.move(self.width)
             slime_0.draw(self.game_screen)
@@ -193,11 +191,11 @@ class Game:
         count = 1
         player = game_object.PC(self.width / 2 - 25, self.height * 0.85, 50, 70)
         # 진행요원 -> 사이즈 비율로 다 맞춰야함. 나중에
-        slime_0 = game_object.NPC(random.randrange(20, 300), 500, 120, 70)
+        slime_0 = game_object.NPC(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
         slime_0.BASE_SPEED *= level * 1.8
-        slime_1 = game_object.NPC(random.randrange(20, 700), 300, 160, 100)
+        slime_1 = game_object.NPC(random.randrange(20, 700), self.width * (2 / 5), 80, 80, 2)
         slime_1.BASE_SPEED *= level * 1.5
-        slime_2 = game_object.NPC(random.randrange(20, 700), 150, 170, 100)
+        slime_2 = game_object.NPC(random.randrange(20, 700), self.width * (2 / 3), 160, 150)
         slime_2.BASE_SPEED *= level * 2
         # 술래
         treasure = game_object.GameObject(self.width / 2 - 45, 30, 100, 70)
@@ -229,7 +227,7 @@ class Game:
 
             # 무궁화 타이머 설정 stop 이 false 일 때만 진행.
             elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
-            timer = round(float(self.TIMER_TIME - elapsed_time), 2)
+            timer = round(float(self.TIMER_TIME - elapsed_time), 1)
 
             # Render boost effects
             if boost > 1:
@@ -242,8 +240,8 @@ class Game:
             message_to_screen_left(
                 self.game_screen, 'Level ' + str(int((level - 1) * 2 + 1)), WHITE, level_font, 0, 0)
             if not self.stop_timer:
-                message_to_screen_left(
-                    self.game_screen, f'Timer: {timer}', BLACK, level_font, 0, 40)
+                message_to_screen_center(
+                    self.game_screen, f'Timer: {timer}', BLACK, level_font, self.width * (1 / 2))
             else:
                 message_to_screen_left(
                     self.game_screen, f'Timer: 0.00', BLACK, level_font, 0, 40)
