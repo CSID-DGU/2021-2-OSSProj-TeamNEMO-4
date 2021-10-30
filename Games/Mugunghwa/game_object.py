@@ -24,32 +24,37 @@ class NPC(GameObject):
     # True  = right, False = Left
     direction = True
 
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, kind_of_npc=3):
         super().__init__(x, y, width, height)
-        object_image = pygame.image.load('NPC/Slime.png')
-        self.image = pygame.transform.scale(object_image, (width, height))
+        if kind_of_npc == 1:
+            object_image = pygame.image.load('NPC/NPC1.png')
+        elif kind_of_npc == 2:
+            object_image = pygame.image.load('NPC/NPC2.png')
+        else:
+            object_image = pygame.image.load('NPC/NPC3.png')
+
+        self.image = pygame.transform.scale(object_image, (width * (3 / 4), height))
 
     def draw(self, background):
         if self.direction:
-            background.blit(self.image, (self.x_pos, self.y_pos))
+            background.blit(self.image, (self.x_pos - self.width / 5, self.y_pos))
         else:
             background.blit(pygame.transform.flip(
-                self.image, 1, 0), (self.x_pos, self.y_pos))
+                self.image, 1, 0), (self.x_pos + self.width / 5, self.y_pos))
 
     # Move character method - moves left to right across the screen
 
     def move(self, max_width, ):
-        if self.x_pos <= 10:
+        if self.x_pos <= -100:
             self.BASE_SPEED = abs(self.BASE_SPEED)
-        elif self.x_pos >= (max_width - 25):
+        elif self.x_pos >= (max_width - 70):
             self.BASE_SPEED = -abs(self.BASE_SPEED)
         self.x_pos += self.BASE_SPEED
         self.direction = self.BASE_SPEED < 0
 
 
-class PC(GameObject):
-    BASE_SPEED = 5
-
+class PC(GameObject):  # 플레이어 캐릭터
+    BASE_SPEED = 3
     object_image = pygame.image.load('PC/LinkFront.png')
     prev_sprite = pygame.transform.scale(object_image, (50, 70))
 
@@ -65,7 +70,7 @@ class PC(GameObject):
         object_image = pygame.image.load('PC/LinkRight.png')
         self.ri_image = pygame.transform.scale(object_image, (width, height))
 
-    # Special drawing based on sprite movement
+    # move() 를 통해 바뀐 direction 으로 캐릭터를 계속 그려낸다.
     def draw(self, background, dir_x, dir_y):
         if dir_y > 0:
             background.blit(self.fr_image, (self.x_pos, self.y_pos))
@@ -82,17 +87,17 @@ class PC(GameObject):
         else:
             background.blit(self.prev_sprite, (self.x_pos, self.y_pos))
 
-    # Move character method
+    # 키 입력에 따른 방향변경
     def move(self, dir_x, dir_y, max_width, max_height, boost):
         MOVE_BY = self.BASE_SPEED
-        # Moving diagonally should be 1/sqrt(2)
+        # 대각선 이동시 1/sqrt(2) 이동
         if dir_x != 0 and dir_y != 0:
             MOVE_BY *= 0.707
-        # Calculate how much to move by
+        # 부스트 사용시 속도 증가.
         MOVE_BY *= boost
         # Define X and Y  movement
-        self.y_pos += MOVE_BY * -dir_y
-        self.x_pos += MOVE_BY * dir_x
+        self.y_pos += MOVE_BY * -dir_y * (2 / 3)
+        self.x_pos += MOVE_BY * dir_x * (2 / 3)
         # Boundary detection
         if self.y_pos > max_height - self.height:
             self.y_pos = max_height - self.height
