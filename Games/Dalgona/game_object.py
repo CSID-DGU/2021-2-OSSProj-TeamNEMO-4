@@ -1,8 +1,27 @@
+import math
+
 from Games.game_settings import *
 
 
 class Dalgona:
-    pass
+    def __init__(self, width, height, game_screen):
+        self.points = []
+        for i in range(20):
+            theta = (2 * math.pi / 20) * i
+            pos_x = width / 2 + 210 * math.cos(theta)
+            pos_y = height / 2 + 210 * math.sin(theta)
+            self.points.append(Point(game_screen, pos_x, pos_y, 5))
+
+    def draw(self):
+        for i in self.points:
+            i.punching()
+
+    def checking_success(self):
+        is_success = True
+        for i in self.points:
+            if not i.clicked:
+                is_success = False
+        return is_success
 
 
 class Point:
