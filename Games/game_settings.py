@@ -12,6 +12,8 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 PINK = (227, 62, 126)
+YELLOWBROWN = (207, 153, 59)
+BROWN = (117, 48, 0)
 
 # 시간
 TICK_RATE = 120  # FPS
@@ -60,6 +62,7 @@ class GameOverTimer:
     def reset_timer(self):
         self.start_ticks = pygame.get_ticks()
 
+
 # 유저명
 # 점수
-#
+SCORE = 0
