@@ -60,7 +60,7 @@ class GameOverTimer:
         return timer
 
     def reset_timer(self):
-        self.start_ticks = pygame.get_ticks()
+        self.start_ticks = pygame.time.get_ticks()
 
 
 # 유저명
