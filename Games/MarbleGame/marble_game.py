@@ -53,15 +53,15 @@ def draw_text(bg, txt, x, y, fnt, col):  # 그림자 포함한 문자 표시
 # 변수 선언
 tmr = 0  # 게임 진행 관리 타이머 변수
 time = 121
-cball = 10
-ball = 10
-ballcnt = 0
+cbead = 10
+bead = 10
+beadcnt = 0
 level = 0
 idx = 0  # 게임 진행 관리 인덱스
 
 
 def main():
-    global tmr, time, cball, ball, ballcnt, idx, level
+    global tmr, time, cbead, bead, beadcnt, idx, level
     pygame.init()
     pygame.display.set_caption(SCREEN_TITLE)
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -69,7 +69,7 @@ def main():
     font = korean_font_small_size
     font2 = korean_font
     temp = 0
-    cballcnt = random.randint(1, 10)
+    cbeadcnt = random.randint(1, 10)
 
     try:
         pygame.mixer.music.load("sound/bgm.mp3")
@@ -88,6 +88,10 @@ def main():
 
         if idx == 0:  # 타이틀 화면
             screen.fill(BLACK)
+            message_to_screen_center(screen, '홀짝 게임', PINK, korean_font, 100)
+            message_to_screen_center(screen, '[ 조작법 ]', PINK, korean_font_small_size, 250)
+            message_to_screen_center(screen, '상하 방향키로 구슬 선택', PINK, korean_font_small_size, 350)
+            message_to_screen_center(screen, '좌우 방향키로 홀짝 선택', PINK, korean_font_small_size, 450)
             draw_text(screen, "Press Space Key", 300, 560, font, BLINK[tmr % 6])
             if key[pygame.K_SPACE] == 1:
                 idx = 10
@@ -96,52 +100,53 @@ def main():
             screen.blit(imgBG, [0, 0])
             minute = int(time / 60)
             second = int(time % 60)
+            #파이참에서 미디어 재생 오류 발생으로 밑에 두 줄 주석처리
             #if pygame.mixer.music.get_busy() == False:
             #    pygame.mixer.music.play(-1)
-            if key[pygame.K_UP] and ballcnt < ball:
-                ballcnt += 1
-            if key[pygame.K_DOWN] and ballcnt > 0:
-                ballcnt -= 1
-            if temp == 1 and cball > 1:
-                cballcnt = random.randint(1, cball)
-                ballcnt = 0
+            if key[pygame.K_UP] and beadcnt < bead:
+                beadcnt += 1
+            if key[pygame.K_DOWN] and beadcnt > 0:
+                beadcnt -= 1
+            if temp == 1 and cbead > 1:
+                cbeadcnt = random.randint(1, cbead)
+                beadcnt = 0
                 temp = 0
 
             time -= 0.1
             txt = font.render("홀짝 게임 " + str(minute) + "분" + str(second) + "초", True, WHITE)
 
             if key[pygame.K_LEFT]:
-                if cballcnt % 2 == 0:
-                    ball -= ballcnt
-                    cball += ballcnt
+                if cbeadcnt % 2 == 0:
+                    bead -= beadcnt
+                    cbead += beadcnt
                 else:
-                    ball += ballcnt
-                    cball -= ballcnt
+                    bead += beadcnt
+                    cbead -= beadcnt
                 temp = 1
 
             if key[pygame.K_RIGHT]:
-                if cballcnt % 2 == 1:
-                    ball -= ballcnt
-                    cball += ballcnt
+                if cbeadcnt % 2 == 1:
+                    bead -= beadcnt
+                    cbead += beadcnt
                 else:
-                    ball += ballcnt
-                    cball -= ballcnt
+                    bead += beadcnt
+                    cbead -= beadcnt
                 temp = 1
 
-            pball = font.render("구슬 배팅 : " + str(ballcnt), True, WHITE)
-            pball2 = font.render("구슬 개수 : " + str(ball), True, WHITE)
-            cballtxt = font.render("상대 구슬 개수 : " + str(cball), True, WHITE)
-            cballtxt2 = font.render("상대 배팅 : " + str(cballcnt), True, WHITE)
+            pbead = font.render("구슬 배팅 : " + str(beadcnt), True, WHITE)
+            pbead2 = font.render("구슬 개수 : " + str(bead), True, WHITE)
+            cbeadtxt = font.render("상대 구슬 개수 : " + str(cbead), True, WHITE)
+            cbeadtxt2 = font.render("상대 배팅 : " + str(cbeadcnt), True, WHITE)
             # screen.fill(BLACK)
 
-            screen.blit(cballtxt, [570, 50])
+            screen.blit(cbeadtxt, [570, 50])
             screen.blit(txt, [300, 0])
-            screen.blit(pball, [320, 600])
-            screen.blit(pball2, [0, 50])
-            screen.blit(cballtxt2, [320, 100])
-            if ball <= 0:
+            screen.blit(pbead, [320, 600])
+            screen.blit(pbead2, [0, 50])
+            screen.blit(cbeadtxt2, [320, 100])
+            if bead <= 0:
                 idx = 13
-            if cball <= 0:
+            if cbead <= 0:
                 idx = 11
         if idx == 11:
             screen.fill(BLACK)
@@ -151,35 +156,37 @@ def main():
                 tmr = 0
                 level += 1
                 time = 121
-                cball = 10
-                ball = 10 - level
-                ballcnt = 0
+                cbead = 10
+                bead = 10 - level
+                beadcnt = 0
                 idx = 10
-            if ball <= 5:
+            if bead <= 5:
                 idx = 12
         if idx == 12:
-            #pygame.mixer.music.stop()
+            pygame.mixer.music.stop()
             screen.fill(BLACK)
             draw_text(screen, "THANK YOU FOR PLAYING", 30, 250, font2, BLINK[tmr % 6])
+            draw_text(screen, "Press Enter or Return Key", 230, 560, font, BLINK[tmr % 6])
             if key[pygame.K_RETURN] == 1:
                 tmr = 0
                 level = 0
                 time = 121
-                cball = 10
-                ball = 10
-                ballcnt = 0
+                cbead = 10
+                bead = 10
+                beadcnt = 0
                 idx = 0
         if idx == 13:
-            #pygame.mixer.music.stop()
+            pygame.mixer.music.stop()
             screen.fill(BLACK)
             draw_text(screen, "GAME OVER", 220, 250, font2, BLINK[tmr % 6])
+            draw_text(screen, "Press Enter or Return Key", 230, 560, font, BLINK[tmr % 6])
             if key[pygame.K_RETURN] == 1:
                 tmr = 0
                 level = 0
                 time = 121
-                cball = 10
-                ball = 10
-                ballcnt = 0
+                cbead = 10
+                bead = 10
+                beadcnt = 0
                 idx = 0
         pygame.display.update()
         clock.tick(10)
