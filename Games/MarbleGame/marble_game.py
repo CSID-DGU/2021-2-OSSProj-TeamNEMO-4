@@ -53,15 +53,15 @@ def draw_text(bg, txt, x, y, fnt, col):  # 그림자 포함한 문자 표시
 # 변수 선언
 tmr = 0  # 게임 진행 관리 타이머 변수
 time = 121
-cbead = 10
-bead = 10
-beadcnt = 0
+cmarble = 10
+marble = 10
+marblecnt = 0
 level = 0
 idx = 0  # 게임 진행 관리 인덱스
 
 
 def main():
-    global tmr, time, cbead, bead, beadcnt, idx, level
+    global tmr, time, cmarble, marble, marblecnt, idx, level
     pygame.init()
     pygame.display.set_caption(SCREEN_TITLE)
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -69,7 +69,7 @@ def main():
     font = korean_font_small_size
     font2 = korean_font
     temp = 0
-    cbeadcnt = random.randint(1, 10)
+    cmarblecnt = random.randint(1, 10)
 
     try:
         pygame.mixer.music.load("sound/bgm.mp3")
@@ -103,50 +103,50 @@ def main():
             #파이참에서 미디어 재생 오류 발생으로 밑에 두 줄 주석처리
             #if pygame.mixer.music.get_busy() == False:
             #    pygame.mixer.music.play(-1)
-            if key[pygame.K_UP] and beadcnt < bead:
-                beadcnt += 1
-            if key[pygame.K_DOWN] and beadcnt > 0:
-                beadcnt -= 1
-            if temp == 1 and cbead > 1:
-                cbeadcnt = random.randint(1, cbead)
-                beadcnt = 0
+            if key[pygame.K_UP] and marblecnt < marble:
+                marblecnt += 1
+            if key[pygame.K_DOWN] and marblecnt > 0:
+                marblecnt -= 1
+            if temp == 1 and cmarble > 1:
+                cmarblecnt = random.randint(1, cmarble)
+                marblecnt = 0
                 temp = 0
 
             time -= 0.1
             txt = font.render("홀짝 게임 " + str(minute) + "분" + str(second) + "초", True, WHITE)
 
             if key[pygame.K_LEFT]:
-                if cbeadcnt % 2 == 0:
-                    bead -= beadcnt
-                    cbead += beadcnt
+                if cmarblecnt % 2 == 0:
+                    marble -= marblecnt
+                    cmarble += marblecnt
                 else:
-                    bead += beadcnt
-                    cbead -= beadcnt
+                    marble += marblecnt
+                    cmarble -= marblecnt
                 temp = 1
 
             if key[pygame.K_RIGHT]:
-                if cbeadcnt % 2 == 1:
-                    bead -= beadcnt
-                    cbead += beadcnt
+                if cmarblecnt % 2 == 1:
+                    marble -= marblecnt
+                    cmarble += marblecnt
                 else:
-                    bead += beadcnt
-                    cbead -= beadcnt
+                    marble += marblecnt
+                    cmarble -= marblecnt
                 temp = 1
 
-            pbead = font.render("구슬 배팅 : " + str(beadcnt), True, WHITE)
-            pbead2 = font.render("구슬 개수 : " + str(bead), True, WHITE)
-            cbeadtxt = font.render("상대 구슬 개수 : " + str(cbead), True, WHITE)
-            cbeadtxt2 = font.render("상대 배팅 : " + str(cbeadcnt), True, WHITE)
+            pmarble = font.render("구슬 배팅 : " + str(marblecnt), True, WHITE)
+            pmarble2 = font.render("구슬 개수 : " + str(marble), True, WHITE)
+            cmarbletxt = font.render("상대 구슬 개수 : " + str(cmarble), True, WHITE)
+            cmarbletxt2 = font.render("상대 배팅 : " + str(cmarblecnt), True, WHITE)
             # screen.fill(BLACK)
 
-            screen.blit(cbeadtxt, [570, 50])
+            screen.blit(cmarbletxt, [570, 50])
             screen.blit(txt, [300, 0])
-            screen.blit(pbead, [320, 600])
-            screen.blit(pbead2, [0, 50])
-            screen.blit(cbeadtxt2, [320, 100])
-            if bead <= 0:
+            screen.blit(pmarble, [320, 600])
+            screen.blit(pmarble2, [0, 50])
+            screen.blit(cmarbletxt2, [320, 100])
+            if marble <= 0:
                 idx = 13
-            if cbead <= 0:
+            if cmarble <= 0:
                 idx = 11
         if idx == 11:
             screen.fill(BLACK)
@@ -156,11 +156,11 @@ def main():
                 tmr = 0
                 level += 1
                 time = 121
-                cbead = 10
-                bead = 10 - level
-                beadcnt = 0
+                cmarble = 10
+                marble = 10 - level
+                marblecnt = 0
                 idx = 10
-            if bead <= 5:
+            if marble <= 5:
                 idx = 12
         if idx == 12:
             pygame.mixer.music.stop()
@@ -171,9 +171,9 @@ def main():
                 tmr = 0
                 level = 0
                 time = 121
-                cbead = 10
-                bead = 10
-                beadcnt = 0
+                cmarble = 10
+                marble = 10
+                marblecnt = 0
                 idx = 0
         if idx == 13:
             pygame.mixer.music.stop()
@@ -184,9 +184,9 @@ def main():
                 tmr = 0
                 level = 0
                 time = 121
-                cbead = 10
-                bead = 10
-                beadcnt = 0
+                cmarble = 10
+                marble = 10
+                marblecnt = 0
                 idx = 0
         pygame.display.update()
         clock.tick(10)
