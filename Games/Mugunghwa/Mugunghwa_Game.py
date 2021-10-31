@@ -2,9 +2,8 @@
 
 import random
 
-import pygame
-
 import game_object
+from Games.game_settings import *
 
 # Screen properties
 SCREEN_TITLE = '오징어 게임'
@@ -183,6 +182,9 @@ class Game:
         did_win = True
         boost = 1
 
+        # 타이머 설정.
+        game_over_timer = GameOverTimer(10)
+
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         print('LEVEL: ', int((level - 1) * 2 + 1))
 
@@ -209,7 +211,11 @@ class Game:
                 if event.type == pygame.KEYDOWN and (event.key == pygame.K_ESCAPE or event.key == pygame.K_q):
                     if self.pause():
                         return
-            # Determine keypresses to determine dirx and diry
+
+            # 전체 타이머
+            left_time = game_over_timer.time_checker()
+
+            # 캐릭터 방향전환.
             dir_x, dir_y, boost = self.get_PC_dir()
             # Redraw screen
             self.game_screen.fill(WHITE)
@@ -239,6 +245,8 @@ class Game:
             # Display level counter in corner
             message_to_screen_left(
                 self.game_screen, 'Level ' + str(int((level - 1) * 2 + 1)), WHITE, level_font, 0, 0)
+            message_to_screen_left(
+                self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 0, 35)
             if not self.stop_timer:
                 message_to_screen_center(
                     self.game_screen, f'Timer: {timer}', BLACK, level_font, self.width * (1 / 2))
