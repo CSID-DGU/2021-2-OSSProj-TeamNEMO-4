@@ -214,7 +214,6 @@ class Game:
 
             # 전체 타이머
             left_time = game_over_timer.time_checker()
-            message_to_screen_left(self.game_screen, str(left_time), BLACK, korean_font_small_size, 0, 0)
 
             # 캐릭터 방향전환.
             dir_x, dir_y, boost = self.get_PC_dir()
@@ -246,6 +245,8 @@ class Game:
             # Display level counter in corner
             message_to_screen_left(
                 self.game_screen, 'Level ' + str(int((level - 1) * 2 + 1)), WHITE, level_font, 0, 0)
+            message_to_screen_left(
+                self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 0, 35)
             if not self.stop_timer:
                 message_to_screen_center(
                     self.game_screen, f'Timer: {timer}', BLACK, level_font, self.width * (1 / 2))
