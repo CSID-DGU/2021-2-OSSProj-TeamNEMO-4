@@ -37,10 +37,10 @@ class Game:
         beadtemp = 0
         cbeadcnt = random.randint(1, 10)
 
-        #try:
-        #pygame.mixer.music.load("sound/bgm.mp3")
-        #except:
-            #print("ogg 파일이 맞지 않거나, 오디오 기기가 접속되어 있지 않습니다")
+        try:
+            pygame.mixer.music.load("sound/bgm.mp3")
+        except:
+            print("ogg 파일이 맞지 않거나, 오디오 기기가 접속되어 있지 않습니다")
 
         while True:
             for event in pygame.event.get():
@@ -63,13 +63,13 @@ class Game:
                     idx = 10
 
             if idx == 10:
-
                 screen.blit(imgBG, [0, 0])
                 minute = int(time / 60)
                 second = int(time % 60)
                 if time<=0 :
                     idx = 13
-                pygame.mixer.music.play(-1)
+                if pygame.mixer.music.get_busy() == False:
+                    pygame.mixer.music.play(-1)
                 if key[pygame.K_UP] and beadcnt < bead:
                     beadcnt += 1
                 if key[pygame.K_DOWN] and beadcnt > 0:
