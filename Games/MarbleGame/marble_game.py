@@ -11,6 +11,7 @@ class Txt:
 
 class Game:
     def main(self):
+        self.game_over_timer = GameOverTimer(10)
         # 변수 선언
         BLINK = [(224, 255, 255), (192, 240, 255), (128, 224, 255), (64, 192, 255), (128, 224, 255), (192, 240, 255)]
         tmr = 0
@@ -41,13 +42,12 @@ class Game:
             pygame.mixer.music.load("sound/bgm.mp3")
         except:
             print("ogg 파일이 맞지 않거나, 오디오 기기가 접속되어 있지 않습니다")
-
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-
+            left_time = self.game_over_timer.time_checker()
             tmr = tmr + 1
 
             key = pygame.key.get_pressed()
@@ -66,7 +66,7 @@ class Game:
                 screen.blit(imgBG, [0, 0])
                 minute = int(time / 60)
                 second = int(time % 60)
-                if time<=0 :
+                if left_time<=0 :
                     idx = 13
                 if pygame.mixer.music.get_busy() == False:
                     pygame.mixer.music.play(-1)
@@ -80,8 +80,8 @@ class Game:
                     beadtemp = 0
 
                 time -= 0.1
-                txt = font.render("홀짝 게임 " + str(minute) + "분" + str(second) + "초", True, WHITE)
-
+                #txt = font.render("홀짝 게임 " + str(minute) + "분" + str(second) + "초", True, WHITE)
+                txt = font.render("홀짝 게임 " + str(left_time) + "초", True, WHITE)
                 if key[pygame.K_LEFT]:
                     if cbeadcnt % 2 == 0:
                         TF = False
@@ -135,6 +135,7 @@ class Game:
                 if bead <= 5:
                     idx = 12
             if idx == 12:
+                self.game_over_timer.reset_timer()
                 pygame.mixer.music.stop()
                 screen.fill(BLACK)
                 Txt.draw_text(self,screen, "THANK YOU FOR PLAYING", 30, 250, font2, BLINK[tmr % 6])
@@ -147,6 +148,7 @@ class Game:
                     beadcnt = 0
                     idx = 0  # 게임 진행 관리 인덱스
             if idx == 13:
+                self.game_over_timer.reset_timer()
                 pygame.mixer.music.stop()
                 screen.fill(BLACK)
                 Txt.draw_text(self,screen, "GAME OVER", 220, 250, font2, BLINK[tmr % 6])
