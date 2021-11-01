@@ -1,64 +1,25 @@
-import pygame
 import sys
 import random
+from Games.game_settings import *
 
-SCREEN_TITLE = '오징어 게임'
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 800
-# Colors
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
-GREEN = (0, 255, 0)
-PINK = (227, 62, 126)
-BLINK = [(224, 255, 255), (192, 240, 255), (128, 224, 255), (64, 192, 255), (128, 224, 255), (192, 240, 255)]
-# Clock of game
-clock = pygame.time.Clock()
-pygame.font.init()
-# Initiate fonts
-large_font = pygame.font.SysFont('comicsans', 75)
-STOP_font = pygame.font.SysFont('comicsans', 120)
-level_font = pygame.font.SysFont('calibri', 30)
-korean_font = pygame.font.Font('../../Font/Pretendard-Medium.otf', 60)
-korean_font_small_size = pygame.font.Font('../../Font/Pretendard-Light.otf', 30)
-level_font.set_bold(True)
-
-
-def text_objects(text, color, text_font):
-    textSurface = text_font.render(text, True, color)
-    return textSurface, textSurface.get_rect()
-
-
-def message_to_screen_center(surface, msg, color, text_font, y):
-    textSurf, textRect = text_objects(msg, color, text_font)
-    textRect.center = SCREEN_WIDTH / 2, y
-    surface.blit(textSurf, textRect)
-
-
-def message_to_screen_left(surface, msg, color, font, x, y):
-    textSurf, textRect = text_objects(msg, color, font)
-    surface.blit(textSurf, (x, y))
-
-
-def draw_text(bg, txt, x, y, fnt, col):  # 그림자 포함한 문자 표시
-    sur = fnt.render(txt, True, BLACK)
-    bg.blit(sur, [x + 1, y + 2])
-    sur = fnt.render(txt, True, col)
-    bg.blit(sur, [x, y])
-
-
+class Txt:
+    def draw_text(self,bg, txt, x, y, fnt, col):  # 그림자 포함한 문자 표시
+        sur = fnt.render(txt, True, BLACK)
+        bg.blit(sur, [x + 1, y + 2])
+        sur = fnt.render(txt, True, col)
+        bg.blit(sur, [x, y])
 
 class Game:
     def main(self):
         # 변수 선언
-        tmr = 0  # 게임 진행 관리 타이머 변수
-        time = 121
+        BLINK = [(224, 255, 255), (192, 240, 255), (128, 224, 255), (64, 192, 255), (128, 224, 255), (192, 240, 255)]
+        tmr = 0
+        time = 30
         cbead = 10
         bead = 10
         beadcnt = 0
         level = 0
-        idx = 0  # 게임 진행 관리 인덱스
+        idx = 0
         TF = True;
         # 이미지 로딩
         imgBG = pygame.image.load("bg/bg.png")
@@ -76,10 +37,10 @@ class Game:
         beadtemp = 0
         cbeadcnt = random.randint(1, 10)
 
-        try:
-            pygame.mixer.music.load("sound/bgm.mp3")
-        except:
-            print("ogg 파일이 맞지 않거나, 오디오 기기가 접속되어 있지 않습니다")
+        #try:
+        #pygame.mixer.music.load("sound/bgm.mp3")
+        #except:
+            #print("ogg 파일이 맞지 않거나, 오디오 기기가 접속되어 있지 않습니다")
 
         while True:
             for event in pygame.event.get():
@@ -97,14 +58,17 @@ class Game:
                 message_to_screen_center(screen, '[ 조작법 ]', PINK, korean_font_small_size, 250)
                 message_to_screen_center(screen, '상하 방향키로 구슬 선택', PINK, korean_font_small_size, 350)
                 message_to_screen_center(screen, '좌우 방향키로 홀짝 선택', PINK, korean_font_small_size, 450)
-                draw_text(screen, "Press Space Key", 300, 560, font, BLINK[tmr % 6])
+                Txt.draw_text(self,screen, "Press Space Key", 300, 560, font, BLINK[tmr % 6])
                 if key[pygame.K_SPACE] == 1:
                     idx = 10
 
             if idx == 10:
+
                 screen.blit(imgBG, [0, 0])
                 minute = int(time / 60)
                 second = int(time % 60)
+                if time<=0 :
+                    idx = 13
                 pygame.mixer.music.play(-1)
                 if key[pygame.K_UP] and beadcnt < bead:
                     beadcnt += 1
@@ -158,7 +122,7 @@ class Game:
 
             if idx == 11:
                 screen.fill(BLACK)
-                draw_text(screen, "YOU WIN! LEVEL UP!", 250, 560, font, BLINK[tmr % 6])
+                Txt.draw_text(self,screen, "YOU WIN! LEVEL UP!", 250, 560, font, BLINK[tmr % 6])
 
                 if key[pygame.K_SPACE] == 1:
                     tmr = 0
@@ -173,27 +137,27 @@ class Game:
             if idx == 12:
                 pygame.mixer.music.stop()
                 screen.fill(BLACK)
-                draw_text(screen, "THANK YOU FOR PLAYING", 30, 250, font2, BLINK[tmr % 6])
+                Txt.draw_text(self,screen, "THANK YOU FOR PLAYING", 30, 250, font2, BLINK[tmr % 6])
                 if key[pygame.K_RETURN] == 1:
-                    tmr = 0
+                    tmr = 0  # 게임 진행 관리 타이머 변수
                     level = 0
-                    time = 121
+                    time = 30  # 전체 시간 변수
                     cbead = 10
                     bead = 10
                     beadcnt = 0
-                    idx = 0
+                    idx = 0  # 게임 진행 관리 인덱스
             if idx == 13:
                 pygame.mixer.music.stop()
                 screen.fill(BLACK)
-                draw_text(screen, "GAME OVER", 220, 250, font2, BLINK[tmr % 6])
+                Txt.draw_text(self,screen, "GAME OVER", 220, 250, font2, BLINK[tmr % 6])
                 if key[pygame.K_RETURN] == 1:
-                    tmr = 0
+                    tmr = 0  # 게임 진행 관리 타이머 변수
                     level = 0
-                    time = 121
+                    time = 30  # 전체 시간 변수
                     cbead = 10
                     bead = 10
                     beadcnt = 0
-                    idx = 0
+                    idx = 0  # 게임 진행 관리 인덱스
             if idx == 14:
                 screen.fill(BLACK)
                 if temp <= tmr - 20:
@@ -218,6 +182,7 @@ class Game:
             clock.tick(10)
 
 if __name__ == '__main__':
+    new_txt=Txt()
     new_game = Game()
     new_game.main()
 
