@@ -10,7 +10,7 @@ class Game:
         self.game_screen = pygame.display.set_mode((width, height))
         self.game_screen.fill(PINK)
         # self.shape = random.randrange(1,4)
-        self.shape = 2
+        self.shape = 3
 
     def start_game(self):
         dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, 16, self.shape)
@@ -32,6 +32,10 @@ class Game:
                                  [self.width / 2 - 150 - 30, self.height / 2 - 150 - 30, self.width / 2.2,
                                   self.width / 2.2],
                                  15, border_radius=10)
+            elif self.shape == 3:
+                pygame.draw.polygon(self.game_screen, DARK_BROWN,
+                                    [[self.width / 2, self.height / 4], [self.width / 4, self.height * (2 / 3)],
+                                     [self.width * (3 / 4), self.height * (2 / 3)]], 15)
 
             dalgona.draw()
             if dalgona.check_win():
