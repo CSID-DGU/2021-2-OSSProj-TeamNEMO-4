@@ -4,14 +4,19 @@ from Games.game_settings import *
 
 
 class Dalgona:
-    def __init__(self, width, height, game_screen, points_num):
+    def __init__(self, width, height, game_screen, points_num, shape):
         self.points = []
-        
-        for i in range(points_num):
-            theta = (2 * math.pi / points_num) * i
-            pos_x = width / 2 + 10 + 210 * math.cos(theta)
-            pos_y = height / 2 + 210 * math.sin(theta)
-            self.points.append(Point(game_screen, pos_x, pos_y, 5))
+
+        if shape == 1:
+            for i in range(points_num):
+                theta = (2 * math.pi / points_num) * i
+                pos_x = width / 2 + 10 + 210 * math.cos(theta)
+                pos_y = height / 2 + 210 * math.sin(theta)
+                self.points.append(Point(game_screen, pos_x, pos_y, 5))
+        elif shape == 2:
+            for i in range(int(points_num / 4)):
+                pos_y = height / 2 + 210 * math.sin(theta)
+                self.points.append(Point(game_screen, pos_x, pos_y, 5))
 
     def draw(self):
         for i in self.points:

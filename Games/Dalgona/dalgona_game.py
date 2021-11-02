@@ -9,9 +9,11 @@ class Game:
         # Screen set-up
         self.game_screen = pygame.display.set_mode((width, height))
         self.game_screen.fill(PINK)
+        # self.shape = random.randrange(1,4)
+        self.shape = 2
 
     def start_game(self):
-        dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, 10)
+        dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, 20, self.shape)
         game_over_timer = GameOverTimer(50)
         while True:
             left_time = game_over_timer.time_checker()
@@ -22,8 +24,15 @@ class Game:
             self.game_screen.fill(PINK)
             message_to_screen_left(self.game_screen, 'GAME OVER: ' + str(left_time), WHITE, level_font, 0, 0)
 
-            pygame.draw.circle(self.game_screen, YELLOWBROWN, [self.width / 2, self.height / 2], 300, 300)
-            pygame.draw.circle(self.game_screen, (175, 118, 43), [self.width / 2 + 10, self.height / 2], 220, 15)
+            pygame.draw.circle(self.game_screen, YELLOW_BROWN, [self.width / 2, self.height / 2], 300, 300)
+            if self.shape == 1:
+                pygame.draw.circle(self.game_screen, DARK_BROWN, [self.width / 2 + 10, self.height / 2], 220, 15)
+            elif self.shape == 2:
+                pygame.draw.rect(self.game_screen, DARK_BROWN,
+                                 [self.width / 2 - 150 - 30, self.height / 2 - 150 - 30, self.width / 2.2,
+                                  self.width / 2.2],
+                                 15, border_radius=10)
+
             dalgona.draw()
             if dalgona.check_win():
                 self.game_screen.fill(PINK)
