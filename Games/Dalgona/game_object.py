@@ -27,18 +27,22 @@ class Dalgona:
                 self.points.append(Point(game_screen, pos_x, pos_y + (width / 2.3), 5))
                 pos_x += (width / 2.2) / (points_num / 4)
         elif shape == 3:
-            pos_x = width / 2 - 150 - 20
-            pos_y = height / 2 - 150 - 20
-            for i in range(int(points_num / 4)):
-                self.points.append(Point(game_screen, pos_x, pos_y, 5))
-                self.points.append(Point(game_screen, pos_x + (width / 2.3), pos_y, 5))
-                pos_y += (width / 2.2) / (points_num / 4)
-            pos_x = width / 2 - 150 - 20
-            pos_y = height / 2 - 150 - 20
-            for i in range(int(points_num / 4)):
-                self.points.append(Point(game_screen, pos_x, pos_y, 5))
-                self.points.append(Point(game_screen, pos_x, pos_y + (width / 2.3), 5))
-                pos_x += (width / 2.2) / (points_num / 4)
+            # [[self.width / 2, self.height / 4], [self.width / 4, self.height * (2 / 3)],
+            #  [self.width * (3 / 4), self.height * (2 / 3)]], 15)
+            pos_x = width / 2
+            pos_y = height / 4 + 10
+            self.points.append(Point(game_screen, pos_x, pos_y, 5))
+            for i in range(int(points_num / 3)):
+                move = ((5 / 12) * height) / (points_num / 3)
+                self.points.append(Point(game_screen, pos_x + ((i + 1) * move * (1 / math.sqrt(3))), pos_y, 5))
+                self.points.append(Point(game_screen, pos_x - ((i + 1) * move * (1 / math.sqrt(3))), pos_y, 5))
+                pos_y += move
+
+            pos_y = height * (2 / 3)
+            self.points.append(Point(game_screen, pos_x, pos_y, 5))
+            for i in range(int(points_num / 6)):
+                self.points.append(Point(game_screen, pos_x + (i + 1) * (width / 4 / (points_num / 6)), pos_y, 5))
+                self.points.append(Point(game_screen, pos_x - (i + 1) * (width / 4 / (points_num / 6)), pos_y, 5))
 
     def draw(self):
         for i in self.points:
