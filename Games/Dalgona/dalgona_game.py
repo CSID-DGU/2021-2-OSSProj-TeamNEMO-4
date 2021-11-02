@@ -11,7 +11,7 @@ class Game:
         self.game_screen.fill(PINK)
 
     def start_game(self):
-        dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, 20)
+        dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, 10)
         game_over_timer = GameOverTimer(50)
         while True:
             left_time = game_over_timer.time_checker()
