@@ -13,7 +13,7 @@ class Game:
         self.shape = 2
 
     def start_game(self):
-        dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, 20, self.shape)
+        dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, 16, self.shape)
         game_over_timer = GameOverTimer(50)
         while True:
             left_time = game_over_timer.time_checker()

@@ -14,9 +14,18 @@ class Dalgona:
                 pos_y = height / 2 + 210 * math.sin(theta)
                 self.points.append(Point(game_screen, pos_x, pos_y, 5))
         elif shape == 2:
+            pos_x = width / 2 - 150 - 20
+            pos_y = height / 2 - 150 - 20
             for i in range(int(points_num / 4)):
-                pos_y = height / 2 + 210 * math.sin(theta)
                 self.points.append(Point(game_screen, pos_x, pos_y, 5))
+                self.points.append(Point(game_screen, pos_x + (width / 2.3), pos_y, 5))
+                pos_y += (width / 2.2) / (points_num / 4)
+            pos_x = width / 2 - 150 - 20
+            pos_y = height / 2 - 150 - 20
+            for i in range(int(points_num / 4)):
+                self.points.append(Point(game_screen, pos_x, pos_y, 5))
+                self.points.append(Point(game_screen, pos_x, pos_y + (width / 2.3), 5))
+                pos_x += (width / 2.2) / (points_num / 4)
 
     def draw(self):
         for i in self.points:
