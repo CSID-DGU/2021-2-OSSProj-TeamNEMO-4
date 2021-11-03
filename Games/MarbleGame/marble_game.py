@@ -30,10 +30,6 @@ class MarbleGame:
         marble_game_timer=0
         xlocation=[] #추후 상대 위치 리스트 만들기
         ylocation=[] #추후 상대 위치 리스트 만들기
-<<<<<<< HEAD
-        PR_ERROR_TEST=True
-=======
->>>>>>> 8e1ab841520345f905963dc0c2b88c81908f17c6
 
         # 이미지 로딩
         imgBG = pygame.image.load("bg/bg.png") #배경 이미지
@@ -54,13 +50,8 @@ class MarbleGame:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-<<<<<<< HEAD
                 if event.type==pygame.VIDEORESIZE:
                     self.game_screen=pygame.display.set_mode((event.w,event.h),pygame.RESIZABLE)
-=======
-                #if event.type==pygame.VIDEORESIZE:
-                    #self.game_screen=pygame.display.set_mode((event.w,event.h),pygame.RESIZABLE)
->>>>>>> 8e1ab841520345f905963dc0c2b88c81908f17c6
 
             key = pygame.key.get_pressed() #모든 키 입력 감지
             if idx==0: #0은 타이틀 화면
