@@ -2,9 +2,8 @@
 
 import random
 
-import pygame
-
 import game_object
+from Games.game_settings import *
 
 # Screen properties
 SCREEN_TITLE = '오징어 게임'
@@ -64,6 +63,7 @@ class Game:
         background_image = pygame.image.load(image_path)
         self.image = pygame.transform.scale(background_image, (width, height))
         self.stop_timer = False
+        self.game_over_timer = None
 
     def start_game(self):
         NPC_1 = game_object.NPC(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
@@ -159,6 +159,7 @@ class Game:
         clock.tick(1)
 
     def game_restart(self):
+        self.game_over_timer.reset_timer()
         NPC_1 = game_object.NPC(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
         while True:
             for event in pygame.event.get():
@@ -182,6 +183,9 @@ class Game:
         game_over = False
         did_win = True
         boost = 1
+
+        # 타이머 설정.
+        self.game_over_timer = GameOverTimer(100)
 
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         print('LEVEL: ', int((level - 1) * 2 + 1))
@@ -209,7 +213,11 @@ class Game:
                 if event.type == pygame.KEYDOWN and (event.key == pygame.K_ESCAPE or event.key == pygame.K_q):
                     if self.pause():
                         return
-            # Determine keypresses to determine dirx and diry
+
+            # 전체 타이머
+            left_time = self.game_over_timer.time_checker()
+
+            # 캐릭터 방향전환.
             dir_x, dir_y, boost = self.get_PC_dir()
             # Redraw screen
             self.game_screen.fill(WHITE)
@@ -239,6 +247,8 @@ class Game:
             # Display level counter in corner
             message_to_screen_left(
                 self.game_screen, 'Level ' + str(int((level - 1) * 2 + 1)), WHITE, level_font, 0, 0)
+            message_to_screen_left(
+                self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 0, 35)
             if not self.stop_timer:
                 message_to_screen_center(
                     self.game_screen, f'Timer: {timer}', BLACK, level_font, self.width * (1 / 2))
