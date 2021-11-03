@@ -31,13 +31,16 @@ level_font.set_bold(True)
 
 # 메세지 작성 함수들
 def text_objects(text, color, text_font):
-    textSurface = text_font.render(text, True, color)
+    textSurface = text_font.render(text, True, color).convert_alpha()
     return textSurface, textSurface.get_rect()
 
-
-def message_to_screen_center(surface, msg, color, text_font, y):
+def message_to_screen_center(surface, msg, color, text_font, y,ref_w, ref_h):
     textSurf, textRect = text_objects(msg, color, text_font)
-    textRect.center = SCREEN_WIDTH / 2, y
+    cur_w, cur_h = surface.get_size()
+    txt_w, txt_h = textSurf.get_size()
+    textSurf = pygame.transform.smoothscale(textSurf, (txt_w * cur_w // ref_w, txt_h * cur_h // ref_h))
+    textRect = textSurf.get_rect()
+    textRect.center = surface.get_width() / 2, y
     surface.blit(textSurf, textRect)
 
 
