@@ -44,9 +44,14 @@ def message_to_screen_center(surface, msg, color, text_font, y,ref_w, ref_h):
     surface.blit(textSurf, textRect)
 
 
-def message_to_screen_left(surface, msg, color, font, x, y):
-    textSurf, textRect = text_objects(msg, color, font)
-    surface.blit(textSurf, (x, y))
+def message_to_screen_left(surface, msg, color, text_font, x, y,ref_w, ref_h):
+    textSurf, textRect = text_objects(msg, color, text_font)
+    cur_w, cur_h = surface.get_size()
+    txt_w, txt_h = textSurf.get_size()
+    textSurf = pygame.transform.smoothscale(textSurf, (txt_w * cur_w // ref_w, txt_h * cur_h // ref_h))
+    textRect = textSurf.get_rect()
+    textRect.center=x,y
+    surface.blit(textSurf, textRect)
 
 
 # 게임 공통 구성요소
