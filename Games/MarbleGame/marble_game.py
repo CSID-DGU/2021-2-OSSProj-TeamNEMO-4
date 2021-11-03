@@ -9,7 +9,13 @@ class Txt:
         sur = fnt.render(txt, True, col)
         bg.blit(sur, [x, y])
 
-class Game:
+class MarbleGame:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        # Screen set-up
+        self.screen = pygame.display.set_mode((width, height))
+        self.screen.fill(PINK)
     def main(self):
         self.game_over_timer = GameOverTimer(10)
         # 변수 선언
@@ -30,7 +36,7 @@ class Game:
         #global tmr, time, cbead, bead, beadcnt, idx, level
         pygame.init()
         pygame.display.set_caption(SCREEN_TITLE)
-        screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        #screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         # clock=pygame.time.Clock()
         font = korean_font_small_size
         font2 = korean_font
@@ -53,17 +59,17 @@ class Game:
             key = pygame.key.get_pressed()
 
             if idx == 0:  # 타이틀 화면
-                screen.fill(BLACK)
-                message_to_screen_center(screen, '홀짝 게임', PINK, korean_font, 100)
-                message_to_screen_center(screen, '[ 조작법 ]', PINK, korean_font_small_size, 250)
-                message_to_screen_center(screen, '상하 방향키로 구슬 선택', PINK, korean_font_small_size, 350)
-                message_to_screen_center(screen, '좌우 방향키로 홀짝 선택', PINK, korean_font_small_size, 450)
-                Txt.draw_text(self,screen, "Press Space Key", 300, 560, font, BLINK[tmr % 6])
+                #screen.fill(BLACK)
+                message_to_screen_center(self.screen, '홀짝 게임', PINK, korean_font, 100)
+                message_to_screen_center(self.screen, '[ 조작법 ]', PINK, korean_font_small_size, 250)
+                message_to_screen_center(self.screen, '상하 방향키로 구슬 선택', PINK, korean_font_small_size, 350)
+                message_to_screen_center(self.screen, '좌우 방향키로 홀짝 선택', PINK, korean_font_small_size, 450)
+                Txt.draw_text(self,self.screen, "Press Space Key", 300, 560, font, BLINK[tmr % 6])
                 if key[pygame.K_SPACE] == 1:
                     idx = 10
 
             if idx == 10:
-                screen.blit(imgBG, [0, 0])
+                self.screen.blit(imgBG, [0, 0])
                 minute = int(time / 60)
                 second = int(time % 60)
                 if left_time<=0 :
@@ -114,7 +120,7 @@ class Game:
                 # cbeadtxt2=font.render("상대 배팅 : "+str(cbeadcnt), True, WHITE)
                 # screen.fill(BLACK)
 
-                screen.blit(cbeadtxt, [570, 50])
+                self.screen.blit(cbeadtxt, [570, 50])
                 screen.blit(txt, [300, 0])
                 screen.blit(pbead, [320, 600])
                 screen.blit(pbead2, [0, 50])
@@ -122,7 +128,7 @@ class Game:
 
             if idx == 11:
                 screen.fill(BLACK)
-                Txt.draw_text(self,screen, "YOU WIN! LEVEL UP!", 250, 560, font, BLINK[tmr % 6])
+                Txt.draw_text(self,self.screen, "YOU WIN! LEVEL UP!", 250, 560, font, BLINK[tmr % 6])
 
                 if key[pygame.K_SPACE] == 1:
                     tmr = 0
@@ -185,6 +191,6 @@ class Game:
 
 if __name__ == '__main__':
     new_txt=Txt()
-    new_game = Game()
+    new_game = MarbleGame(SCREEN_WIDTH, SCREEN_HEIGHT)
     new_game.main()
 
