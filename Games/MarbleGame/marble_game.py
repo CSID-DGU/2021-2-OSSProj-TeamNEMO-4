@@ -50,8 +50,8 @@ class MarbleGame:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                #if event.type==pygame.VIDEORESIZE:
-                    #self.game_screen=pygame.display.set_mode((event.w,event.h),pygame.RESIZABLE)
+                if event.type==pygame.VIDEORESIZE:
+                    self.game_screen=pygame.display.set_mode((event.w,event.h),pygame.RESIZABLE)
 
             key = pygame.key.get_pressed() #모든 키 입력 감지
             if idx==0: #0은 타이틀 화면
