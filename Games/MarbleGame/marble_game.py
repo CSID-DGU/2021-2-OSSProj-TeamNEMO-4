@@ -30,6 +30,7 @@ class MarbleGame:
         marble_game_timer=0
         xlocation=[] #추후 상대 위치 리스트 만들기
         ylocation=[] #추후 상대 위치 리스트 만들기
+        PR_ERROR_TEST=True
 
         # 이미지 로딩
         imgBG = pygame.image.load("bg/bg.png") #배경 이미지
