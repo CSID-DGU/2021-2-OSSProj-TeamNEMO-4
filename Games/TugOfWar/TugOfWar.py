@@ -43,8 +43,8 @@ def message_to_screen_left(surface, msg, color, font, x, y):
 class Game:
     FPS = 120
     Click_Num = 15 #Level 당 클릭해야하는 횟수 ex) Level 1: 15번, Level 2: 30번 .....
-    TIMER_TIME1 = random.randint(3, 7)
-    TIMER_TIME2 = random.randint(3, 7)
+    TIMER_TIME1 = 30 #Level 1의 제한시간
+    TIMER_TIME2 = random.randint(3, 7) #당기기 당기지 않기의 시간
 
     def __init__(self, title, width, height):
         self.title = title
@@ -62,9 +62,9 @@ class Game:
                 if event.type == pygame.QUIT:
                     return
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_s:
+                    if event.key == pygame.K_e:
                         self.run_game_loop(1)
-                    elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+                    elif event.key == pygame.K_q:
                         return
             #배경 설정
             self.game_screen.fill(WHITE)
@@ -75,9 +75,11 @@ class Game:
             message_to_screen_left(
                 self.game_screen, '[조작법]', BLACK, korean_font_small_size, 150, 300)
             message_to_screen_left(
-                self.game_screen, '<- 클릭', BLACK, korean_font_small_size, 150, 350)
+                self.game_screen, 'A 클릭하여 줄 당기기', BLACK, korean_font_small_size, 150, 350)
             message_to_screen_left(
-                self.game_screen, 'S 로 시작, Q로 종료', BLACK, korean_font_small_size, 150, 400)
+                self.game_screen, 'D 클릭하여 버티기', BLACK, korean_font_small_size, 150, 400)
+            message_to_screen_left(
+                self.game_screen, 'E 로 시작, Q로 종료', BLACK, korean_font_small_size, 150, 500)
             pygame.display.update()
 
     def win_game(self):
@@ -86,7 +88,7 @@ class Game:
                 if event.type == pygame.QUIT:
                     return False
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+                    if event.key == pygame.K_q:
                         return False
                     elif event.key == pygame.K_r:
                         return True
@@ -95,11 +97,9 @@ class Game:
             message_to_screen_left(
                 self.game_screen, '통과하셨습니다', BLUE, large_font, 100, 50)
             message_to_screen_left(
-                self.game_screen, 'Press R to Play Again', RED, large_font, 150, 200)
+                self.game_screen, 'Press R to Play Again', RED, korean_font_small_size, 150, 200)
             message_to_screen_left(
-                self.game_screen, 'Press Q or Esc', RED, large_font, 150, 350)
-            message_to_screen_left(
-                self.game_screen, 'to go to main menu', RED, large_font, 150, 400)
+                self.game_screen, 'Press Q to go to main menu', RED, korean_font_small_size, 150, 350)
             pygame.display.update()
 
     def lose_game(self):
@@ -112,7 +112,7 @@ class Game:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN
-                                                 and (event.key == pygame.K_q or event.key == pygame.K_ESCAPE)):
+                                                 and event.key == pygame.K_q):
                     return False
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
                     return True
@@ -151,47 +151,48 @@ class Game:
             message_to_screen_left(
                 self.game_screen, 'Level ' + str(level), WHITE, level_font, 0, 0)
 
-            if timer2 <= 0:
-                self.stop_timer = True
-                time2 = random.randint(3, 7)
-                time_checker2 = round(time2 -(timer2)*(-1), 1)
-                message_to_screen_center(
-                    self.game_screen, "S T O P", RED, large_font, self.height/2)
-                message_to_screen_center(
-                    self.game_screen, f'{time_checker2}', RED, large_font, self.height/3)
-                if time_checker2 <= 0:
-                    self.stop_timer = False
-                    start_ticks2 = pygame.time.get_ticks()
-                    elapsed_time2 = (pygame.time.get_ticks() - start_ticks2) / 1000
-                    timer2 = round(float(self.TIMER_TIME2 - elapsed_time2), 1)
-                else:
-                    if event.type == 768:
-                        did_win = False
+            for event in pygame.event.get():
+                if timer2 <= 0:
+                    self.stop_timer = True
+                    time2 = random.randint(3, 7)
+                    time_checker2 = round(time2 - (timer2) * (-1), 1)
+                    message_to_screen_center(
+                        self.game_screen, "S T O P", RED, large_font, self.height / 2)
+                    message_to_screen_center(
+                        self.game_screen, f'{time_checker2}', RED, large_font, self.height / 3)
+                    if time_checker2 <= 0:
                         self.stop_timer = False
-                        break
-            elif timer2 > 0:
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
-                    click_rate += 1
+                        start_ticks2 = pygame.time.get_ticks()
+                        elapsed_time2 = (pygame.time.get_ticks() - start_ticks2) / 1000
+                        timer2 = round(float(self.TIMER_TIME2 - elapsed_time2), 1)
+                    else:
+                        if event.type == 768:
+                            did_win = False
+                            self.stop_timer = False
+                            break
+                elif timer2 > 0:
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+                        click_rate += 1
 
-                if click_rate == int(level)*15:
-                    did_win = True
-
+                    if click_rate == int(level) * self.Click_Num:
+                        did_win = True
 
             if timer1 <= 0:
                 did_win = False
                 break
 
-            if did_win:
-                if level > 3:
-                    self.win_game()
-                else:
-                    message_to_screen_left(
-                        self.game_screen, 'Level ' + str(int(level) + 1), WHITE, level_font, 0, 0)
-                    self.run_game_loop(level + 1)
-            elif self.game_restart():
-                self.run_game_loop(1)
+        if did_win:
+            if level > 3:
+                self.win_game()
             else:
-                return
+                message_to_screen_left(
+                    self.game_screen, 'Level ' + str(int(level) + 1), WHITE, level_font, 0, 0)
+                self.run_game_loop(level + 1)
+        elif self.game_restart():
+            self.run_game_loop(1)
+        else:
+            return
+
 
 pygame.init()
 new_game = Game(SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
