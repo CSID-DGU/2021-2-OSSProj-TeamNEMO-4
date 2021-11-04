@@ -6,12 +6,17 @@ from Games.game_settings import *
 
 class Game:
     def main(self):
-        time = 30
-        self.game_over_timer = GameOverTimer(time)
+        game_time = 15 # LEVEL마다 제한시간
+        a_time = random.randint(3, 7) #a 누를 수 있는 시간
+        d_time = random.randint(3, 5) #b 누를 수 있는 시간
+        self.game_over_timer = None
+        self.a_timer = None
+        self.d_timer = None
         tmr = 0
         level = 0
         click = 0
         click_n = 15
+        idx = 0
 
         pygame.init()
         pygame.display.set_caption(SCREEN_TITLE)
@@ -27,14 +32,12 @@ class Game:
             surface.blit(textSurf, (200, 0))
 
 
-
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
 
-            tmr += 1
             imgBG = pygame.image.load("Images/TugOfWarBack.png")
             char_1 = pygame.image.load("Images/char1.png")
             char_2 = pygame.image.load("Images/char2.png")
@@ -43,6 +46,7 @@ class Game:
 
             # 시작 화면
             if idx == 0:
+                click = 0
                 screen.fill(WHITE)
                 screen.blit(imgBG, [0, 0])
                 message_to_screen_center(screen, '줄다리기 게임', WHITE, korean_font, SCREEN_HEIGHT / 4)
@@ -64,6 +68,10 @@ class Game:
 
             # 게임 화면 1단계
             if idx == 1:
+                if tmr == 0: # 첫루프 도는 경우
+                    self.game_over_timer = GameOverTimer(game_time)
+                    self.game_over_timer.reset_timer()
+                    tmr += 1
                 level = idx
                 click_num = click_n*level
                 screen.fill(BLACK)
@@ -84,6 +92,10 @@ class Game:
                             click += 1
                         elif event.key == pygame.K_d:
                             click += 1
+                left_time = self.game_over_timer.time_checker()
+                if left_time <= 0:
+                    idx = 44
+                message_to_screen_center(screen, '남은 시간 : {}초'.format(left_time), WHITE, korean_font_small_size, 300)
                 message_to_screen_topCenter(screen, '남은 클릭횟수 : {}'.format((click_num - click)), WHITE, korean_font)
                 pygame.display.update()
                 if click == click_num:
@@ -91,6 +103,10 @@ class Game:
 
             # 게임 화면 2단계
             if idx == 2:
+                if tmr == 0: # 첫루프 도는 경우
+                    self.game_over_timer = GameOverTimer(game_time)
+                    self.game_over_timer.reset_timer()
+                    tmr += 1
                 level = idx
                 click_num = click_n*level
                 screen.fill(BLACK)
@@ -112,6 +128,10 @@ class Game:
                             click += 1
                         elif event.key == pygame.K_d:
                             click += 1
+                left_time = self.game_over_timer.time_checker()
+                if left_time <= 0:
+                    idx = 44
+                message_to_screen_center(screen, '남은 시간 : {}초'.format(left_time), WHITE, korean_font_small_size, 300)
                 message_to_screen_topCenter(screen, '남은 클릭횟수 : {}'.format(click_num - click), WHITE, korean_font)
                 pygame.display.update()
                 if click == click_num:
@@ -119,6 +139,10 @@ class Game:
 
             # 게임 화면 3단계
             if idx == 3:
+                if tmr == 0: # 첫루프 도는 경우
+                    self.game_over_timer = GameOverTimer(game_time)
+                    self.game_over_timer.reset_timer()
+                    tmr += 1
                 level = idx
                 click_num = click_n * level
                 screen.fill(BLACK)
@@ -140,6 +164,10 @@ class Game:
                             click += 1
                         elif event.key == pygame.K_d:
                             click += 1
+                left_time = self.game_over_timer.time_checker()
+                if left_time <= 0:
+                    idx = 44
+                message_to_screen_center(screen, '남은 시간 : {}초'.format(left_time), WHITE, korean_font_small_size, 300)
                 message_to_screen_topCenter(screen, '남은 클릭횟수 : {}'.format(click_num - click), WHITE, korean_font)
                 pygame.display.update()
                 if click == click_num:
@@ -147,6 +175,7 @@ class Game:
 
             # 통과화면
             if idx == 22:
+                tmr = 0
                 click = 0
                 screen.fill(BLACK)
                 message_to_screen_center(screen, '통과하셨습니다', BLUE, korean_font, 200)
@@ -164,8 +193,9 @@ class Game:
                             pygame.quit()
                             sys.exit()
 
-            # 종료함수
+            # 종료(성공) 화면 함수
             if idx == 33:
+                tmr = 0
                 screen.fill(BLACK)
                 message_to_screen_center(screen, '줄 다리기 게임을 통과했습니다', BLUE, korean_font, 200)
                 message_to_screen_center(screen, '시작화면으로 이동 : R', BLUE, korean_font, 300)
@@ -184,6 +214,7 @@ class Game:
 
             # 실패 화면
             if idx == 44:
+                tmr = 0
                 screen.fill(BLACK)
                 message_to_screen_center(screen, '탈 락 하 셨 습 니 다', RED, korean_font, 200)
                 message_to_screen_center(screen, '시작화면으로 이동 : R', RED, korean_font, 300)
