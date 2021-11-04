@@ -10,7 +10,6 @@ class Game:
         self.game_over_timer = GameOverTimer(time)
         tmr = 0
         level = 0
-        idx = 0
         click = 0
         click_n = 15
 
