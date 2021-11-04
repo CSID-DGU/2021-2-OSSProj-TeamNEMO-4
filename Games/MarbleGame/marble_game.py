@@ -19,7 +19,6 @@ class MarbleGame:
     fail_eff_y = random.randint(-10, 10)
     xlocation = []  # 추후 상대 위치 리스트 만들기
     ylocation = []  # 추후 상대 위치 리스트 만들기
-    isError=False
     # 이미지 로딩
     imgBG = pygame.image.load("bg/bg.png")  # 배경 이미지
     imgTrue = pygame.image.load("imgs/True.png")  # 배팅 성공 이미지
