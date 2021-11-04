@@ -51,6 +51,7 @@ class Game:
     HARD_LEVEL = 3
     WIN_LEVEL = 4 + 1.5
     TIMER_TIME = 5  # 술래 뒤도는 카운터.
+    NPC_CHANGE_DIRECTION_TIME = 2
 
     def __init__(self, image_path, title, width, height):
         self.title = title
@@ -208,9 +209,12 @@ class Game:
         NPC_3 = game_object.NPC(random.randrange(20, 700), self.width * (2 / 3), 160, 150)
         NPC_3.BASE_SPEED *= level * 2
         # 술래
-        DOLL = game_object.GameObject(self.width / 2 - 45, 10, 130, 130)
+        DOLL = game_object.GameObject(self.width / 2 - 45, 10, 100, 150)
         DOLL.sprite_image('NPC/back.png')
+
         start_ticks = pygame.time.get_ticks()
+        NPC_ticks = pygame.time.get_ticks()
+
         while not game_over:
             for event in pygame.event.get():
                 # Quit if player tries to exit
@@ -238,6 +242,16 @@ class Game:
             NPC_3.draw(self.game_screen)
             player.move(dir_x, dir_y, self.width, self.height, boost)
             player.draw(self.game_screen, dir_x, dir_y)
+            # NPC turning timer 설정.
+            if level >= 1:
+                NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
+                NPC_timer = round(float(self.NPC_CHANGE_DIRECTION_TIME - NPC_elapsed_time), 1)
+                if NPC_timer <= 0:
+                    NPC_1.change_direction()
+                    NPC_2.change_direction()
+                    NPC_3.change_direction()
+                    NPC_ticks = pygame.time.get_ticks()
+                    NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
 
             # 무궁화 타이머 설정 stop 이 false 일 때만 진행.
             elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
