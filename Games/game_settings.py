@@ -35,7 +35,8 @@ def text_objects(text, color, text_font):
     textSurface = text_font.render(text, True, color).convert_alpha()
     return textSurface, textSurface.get_rect()
 
-def message_to_screen_center(surface, msg, color, text_font, y,ref_w, ref_h):
+
+def message_to_screen_center(surface, msg, color, text_font, y, ref_w, ref_h):
     textSurf, textRect = text_objects(msg, color, text_font)
     cur_w, cur_h = surface.get_size()
     txt_w, txt_h = textSurf.get_size()
@@ -45,22 +46,22 @@ def message_to_screen_center(surface, msg, color, text_font, y,ref_w, ref_h):
     surface.blit(textSurf, textRect)
 
 
-def message_to_screen_left(surface, msg, color, text_font, x, y,ref_w, ref_h):
+def message_to_screen_left(surface, msg, color, text_font, x, y, ref_w, ref_h):
     textSurf, textRect = text_objects(msg, color, text_font)
     cur_w, cur_h = surface.get_size()
     txt_w, txt_h = textSurf.get_size()
     textSurf = pygame.transform.smoothscale(textSurf, (txt_w * cur_w // ref_w, txt_h * cur_h // ref_h))
     textRect = textSurf.get_rect()
-    textRect.center=x,y
+    textRect.center = x, y
     surface.blit(textSurf, textRect)
 
 
 # 게임 공통 구성요소
 # 타이머
 class GameOverTimer:
-    start_ticks = pygame.time.get_ticks()
 
     def __init__(self, timer_time):
+        self.start_ticks = pygame.time.get_ticks()
         self.timer_time = timer_time
 
     def time_checker(self):
@@ -68,8 +69,8 @@ class GameOverTimer:
         timer = round(float(self.timer_time - elapsed_time), 1)
         return timer
 
-    def reset_timer(self):
-        self.start_ticks = pygame.time.get_ticks()
+    def reset_timer(self, timer_time):
+        self.__init__(timer_time)
 
 
 # 유저명
