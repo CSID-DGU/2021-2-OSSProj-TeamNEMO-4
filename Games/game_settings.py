@@ -69,9 +69,6 @@ class GameOverTimer:
         timer = round(float(self.timer_time - elapsed_time), 1)
         return timer
 
-    def reset_timer(self, timer_time):
-        self.__init__(timer_time)
-
 
 # 유저명
 # 점수
