@@ -115,7 +115,7 @@ class MarbleGame:
 
     def start_marble_game(self):
         # 타이머
-        game_over_timer = GameOverTimer(1000)
+        game_over_timer = GameOverTimer(10)
         #배경 음악 로딩
         try:
             pygame.mixer.music.load("sound/bgm.mp3")
@@ -193,13 +193,16 @@ class MarbleGame:
                                        self.ref_h)
             if self.idx == 11:
                 self.level_up()
+                game_over_timer.reset_timer(10)
             if self.idx == 12: #클리어 화면
                 self.draw_clear()
+                game_over_timer.reset_timer(10)
                 if key[pygame.K_RETURN] == 1: #엔터 또는 return 키가 눌리면
                     self.reset_variable()
             if self.idx == 13: #게임 오버 화면
                 self.draw_game_over()
                 if key[pygame.K_RETURN] == 1:
+                    game_over_timer.reset_timer(10)
                     self.reset_variable()
             if self.idx == 14: # 홀짝 판정 화면으로
                 self.draw_true_false()
