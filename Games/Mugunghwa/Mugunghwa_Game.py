@@ -159,7 +159,6 @@ class Game:
         clock.tick(1)
 
     def game_restart(self):
-        self.game_over_timer.reset_timer()
         NPC_1 = game_object.NPC(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
         while True:
             for event in pygame.event.get():
@@ -167,6 +166,7 @@ class Game:
                                                  and (event.key == pygame.K_q or event.key == pygame.K_ESCAPE)):
                     return False
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+                    self.game_over_timer.reset_timer(100)
                     return True
             # Display text for losing
             self.game_screen.fill(PINK)
@@ -185,7 +185,8 @@ class Game:
         boost = 1
 
         # 타이머 설정.
-        self.game_over_timer = GameOverTimer(100)
+        if level == 1:
+            self.game_over_timer = GameOverTimer(100)
 
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         print('LEVEL: ', int((level - 1) * 2 + 1))
