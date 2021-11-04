@@ -12,7 +12,6 @@ class MarbleGame:
         self.ref_w, self.ref_h = self.game_screen.get_size()
         self.game_screen.fill(PINK)
 
-
     def start_marble_game(self):
         # 타이머
         game_over_timer = GameOverTimer(1000)
@@ -28,6 +27,7 @@ class MarbleGame:
         betting_button_pressed=False
         screen_buffer=0 #화면 대기 구현 변수
         marble_game_timer=0
+        fail_eff=0
         xlocation=[] #추후 상대 위치 리스트 만들기
         ylocation=[] #추후 상대 위치 리스트 만들기
 
@@ -101,6 +101,7 @@ class MarbleGame:
                         computer_beads -= player_betting
                     screen_buffer = marble_game_timer
                     idx = 14
+                    fail_eff=5
                     betting_button_pressed = True
 
 
@@ -176,6 +177,11 @@ class MarbleGame:
                     else:
                         imgFalse = pygame.transform.scale(imgFalse,(self.game_screen.get_width(), self.game_screen.get_height()))
                         self.game_screen.blit(imgFalse, [0, 0])
+                        if fail_eff > 0:
+                            fail_eff = fail_eff - 1
+                            bx = random.randint(-20, 20)
+                            by = random.randint(-10, 10)
+                        self.game_screen.blit(imgFalse, [bx, by])
                         if screen_buffer <= marble_game_timer-30:
                             idx = 1
                             if player_beads <= 0 :
