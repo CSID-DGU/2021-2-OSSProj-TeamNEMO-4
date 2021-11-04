@@ -13,9 +13,13 @@ class Game:
         self.game_screen.fill(PINK)
         # self.shape = random.randrange(1,4)
         self.shape = 4
+        pygame.mixer.music.load("Media/bgm.mp3")
+        self.ref_w, self.ref_h = self.game_screen.get_size()
 
     def start_game(self):
         # 달고나 생성.
+        if pygame.mixer.music.get_busy() == False:
+            pygame.mixer.music.play(-1)
         dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, 100, self.shape)
         game_over_timer = GameOverTimer(50)
         while True:
@@ -25,7 +29,10 @@ class Game:
                 if event.type == pygame.QUIT:
                     return
             self.game_screen.fill(PINK)
-            message_to_screen_left(self.game_screen, 'GAME OVER: ' + str(left_time), WHITE, level_font, 0, 0)
+
+            message_to_screen_left(self.game_screen, 'GAME OVER: ' + str(left_time), WHITE, level_font, self.width / 5,
+                                   self.height / 20,
+                                   self.ref_w, self.ref_h)
 
             pygame.draw.circle(self.game_screen, YELLOW_BROWN, [self.width / 2, self.height / 2], 300, 300)
 
@@ -62,10 +69,12 @@ class Game:
             dalgona.draw()
             if dalgona.check_win():
                 self.game_screen.fill(PINK)
-                message_to_screen_center(self.game_screen, "승리!", WHITE, korean_font, self.width / 2)
+                message_to_screen_center(self.game_screen, "승리!", WHITE, korean_font, self.width / 2, self.ref_w,
+                                         self.ref_h)
             if left_time <= 0:
                 self.game_screen.fill(PINK)
-                message_to_screen_center(self.game_screen, "패 배", WHITE, korean_font, self.width / 2)
+                message_to_screen_center(self.game_screen, "패 배", WHITE, korean_font, self.width / 2, self.ref_w,
+                                         self.ref_h)
             pygame.display.update()
             clock.tick(20)
 
