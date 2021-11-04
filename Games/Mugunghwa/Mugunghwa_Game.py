@@ -50,7 +50,7 @@ class Game:
     MEDIUM_LEVEL = 2
     HARD_LEVEL = 3
     WIN_LEVEL = 4 + 1.5
-    TIMER_TIME = 4  # 술래 뒤도는 카운터.
+    TIMER_TIME = 5  # 술래 뒤도는 카운터.
 
     def __init__(self, image_path, title, width, height):
         self.title = title
@@ -64,6 +64,10 @@ class Game:
         self.image = pygame.transform.scale(background_image, (width, height))
         self.stop_timer = False
         self.game_over_timer = None
+        try:
+            pygame.mixer.music.load("Sound/mugunghwa.mp3")
+        except:
+            print("사운드 로드 오류")
 
     def start_game(self):
         NPC_1 = game_object.NPC(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
@@ -166,7 +170,6 @@ class Game:
                                                  and (event.key == pygame.K_q or event.key == pygame.K_ESCAPE)):
                     return False
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
-                    self.game_over_timer.reset_timer(100)
                     return True
             # Display text for losing
             self.game_screen.fill(PINK)
@@ -183,6 +186,8 @@ class Game:
         game_over = False
         did_win = True
         boost = 1
+        # 무궁화 SOUND EFFECTS
+        pygame.mixer.music.play(-1)
 
         # 타이머 설정.
         if level == 1:
@@ -250,9 +255,9 @@ class Game:
                 self.game_screen, 'Level ' + str(int((level - 1) * 2 + 1)), WHITE, level_font, 0, 0)
             message_to_screen_left(
                 self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 0, 35)
-            if not self.stop_timer:
-                message_to_screen_center(
-                    self.game_screen, f'Timer: {timer}', BLACK, level_font, self.width * (1 / 2))
+            # if not self.stop_timer:
+            #     message_to_screen_center(
+            #         self.game_screen, f'Timer: {timer}', BLACK, level_font, self.width * (1 / 2))
 
             # Detect collision
             try:
@@ -266,17 +271,20 @@ class Game:
                     collision = self.detect_all_collisions(
                         level, player, NPC_1, 0, 0, DOLL)
 
+            # 무궁화 SOUND EFFECTS
+            if pygame.mixer.music.get_busy() == False:
+                pygame.mixer.music.play(-1)
             # 무궁화 발동
             if timer <= 0:
                 # 3초 타이머 걸고 지나면 해제. & 타이머 리셋.
                 DOLL.sprite_image('NPC/front.png')
                 self.stop_timer = True
-                time = 3
+                time = 5
                 time_checker = round(time - (timer) * (-1), 1)
-                message_to_screen_center(
-                    self.game_screen, "S T O P !", RED, large_font, self.height / 2)
-                message_to_screen_center(
-                    self.game_screen, f'{time_checker}', RED, large_font, self.height / 3)
+                # message_to_screen_center(
+                #     self.game_screen, "S T O P !", RED, large_font, self.height / 2)
+                # message_to_screen_center(
+                #     self.game_screen, f'{time_checker}', RED, large_font, self.height / 3)
                 if time_checker <= 0:
                     DOLL.sprite_image('NPC/back.png')
                     self.stop_timer = False
