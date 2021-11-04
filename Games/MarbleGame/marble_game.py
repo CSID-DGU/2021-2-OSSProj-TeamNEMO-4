@@ -33,6 +33,19 @@ class MarbleGame:
         self.ref_w, self.ref_h = self.game_screen.get_size()
         self.game_screen.fill(PINK)
 
+    def draw_title(self):
+        self.game_screen.fill(PINK)
+        message_to_screen_center(self.game_screen, '홀짝 게임', WHITE, korean_font, self.game_screen.get_height() / 4,
+                                     self.ref_w, self.ref_h)
+        message_to_screen_center(self.game_screen, '[ 조작법 ]', WHITE, korean_font_small_size,
+                                     self.game_screen.get_height() / 3, self.ref_w, self.ref_h)
+        message_to_screen_center(self.game_screen, '상하 방향키로 구슬 선택', WHITE, korean_font_small_size,
+                                     self.game_screen.get_height() / 2, self.ref_w, self.ref_h)
+        message_to_screen_center(self.game_screen, '좌우 방향키로 홀짝 선택', WHITE, korean_font_small_size,
+                                     self.game_screen.get_height() / 1.5, self.ref_w, self.ref_h)
+        message_to_screen_center(self.game_screen, 'Press Space Key', WHITE, korean_font_small_size,
+                                     self.game_screen.get_height() / 1.25, self.ref_w, self.ref_h)
+
     def level_up(self):
         self.game_screen.fill(BLACK)
         message_to_screen_center(self.game_screen, 'YOU WIN! LEVEL UP!', WHITE, korean_font,self.game_screen.get_height() / 4, self.ref_w, self.ref_h)
@@ -50,9 +63,6 @@ class MarbleGame:
     def start_marble_game(self):
         # 타이머
         game_over_timer = GameOverTimer(1000)
-
-
-
         #배경 음악 로딩
         try:
             pygame.mixer.music.load("sound/bgm.mp3")
@@ -72,23 +82,16 @@ class MarbleGame:
 
             key = pygame.key.get_pressed() #모든 키 입력 감지
             if MarbleGame.idx==0: #0은 타이틀 화면
-                self.game_screen.fill(PINK)
-                message_to_screen_center(self.game_screen,'홀짝 게임',WHITE, korean_font,self.game_screen.get_height()/4,self.ref_w, self.ref_h)
-                message_to_screen_center(self.game_screen, '[ 조작법 ]', WHITE, korean_font_small_size, self.game_screen.get_height()/3,self.ref_w, self.ref_h)
-                message_to_screen_center(self.game_screen, '상하 방향키로 구슬 선택', WHITE, korean_font_small_size, self.game_screen.get_height()/2,self.ref_w, self.ref_h)
-                message_to_screen_center(self.game_screen, '좌우 방향키로 홀짝 선택', WHITE, korean_font_small_size, self.game_screen.get_height()/1.5,self.ref_w, self.ref_h)
-                message_to_screen_center(self.game_screen, 'Press Space Key', WHITE, korean_font_small_size, self.game_screen.get_height()/1.25,self.ref_w, self.ref_h)
-                if key[pygame.K_SPACE] == 1: MarbleGame.idx = 1 #스페이스키 입력시 1번 화면으로 이동
-
+                self.draw_title()
+                if key[pygame.K_SPACE] == 1: MarbleGame.idx = 1  # 스페이스키 입력시 1번 화면으로 이동
             if MarbleGame.idx==1:
                 MarbleGame.imgBG=pygame.transform.scale(MarbleGame.imgBG,(self.game_screen.get_width(),self.game_screen.get_height()))
                 self.game_screen.blit(MarbleGame.imgBG,[0,0])
-
                 if pygame.mixer.music.get_busy() == False: #bgm 재생 정지 상태라면
                     pygame.mixer.music.play(-1) #bgm 재생
                 if left_time<=0 :
                     MarbleGame.idx = 13
-                if key[pygame.K_UP] and MarbleGame.player_betting < MarbleGame.player_beads: MarbleGame.player_betting += 1
+                if key[pygame.K_UP] and MarbleGame.player_betting < MarbleGame.player_beads and MarbleGame.player_betting<MarbleGame.computer_beads: MarbleGame.player_betting += 1
                 if key[pygame.K_DOWN] and MarbleGame.player_betting > 0: MarbleGame.player_betting -= 1
                 if MarbleGame.betting_button_pressed == True and MarbleGame.computer_beads > 1:
                     MarbleGame.computer_betting = random.randint(1, MarbleGame.computer_beads)
