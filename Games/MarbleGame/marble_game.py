@@ -25,6 +25,7 @@ class MarbleGame:
     imgTrue = pygame.image.load("imgs/True.png")  # 배팅 성공 이미지
     imgFalse = pygame.image.load("imgs/False.png")  # 배팅 실패 이미지
     gganbuplay=False
+    errortest=False
 
     def __init__(self,width,height):
         pygame.display.set_caption(SCREEN_TITLE)
