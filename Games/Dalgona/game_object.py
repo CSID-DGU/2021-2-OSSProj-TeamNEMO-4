@@ -62,6 +62,7 @@ class Dalgona:
                           pos_y + i * ((half_side_length * ratio) / points_num_of_side), 5))
                 self.points.append(Point(game_screen, reverse_pos_x + increase / ratio, reverse_pos_y - increase, 5))
                 self.points.append(Point(game_screen, reverse_pos_x - increase / ratio, reverse_pos_y - increase, 5))
+
             # 안쪽 경계선 뛰어넘고 그리기
             for i in range(points_num_of_side * 2, points_num_of_side * 3):
                 increase = i * ((half_side_length * ratio) / points_num_of_side)
@@ -72,20 +73,36 @@ class Dalgona:
                           pos_y + i * ((half_side_length * ratio) / points_num_of_side), 5))
                 self.points.append(Point(game_screen, reverse_pos_x + increase / ratio, reverse_pos_y - increase, 5))
                 self.points.append(Point(game_screen, reverse_pos_x - increase / ratio, reverse_pos_y - increase, 5))
+
             # 가로줄 그리기
             pos_y += half_side_length * ratio
             reverse_pos_y -= half_side_length * ratio
             for i in range(points_num_of_side):
-                self.points.append(
-                    Point(game_screen, pos_x + half_side_length + i * (side_length / points_num_of_side), pos_y, 5))
-                self.points.append(
-                    Point(game_screen, pos_x - half_side_length - i * (side_length / points_num_of_side), pos_y, 5))
-                self.points.append(
-                    Point(game_screen, reverse_pos_x + half_side_length + i * (side_length / points_num_of_side),
-                          reverse_pos_y, 5))
-                self.points.append(
-                    Point(game_screen, reverse_pos_x - half_side_length - i * (side_length / points_num_of_side),
-                          reverse_pos_y, 5))
+                if i % 10 != 0:
+                    self.points.append(
+                        Point(game_screen, pos_x + half_side_length + i * (side_length / points_num_of_side), pos_y, 5))
+                    self.points.append(
+                        Point(game_screen, pos_x - half_side_length - i * (side_length / points_num_of_side), pos_y, 5))
+                    self.points.append(
+                        Point(game_screen, reverse_pos_x + half_side_length + i * (side_length / points_num_of_side),
+                              reverse_pos_y, 5))
+                    self.points.append(
+                        Point(game_screen, reverse_pos_x - half_side_length - i * (side_length / points_num_of_side),
+                              reverse_pos_y, 5))
+                else:
+                    self.points.append(
+                        Point(game_screen, pos_x + half_side_length + i * (side_length / points_num_of_side), pos_y, 5,
+                              wrong_point=True))
+                    self.points.append(
+                        Point(game_screen, pos_x - half_side_length - i * (side_length / points_num_of_side), pos_y, 5,
+                              wrong_point=True))
+                    self.points.append(
+                        Point(game_screen, reverse_pos_x + half_side_length + i * (side_length / points_num_of_side),
+                              reverse_pos_y, 5, wrong_point=True))
+                    self.points.append(
+                        Point(game_screen, reverse_pos_x - half_side_length - i * (side_length / points_num_of_side),
+                              reverse_pos_y, 5, wrong_point=True))
+
             # wrong_point 그리기.
             self.points.append(
                 Point(game_screen, width / 2, height / 2, 5, wrong_point=True))
@@ -95,13 +112,13 @@ class Dalgona:
             i.punching()
 
     def check_win(self):
-        is_success = True
+        result = {"is_success": True, "wrong_point_clicked": False}
         for i in self.points:
             if not i.clicked:
-                is_success = False
+                result["is_success"] = False
             if i.wrong_point and i.clicked:
-                is_success = "wrong_point_clicked"
-        return is_success
+                result["wrong_point_clicked"] = True
+        return result
 
 
 class Point:
