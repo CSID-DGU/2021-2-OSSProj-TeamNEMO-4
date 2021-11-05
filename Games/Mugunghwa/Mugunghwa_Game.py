@@ -50,7 +50,8 @@ class Game:
     MEDIUM_LEVEL = 2
     HARD_LEVEL = 3
     WIN_LEVEL = 4 + 1.5
-    TIMER_TIME = 4  # 술래 뒤도는 카운터.
+    TIMER_TIME = 5  # 술래 뒤도는 카운터.
+    NPC_CHANGE_DIRECTION_TIME = 2
 
     def __init__(self, image_path, title, width, height):
         self.title = title
@@ -64,6 +65,10 @@ class Game:
         self.image = pygame.transform.scale(background_image, (width, height))
         self.stop_timer = False
         self.game_over_timer = None
+        try:
+            pygame.mixer.music.load("Sound/mugunghwa.mp3")
+        except:
+            print("사운드 로드 오류")
 
     def start_game(self):
         NPC_1 = game_object.NPC(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
@@ -166,7 +171,6 @@ class Game:
                                                  and (event.key == pygame.K_q or event.key == pygame.K_ESCAPE)):
                     return False
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
-                    self.game_over_timer.reset_timer(100)
                     return True
             # Display text for losing
             self.game_screen.fill(PINK)
@@ -183,6 +187,8 @@ class Game:
         game_over = False
         did_win = True
         boost = 1
+        # 무궁화 SOUND EFFECTS
+        pygame.mixer.music.play(-1)
 
         # 타이머 설정.
         if level == 1:
@@ -203,9 +209,12 @@ class Game:
         NPC_3 = game_object.NPC(random.randrange(20, 700), self.width * (2 / 3), 160, 150)
         NPC_3.BASE_SPEED *= level * 2
         # 술래
-        DOLL = game_object.GameObject(self.width / 2 - 45, 10, 130, 130)
+        DOLL = game_object.GameObject(self.width / 2 - 45, 10, 100, 150)
         DOLL.sprite_image('NPC/back.png')
+
         start_ticks = pygame.time.get_ticks()
+        NPC_ticks = pygame.time.get_ticks()
+
         while not game_over:
             for event in pygame.event.get():
                 # Quit if player tries to exit
@@ -233,6 +242,16 @@ class Game:
             NPC_3.draw(self.game_screen)
             player.move(dir_x, dir_y, self.width, self.height, boost)
             player.draw(self.game_screen, dir_x, dir_y)
+            # NPC turning timer 설정.
+            if level >= 1:
+                NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
+                NPC_timer = round(float(self.NPC_CHANGE_DIRECTION_TIME - NPC_elapsed_time), 1)
+                if NPC_timer <= 0:
+                    NPC_1.change_direction()
+                    NPC_2.change_direction()
+                    NPC_3.change_direction()
+                    NPC_ticks = pygame.time.get_ticks()
+                    NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
 
             # 무궁화 타이머 설정 stop 이 false 일 때만 진행.
             elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
@@ -250,9 +269,9 @@ class Game:
                 self.game_screen, 'Level ' + str(int((level - 1) * 2 + 1)), WHITE, level_font, 0, 0)
             message_to_screen_left(
                 self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 0, 35)
-            if not self.stop_timer:
-                message_to_screen_center(
-                    self.game_screen, f'Timer: {timer}', BLACK, level_font, self.width * (1 / 2))
+            # if not self.stop_timer:
+            #     message_to_screen_center(
+            #         self.game_screen, f'Timer: {timer}', BLACK, level_font, self.width * (1 / 2))
 
             # Detect collision
             try:
@@ -266,17 +285,20 @@ class Game:
                     collision = self.detect_all_collisions(
                         level, player, NPC_1, 0, 0, DOLL)
 
+            # 무궁화 SOUND EFFECTS
+            if pygame.mixer.music.get_busy() == False:
+                pygame.mixer.music.play(-1)
             # 무궁화 발동
             if timer <= 0:
                 # 3초 타이머 걸고 지나면 해제. & 타이머 리셋.
                 DOLL.sprite_image('NPC/front.png')
                 self.stop_timer = True
-                time = 3
+                time = 5
                 time_checker = round(time - (timer) * (-1), 1)
-                message_to_screen_center(
-                    self.game_screen, "S T O P !", RED, large_font, self.height / 2)
-                message_to_screen_center(
-                    self.game_screen, f'{time_checker}', RED, large_font, self.height / 3)
+                # message_to_screen_center(
+                #     self.game_screen, "S T O P !", RED, large_font, self.height / 2)
+                # message_to_screen_center(
+                #     self.game_screen, f'{time_checker}', RED, large_font, self.height / 3)
                 if time_checker <= 0:
                     DOLL.sprite_image('NPC/back.png')
                     self.stop_timer = False
