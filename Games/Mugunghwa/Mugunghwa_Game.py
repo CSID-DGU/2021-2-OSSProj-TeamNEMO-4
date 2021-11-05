@@ -1,7 +1,5 @@
 # Use base code from "https://github.com/AidenBurgess/CrossGame"
 
-import random
-
 import game_object
 from Games.game_settings import *
 
