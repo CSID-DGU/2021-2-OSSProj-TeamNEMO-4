@@ -207,10 +207,9 @@ class MarbleGame:
                         beadsound.play()
                     elif self.computer_betting==3:
                         beadsound2.play()
+
                 if self.player_beads == 1:
                     self.idx = 6
-
-
 
 
                 message_to_screen_left(self.game_screen, str(left_time), WHITE, korean_font,
@@ -238,12 +237,14 @@ class MarbleGame:
                 self.draw_clear()
                 self.score+=left_time
                 game_over_timer.__init__(60)
+
                 if key[pygame.K_RETURN] == 1: #엔터 또는 return 키가 눌리면
                     self.reset_variable()
             if self.idx == 13: #게임 오버 화면
                 self.draw_game_over()
                 if key[pygame.K_RETURN] == 1:
                     game_over_timer.__init__(60)
+
                     self.reset_variable()
             if self.idx == 14: # 홀짝 판정 화면으로
                 self.draw_true_false()
