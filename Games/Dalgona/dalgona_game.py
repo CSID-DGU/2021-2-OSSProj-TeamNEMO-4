@@ -80,7 +80,7 @@ class Game:
         self.game_screen = pygame.display.set_mode((width, height))
         self.game_screen.fill(PINK)
         # self.shape = random.randrange(1,4)
-        self.shape = 4
+        self.shape = 3
         pygame.mixer.music.load("Media/bgm.mp3")
         self.ref_w, self.ref_h = self.game_screen.get_size()
 

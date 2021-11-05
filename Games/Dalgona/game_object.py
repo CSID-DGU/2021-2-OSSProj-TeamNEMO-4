@@ -12,7 +12,11 @@ class Dalgona:
                 theta = (2 * math.pi / points_num) * i
                 pos_x = width / 2 + 10 + 210 * math.cos(theta)
                 pos_y = height / 2 + 210 * math.sin(theta)
-                self.points.append(Point(game_screen, pos_x, pos_y, 5))
+                if i % 10 != 0:
+                    self.points.append(Point(game_screen, pos_x, pos_y, 5))
+                else:
+                    self.points.append(Point(game_screen, pos_x, pos_y, 5, wrong_point=True))
+
         elif shape == 2:
             pos_x = width / 2 - 150 - 20
             pos_y = height / 2 - 150 - 20
@@ -23,17 +27,28 @@ class Dalgona:
             pos_x = width / 2 - 150 - 20
             pos_y = height / 2 - 150 - 20
             for i in range(int(points_num / 4)):
-                self.points.append(Point(game_screen, pos_x, pos_y, 5))
-                self.points.append(Point(game_screen, pos_x, pos_y + (width / 2.3), 5))
+                if i % 10 != 0:
+                    self.points.append(Point(game_screen, pos_x, pos_y, 5))
+                    self.points.append(Point(game_screen, pos_x, pos_y + (width / 2.3), 5))
+                else:
+                    self.points.append(Point(game_screen, pos_x, pos_y, 5, wrong_point=True))
+                    self.points.append(Point(game_screen, pos_x, pos_y + (width / 2.3), 5, wrong_point=True))
                 pos_x += (width / 2.2) / (points_num / 4)
+
         elif shape == 3:
             pos_x = width / 2
             pos_y = height / 4 + 10
             self.points.append(Point(game_screen, pos_x, pos_y, 5))
             for i in range(int(points_num / 3)):
                 move = ((5 / 12) * height) / (points_num / 3)
-                self.points.append(Point(game_screen, pos_x + ((i + 1) * move * (1 / math.sqrt(3))), pos_y, 5))
-                self.points.append(Point(game_screen, pos_x - ((i + 1) * move * (1 / math.sqrt(3))), pos_y, 5))
+                if i % 10 != 0:
+                    self.points.append(Point(game_screen, pos_x + ((i + 1) * move * (1 / math.sqrt(3))), pos_y, 5))
+                    self.points.append(Point(game_screen, pos_x - ((i + 1) * move * (1 / math.sqrt(3))), pos_y, 5))
+                else:
+                    self.points.append(
+                        Point(game_screen, pos_x + ((i + 1) * move * (1 / math.sqrt(3))), pos_y, 5, wrong_point=True))
+                    self.points.append(
+                        Point(game_screen, pos_x - ((i + 1) * move * (1 / math.sqrt(3))), pos_y, 5, wrong_point=True))
                 pos_y += move
 
             pos_y = height * (2 / 3)
@@ -90,6 +105,7 @@ class Dalgona:
                         Point(game_screen, reverse_pos_x - half_side_length - i * (side_length / points_num_of_side),
                               reverse_pos_y, 5))
                 else:
+                    # wrong_point 그리기.
                     self.points.append(
                         Point(game_screen, pos_x + half_side_length + i * (side_length / points_num_of_side), pos_y, 5,
                               wrong_point=True))
@@ -103,10 +119,6 @@ class Dalgona:
                         Point(game_screen, reverse_pos_x - half_side_length - i * (side_length / points_num_of_side),
                               reverse_pos_y, 5, wrong_point=True))
 
-            # wrong_point 그리기.
-            self.points.append(
-                Point(game_screen, width / 2, height / 2, 5, wrong_point=True))
-
     def draw(self):
         for i in self.points:
             i.punching()
@@ -114,7 +126,7 @@ class Dalgona:
     def check_win(self):
         result = {"is_success": True, "wrong_point_clicked": False}
         for i in self.points:
-            if not i.clicked:
+            if not i.clicked and not i.wrong_point:
                 result["is_success"] = False
             if i.wrong_point and i.clicked:
                 result["wrong_point_clicked"] = True
