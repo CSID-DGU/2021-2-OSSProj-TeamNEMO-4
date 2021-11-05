@@ -7,8 +7,8 @@ class MarbleGame:
     idx = 0  # 화면 전환 관리 변수 0 : 타이틀
     player_beads = 10
     player_betting = 1
-    computer_beads = 10
-    computer_betting = random.randint(1, computer_beads)
+    computer_beads = 2
+    computer_betting = random.randint(1, 3)
     marble_game_level = 0
     betting_success = True
     betting_button_pressed = False
@@ -122,6 +122,8 @@ class MarbleGame:
         #배경 음악 로딩
         try:
             pygame.mixer.music.load("sound/bgm.mp3")
+            beadsound=pygame.mixer.Sound("sound/beadsound.mp3")
+            beadsound2=pygame.mixer.Sound("sound/beadsound2.mp3")
         except:
             print("ogg 파일이 맞지 않거나, 오디오 기기가 접속되어 있지 않습니다")
 
@@ -139,7 +141,7 @@ class MarbleGame:
             if self.idx==0: #0은 타이틀 화면
                 self.draw_title()
                 if key[pygame.K_SPACE] == 1:
-                    game_over_timer = GameOverTimer(10)
+                    game_over_timer = GameOverTimer(60)
                     self.idx = 1  # 스페이스키 입력시 1번 화면으로 이동
             if self.idx==1:
                 # 타이머
@@ -185,6 +187,13 @@ class MarbleGame:
                     self.idx = 14
                     self.fail_eff=5
                     self.betting_button_pressed = True
+                if key[pygame.K_RETURN]:
+                    if self.computer_betting==2:
+                        beadsound.play()
+                    elif self.computer_betting==3:
+                        beadsound2.play()
+
+
 
 
                 message_to_screen_left(self.game_screen, str(left_time), WHITE, korean_font,
@@ -201,6 +210,9 @@ class MarbleGame:
                                        self.ref_h)
                 message_to_screen_left(self.game_screen, "SCORE : " + str(self.score), WHITE, korean_font,
                                        self.game_screen.get_width() / 2, self.game_screen.get_height() / 5, self.ref_w,
+                                       self.ref_h)
+                message_to_screen_left(self.game_screen, "컴퓨터 배팅 test : " + str(self.computer_betting), WHITE, korean_font,
+                                       self.game_screen.get_width() / 2, self.game_screen.get_height() / 7, self.ref_w,
                                        self.ref_h)
             if self.idx == 11:
                 self.level_up()
