@@ -38,7 +38,7 @@ class Dalgona:
         elif shape == 3:
             pos_x = width / 2
             pos_y = height / 4 + 10
-            self.points.append(Point(game_screen, pos_x, pos_y, 5))
+            # self.points.append(Point(game_screen, pos_x, pos_y, 5))
             for i in range(int(points_num / 3)):
                 move = ((5 / 12) * height) / (points_num / 3)
                 if i % 10 != 0:
