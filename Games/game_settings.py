@@ -72,7 +72,6 @@ class GameOverTimer:
         timer = round(float(self.timer_time - elapsed_time), 1)
         return timer
 
-
 # 유저명
 # 점수
 SCORE = 0
