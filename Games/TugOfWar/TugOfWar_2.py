@@ -1,4 +1,4 @@
-import  pygame
+import pygame
 import sys
 import random
 from Games.game_settings import *
@@ -6,16 +6,18 @@ from Games.game_settings import *
 
 class Game:
     def main(self):
-        game_time = 15 # LEVEL마다 제한시간
+        game_time = 10 # LEVEL마다 제한시간
         a_time = random.randint(3, 7) #a 누를 수 있는 시간
         d_time = random.randint(3, 5) #b 누를 수 있는 시간
         self.game_over_timer = None
         self.a_timer = None
         self.d_timer = None
-        tmr = 0
+        tmr = 0 # 전체 시간 초기화에 필요
+        tmr_a = 0 # a_timer 초기화에 필요
+        tmr_d = 0 # d_timer 초기화에 필요
         level = 0
         click = 0
-        click_n = 15
+        click_n = 20
         idx = 0
 
         pygame.init()
