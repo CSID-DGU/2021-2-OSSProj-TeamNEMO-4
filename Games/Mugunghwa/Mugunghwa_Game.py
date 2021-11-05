@@ -50,6 +50,7 @@ class Game:
     WIN_LEVEL = 4 + 1.5
     TIMER_TIME = 5  # 술래 뒤도는 카운터.
     NPC_CHANGE_DIRECTION_TIME = 2
+    AIM_CHANGE_DIRECTION_TIME = 1.5
 
     def __init__(self, image_path, title, width, height):
         self.title = title
@@ -63,6 +64,7 @@ class Game:
         self.image = pygame.transform.scale(background_image, (width, height))
         self.stop_timer = False
         self.game_over_timer = None
+        self.aim_image = pygame.image.load("NPC/aim.png")
         try:
             pygame.mixer.music.load("Sound/mugunghwa.mp3")
         except:
@@ -206,12 +208,15 @@ class Game:
         NPC_2.BASE_SPEED *= level * 1.5
         NPC_3 = game_object.NPC(random.randrange(20, 700), self.width * (2 / 3), 160, 150)
         NPC_3.BASE_SPEED *= level * 2
+        aim = game_object.NPC(self.width / 3, self.width / 3, 500, 350, 4)
+        aim.BASE_SPEED *= level * 2
         # 술래
         DOLL = game_object.GameObject(self.width / 2 - 45, 10, 100, 150)
         DOLL.sprite_image('NPC/back.png')
 
         start_ticks = pygame.time.get_ticks()
         NPC_ticks = pygame.time.get_ticks()
+        aim_ticks = pygame.time.get_ticks()
 
         while not game_over:
             for event in pygame.event.get():
@@ -304,6 +309,15 @@ class Game:
                     elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
                     timer = round(float(self.TIMER_TIME - elapsed_time), 2)
                 else:
+                    aim.move(self.width)
+                    aim.draw(self.game_screen)
+                    aim_elapsed_time = (pygame.time.get_ticks() - aim_ticks) / 1000
+                    aim_timer = round(float(self.AIM_CHANGE_DIRECTION_TIME - aim_elapsed_time), 1)
+                    if aim_timer <= 0:
+                        aim.change_direction()
+                        aim_ticks = pygame.time.get_ticks()
+                        aim_elapsed_time = (pygame.time.get_ticks() - aim_ticks) / 1000
+
                     if event.type == 768:  # keydown 감지되면 끝.
                         did_win = False
                         self.stop_timer = False  # 재시작을 위한 stop_timer 원상복귀.
