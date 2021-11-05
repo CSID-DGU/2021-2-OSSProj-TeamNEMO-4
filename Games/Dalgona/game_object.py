@@ -86,6 +86,9 @@ class Dalgona:
                 self.points.append(
                     Point(game_screen, reverse_pos_x - half_side_length - i * (side_length / points_num_of_side),
                           reverse_pos_y, 5))
+            # wrong_point 그리기.
+            self.points.append(
+                Point(game_screen, width / 2, height / 2, 5, wrong_point=True))
 
     def draw(self):
         for i in self.points:
@@ -96,16 +99,19 @@ class Dalgona:
         for i in self.points:
             if not i.clicked:
                 is_success = False
+            if i.wrong_point and i.clicked:
+                is_success = "wrong_point_clicked"
         return is_success
 
 
 class Point:
-    def __init__(self, game_display, x, y, radius):
+    def __init__(self, game_display, x, y, radius, wrong_point=False):
         self.game_display = game_display
         self.clicked = False
         self.radius = radius
         self.x = x
         self.y = y
+        self.wrong_point = wrong_point
 
     def is_clicked(self):
         mouse = pygame.mouse.get_pos()
@@ -115,10 +121,12 @@ class Point:
                 self.clicked = True
 
     def draw(self):
-        if self.clicked:
+        if self.clicked and not self.wrong_point:
             pygame.draw.circle(self.game_display, BLACK, [self.x, self.y], self.radius, 6)
-        else:
+        elif not self.clicked and not self.wrong_point:
             pygame.draw.circle(self.game_display, BROWN, [self.x, self.y], self.radius, 2)
+        elif not self.clicked and self.wrong_point:
+            pygame.draw.circle(self.game_display, RED, [self.x, self.y], self.radius, 6)
 
     def punching(self):
         self.is_clicked()
