@@ -80,7 +80,7 @@ class Game:
         self.game_screen = pygame.display.set_mode((width, height))
         self.game_screen.fill(PINK)
         # self.shape = random.randrange(1,4)
-        self.shape = 4
+        self.shape = 3
         pygame.mixer.music.load("Media/bgm.mp3")
         self.ref_w, self.ref_h = self.game_screen.get_size()
 
@@ -138,6 +138,7 @@ class Game:
                                     [reverse_point1, reverse_point2, reverse_point3], 15)
 
             dalgona.draw()
+
             ###NPC###
             npc.move(self.width)
             npc.draw(self.game_screen)
@@ -148,11 +149,11 @@ class Game:
                 NPC_ticks = pygame.time.get_ticks()
                 NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
             ########
-            if dalgona.check_win():
+            if dalgona.check_win()["is_success"] is True:
                 self.game_screen.fill(PINK)
                 message_to_screen_center(self.game_screen, "승리!", WHITE, korean_font, self.width / 2, self.ref_w,
                                          self.ref_h)
-            if left_time <= 0:
+            if left_time <= 0 or dalgona.check_win()["wrong_point_clicked"]:
                 self.game_screen.fill(PINK)
                 message_to_screen_center(self.game_screen, "패 배", WHITE, korean_font, self.width / 2, self.ref_w,
                                          self.ref_h)
