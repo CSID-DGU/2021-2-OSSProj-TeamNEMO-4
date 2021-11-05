@@ -86,7 +86,7 @@ class Game:
 
     def start_game(self):
         # walking around NPC
-        npc = NPCs(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
+        npc = NPCs(random.randrange(20, 300), self.width * (1 / 5), 150, 150, 1)
 
         # 달고나 생성.
         if pygame.mixer.music.get_busy() == False:
@@ -95,10 +95,12 @@ class Game:
         game_over_timer = GameOverTimer(50)
         NPC_ticks = pygame.time.get_ticks()
         while True:
+
             left_time = game_over_timer.time_checker()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return
+
             self.game_screen.fill(PINK)
 
             message_to_screen_left(self.game_screen, 'GAME OVER: ' + str(left_time), WHITE, level_font, self.width / 5,
@@ -138,7 +140,13 @@ class Game:
                                     [reverse_point1, reverse_point2, reverse_point3], 15)
 
             dalgona.draw()
+            if pygame.mouse.get_pressed()[0]:
+                image = pygame.image.load("Media/pin.png")
 
+                x_pos = pygame.mouse.get_pos()[0]
+                y_pos = pygame.mouse.get_pos()[1]
+                # print(x_pos, y_pos)
+                self.game_screen.blit(image, (x_pos, y_pos - image.get_size()[1]))
             ###NPC###
             npc.move(self.width)
             npc.draw(self.game_screen)
