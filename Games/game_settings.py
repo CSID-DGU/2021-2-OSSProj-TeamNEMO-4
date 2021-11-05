@@ -1,6 +1,9 @@
+import random
+
 import pygame
 
 # 화면 속성
+
 SCREEN_TITLE = '오징어 게임'
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
@@ -69,10 +72,73 @@ class GameOverTimer:
         timer = round(float(self.timer_time - elapsed_time), 1)
         return timer
 
-    def reset_timer(self, timer_time):
-        self.__init__(timer_time)
-
 
 # 유저명
 # 점수
 SCORE = 0
+
+
+class GameObject:
+
+    def __init__(self, x, y, width, height):
+        self.x_pos = x
+        self.y_pos = y
+        self.width = width
+        self.height = height
+
+    def sprite_image(self, image_path):
+        object_image = pygame.image.load(image_path)
+        self.image = pygame.transform.scale(object_image, (self.width, self.height))
+
+    def draw(self, background):
+        background.blit(self.image, (self.x_pos, self.y_pos))
+
+
+class NPC(GameObject):
+    BASE_SPEED = 3
+
+    # True  = right, False = Left
+
+    def __init__(self, x, y, width, height, kind_of_npc=1):
+        super().__init__(x, y, width / 2, height)  # 범위 보정
+        if kind_of_npc == 1:
+            object_image = pygame.image.load('common_images/NPC1.png')
+        # elif kind_of_npc == 2:
+        #     object_image = pygame.image.load('common_images/NPC2.png')
+        # else:
+        #     object_image = pygame.image.load('common_images/NPC3.png')
+        self.go_forward = False
+        self.direction = 1
+        # 1 right 2 left 3 up 4 down
+        self.image = pygame.transform.scale(object_image, (width * (3 / 4), height))
+
+    def draw(self, background):
+        if self.go_forward:
+            background.blit(self.image, (self.x_pos, self.y_pos))
+        else:
+            background.blit(pygame.transform.flip(
+                self.image, 1, 0), (self.x_pos, self.y_pos))
+
+    def move(self, max_width):
+        if self.x_pos <= 0:
+            self.direction = 1
+        elif self.x_pos >= max_width:
+            self.direction = 2
+        elif self.y_pos <= 0:
+            self.direction = 4
+        elif self.y_pos >= max_width:
+            self.direction = 3
+
+        if self.direction == 1:
+            self.x_pos += self.BASE_SPEED
+            self.go_forward = False
+        elif self.direction == 2:
+            self.x_pos -= self.BASE_SPEED
+            self.go_forward = True
+        elif self.direction == 3:
+            self.y_pos -= self.BASE_SPEED
+        else:
+            self.y_pos += self.BASE_SPEED
+
+    def change_direction(self):
+        self.direction = random.randrange(1, 5)

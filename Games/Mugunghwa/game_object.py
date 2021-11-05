@@ -1,5 +1,7 @@
 # Use base code from "https://github.com/AidenBurgess/CrossGame"
 
+import random
+
 import pygame
 
 
@@ -21,36 +23,52 @@ class GameObject:
 
 class NPC(GameObject):
     BASE_SPEED = 3
+
     # True  = right, False = Left
-    direction = True
 
     def __init__(self, x, y, width, height, kind_of_npc=3):
-        super().__init__(x, y, width, height)
+        super().__init__(x, y, width / 2, height)  # 범위 보정
         if kind_of_npc == 1:
             object_image = pygame.image.load('NPC/NPC1.png')
         elif kind_of_npc == 2:
             object_image = pygame.image.load('NPC/NPC2.png')
         else:
             object_image = pygame.image.load('NPC/NPC3.png')
-
+        self.go_forward = False
+        self.direction = 1
+        # 1 right 2 left 3 up 4 down
         self.image = pygame.transform.scale(object_image, (width * (3 / 4), height))
 
     def draw(self, background):
-        if self.direction:
-            background.blit(self.image, (self.x_pos - self.width / 5, self.y_pos))
+        if self.go_forward:
+            background.blit(self.image, (self.x_pos, self.y_pos))
         else:
             background.blit(pygame.transform.flip(
-                self.image, 1, 0), (self.x_pos + self.width / 5, self.y_pos))
+                self.image, 1, 0), (self.x_pos, self.y_pos))
 
-    # Move character method - moves left to right across the screen
+    def move(self, max_width):
+        if self.x_pos <= 0:
+            self.direction = 1
+        elif self.x_pos >= max_width:
+            self.direction = 2
+        elif self.y_pos <= 0:
+            self.direction = 4
+        elif self.y_pos >= max_width:
+            self.direction = 3
 
-    def move(self, max_width, ):
-        if self.x_pos <= -100:
-            self.BASE_SPEED = abs(self.BASE_SPEED)
-        elif self.x_pos >= (max_width - 70):
-            self.BASE_SPEED = -abs(self.BASE_SPEED)
-        self.x_pos += self.BASE_SPEED
-        self.direction = self.BASE_SPEED < 0
+        if self.direction == 1:
+            self.x_pos += self.BASE_SPEED
+            self.go_forward = False
+        elif self.direction == 2:
+            self.x_pos -= self.BASE_SPEED
+            self.go_forward = True
+        elif self.direction == 3:
+            self.y_pos -= self.BASE_SPEED
+        else:
+            self.y_pos += self.BASE_SPEED
+
+    def change_direction(self):
+        self.direction = random.randrange(1, 5)
 
 
 class PC(GameObject):  # 플레이어 캐릭터
