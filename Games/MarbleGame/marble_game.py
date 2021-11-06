@@ -242,8 +242,6 @@ class MarbleGame:
                     self.fail_eff = self.fail_eff - 1
                 self.game_screen.blit(self.imgBG, [self.fail_eff_x, 0])
 
-
-
                 message_to_screen_left(self.game_screen, str(left_time), WHITE, korean_font,
                                        self.game_screen.get_width() / 2, self.game_screen.get_height() / 17, self.ref_w,
                                        self.ref_h)
@@ -270,6 +268,7 @@ class MarbleGame:
             if self.idx == 12: #클리어 화면
                 self.draw_clear()
                 game_over_timer.__init__(60)
+
                 if key[pygame.K_RETURN] == 1: #엔터 또는 return 키가 눌리면
                     self.reset_variable()
             if self.idx == 13: #게임 오버 화면
@@ -277,6 +276,7 @@ class MarbleGame:
                 if key[pygame.K_RETURN] == 1:
                     game_over_timer.__init__(60)
                     self.score = 0
+
                     self.reset_variable()
             if self.idx == 14: # 홀짝 판정 화면으로
                 self.draw_true_false()
