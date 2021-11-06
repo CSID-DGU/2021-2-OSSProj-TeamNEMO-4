@@ -8,7 +8,7 @@ class Game:
     def main(self):
         game_time = 10 # LEVEL마다 제한시간
         a_time = random.randint(3, 7) #a 누를 수 있는 시간
-        d_time = random.randint(3, 5) #b 누를 수 있는 시간
+        d_time = random.randint(3, 5) #d 누를 수 있는 시간
         self.game_over_timer = None
         self.a_timer = None
         self.d_timer = None
