@@ -28,12 +28,15 @@ class NPC(GameObject):
 
     def __init__(self, x, y, width, height, kind_of_npc=3):
         super().__init__(x, y, width / 2, height)  # 범위 보정
+        self.kind_of_npc = kind_of_npc
         if kind_of_npc == 1:
             object_image = pygame.image.load('NPC/NPC1.png')
         elif kind_of_npc == 2:
             object_image = pygame.image.load('NPC/NPC2.png')
-        else:
+        elif kind_of_npc == 3:
             object_image = pygame.image.load('NPC/NPC3.png')
+        else:
+            object_image = pygame.image.load('NPC/aim.png')
         self.go_forward = False
         self.direction = 1
         # 1 right 2 left 3 up 4 down
@@ -47,14 +50,24 @@ class NPC(GameObject):
                 self.image, 1, 0), (self.x_pos, self.y_pos))
 
     def move(self, max_width):
-        if self.x_pos <= 0:
-            self.direction = 1
-        elif self.x_pos >= max_width:
-            self.direction = 2
-        elif self.y_pos <= 0:
-            self.direction = 4
-        elif self.y_pos >= max_width:
-            self.direction = 3
+        if self.kind_of_npc != 4:
+            if self.x_pos <= 0:
+                self.direction = 1
+            elif self.x_pos >= max_width:
+                self.direction = 2
+            elif self.y_pos <= 0:
+                self.direction = 4
+            elif self.y_pos >= max_width:
+                self.direction = 3
+        else:
+            if self.x_pos <= 0 - self.width / 2:
+                self.direction = 1
+            elif self.x_pos >= max_width - self.width / 2:
+                self.direction = 2
+            elif self.y_pos <= 0 - self.width / 2:
+                self.direction = 4
+            elif self.y_pos >= max_width - self.width / 2:
+                self.direction = 3
 
         if self.direction == 1:
             self.x_pos += self.BASE_SPEED
