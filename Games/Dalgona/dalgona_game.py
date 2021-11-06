@@ -80,7 +80,7 @@ class Game:
         self.game_screen = pygame.display.set_mode((width, height))
         self.game_screen.fill(PINK)
         # self.shape = random.randrange(1,4)
-        self.shape = 3
+        self.shape = 4
         pygame.mixer.music.load("Media/bgm.mp3")
         self.ref_w, self.ref_h = self.game_screen.get_size()
         self.pin_image = pygame.image.load("Media/pin.png")
@@ -88,10 +88,10 @@ class Game:
     def start_game(self):
         # walking around NPC
         npc = NPCs(random.randrange(20, 300), self.width * (1 / 5), 150, 150, 1)
-
-        # 달고나 생성.
+        # bgm
         if pygame.mixer.music.get_busy() == False:
             pygame.mixer.music.play(-1)
+        # 달고나 생성
         dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, 100, self.shape)
         game_over_timer = GameOverTimer(50)
         NPC_ticks = pygame.time.get_ticks()
