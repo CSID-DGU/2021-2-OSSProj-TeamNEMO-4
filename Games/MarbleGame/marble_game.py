@@ -8,7 +8,7 @@ class MarbleGame:
     player_beads = 10
     player_betting = 1
     computer_beads = 10
-    computer_betting = random.randint(1, 3)
+    computer_betting = random.randint(1, 2)
     marble_game_level = 0
     betting_success = True
     betting_button_pressed = False
@@ -39,7 +39,7 @@ class MarbleGame:
         self.player_beads = 10
         self.player_betting = 1
         self.computer_beads = 10
-        self.computer_betting = 0
+        self.computer_betting = random.randint(1,2+self.marble_game_level)
         self.marble_game_level = 0
         self.marble_game_timer = 0
         self.idx = 0  # 초기 화면으로
@@ -67,7 +67,7 @@ class MarbleGame:
         message_to_screen_left(self.game_screen, "SCORE : " + str(self.score), WHITE, korean_font,
                                self.game_screen.get_width() / 2, self.game_screen.get_height() / 2, self.ref_w,
                                self.ref_h)
-    def level_up(self):
+    def level_up(self,score=0):
         self.game_screen.fill(BLACK)
         message_to_screen_center(self.game_screen, 'YOU WIN! LEVEL UP!', WHITE, korean_font,self.game_screen.get_height() / 4, self.ref_w, self.ref_h)
         if self.screen_buffer <= self.marble_game_timer - 20:
@@ -76,9 +76,11 @@ class MarbleGame:
             self.player_beads = 10 - self.marble_game_level
             self.player_betting = 1
             self.computer_beads = 10
-            self.computer_betting = 0
+            self.computer_betting = random.randint(1,2+self.marble_game_level)
             self.idx = 1
+            self.score += int(score)
         if self.player_beads <= 5:  # 플레이어 구슬이 5개 이하라면
+            self.score += int(score)
             self.idx = 12  # 클리어 화면으로
     def draw_true_false(self):
         self.game_screen.fill(BLACK)
@@ -88,6 +90,7 @@ class MarbleGame:
                 self.game_screen.get_width(), self.game_screen.get_height()))
                 self.game_screen.blit(self.imgTrue, [0, 0])
                 if self.screen_buffer <= self.marble_game_timer - 30:
+                    self.player_betting = 1
                     self.idx = 1
                     if self.player_beads <= 0:
                         self.idx = 13
@@ -104,6 +107,7 @@ class MarbleGame:
                     self.fail_eff = self.fail_eff - 1
                 self.game_screen.blit(self.imgFalse, [self.fail_eff_x, self.fail_eff_y])
                 if self.screen_buffer <= self.marble_game_timer - 30:
+                    self.player_betting = 1
                     self.idx = 1
                     if self.player_beads <= 0:
                         self.idx = 13
@@ -117,7 +121,9 @@ class MarbleGame:
                                  self.game_screen.get_height() / 4, self.ref_w, self.ref_h)
         message_to_screen_center(self.game_screen, 'Press Enter or Return Key', WHITE, korean_font_small_size,
                                  self.game_screen.get_height() / 1.25, self.ref_w, self.ref_h)
-        self.score=0
+        message_to_screen_left(self.game_screen, "SCORE : " + str(self.score), WHITE, korean_font,
+                               self.game_screen.get_width() / 2, self.game_screen.get_height() / 2, self.ref_w,
+                               self.ref_h)
 
     def draw_gganbu(self):
         self.game_screen.fill(BLACK)
@@ -139,6 +145,9 @@ class MarbleGame:
             pygame.mixer.music.load("sound/bgm.mp3")
             beadsound=pygame.mixer.Sound("sound/beadsound.mp3")
             beadsound2=pygame.mixer.Sound("sound/beadsound2.mp3")
+            beadsound3=pygame.mixer.Sound("sound/beadsound3.mp3")
+            beadsound4=pygame.mixer.Sound("sound/beadsound4.mp3")
+            beadsound5=pygame.mixer.Sound("sound/beadsound5.mp3")
         except:
             print("ogg 파일이 맞지 않거나, 오디오 기기가 접속되어 있지 않습니다")
 
@@ -170,7 +179,13 @@ class MarbleGame:
                 if key[pygame.K_UP] and self.player_betting < self.player_beads and self.player_betting<self.computer_beads: self.player_betting += 1
                 if key[pygame.K_DOWN] and self.player_betting > 0: self.player_betting -= 1
                 if self.betting_button_pressed == True and self.computer_beads > 1:
-                    self.computer_betting = random.randint(1, self.computer_beads)
+                    if self.computer_beads>6:
+                        self.computer_betting=random.randint(1,2+self.marble_game_level)
+                    else :self.computer_betting = random.randint(1,self.computer_beads)
+                    self.player_betting = 1
+                    self.betting_button_pressed = False
+                elif self.betting_button_pressed == True and self.computer_beads ==1:
+                    self.computer_betting = 1
                     self.player_betting = 1
                     self.betting_button_pressed = False
                 if key[pygame.K_LEFT]: #홀 버튼 누름&배팅
@@ -187,6 +202,10 @@ class MarbleGame:
                     self.idx = 14
                     self.fail_eff = 5
                     self.betting_button_pressed = True
+                    if self.player_beads == 1:
+                        if random.randint(0, 99) < 40 - self.marble_game_level * 5: #40%확률로 깐부 발동
+                            self.score += 10
+                            self.idx = 6
 
                 if key[pygame.K_RIGHT]:
                     if self.computer_betting % 2 == 1:
@@ -202,15 +221,26 @@ class MarbleGame:
                     self.idx = 14
                     self.fail_eff=5
                     self.betting_button_pressed = True
+                    if self.player_beads == 1:
+                        if random.randint(0, 99) < 40 - self.marble_game_level * 5: #40%확률로 깐부 발동
+                            self.score+=10
+                            self.idx = 6
                 if key[pygame.K_RETURN]:
-                    if self.computer_betting==2:
+                    self.fail_eff=5
+                    if self.computer_betting==2: #구슬이 2개일 때 1번 부딪치는 소리 재생
                         beadsound.play()
                     elif self.computer_betting==3:
                         beadsound2.play()
-
-                if self.player_beads == 1:
-                    self.idx = 6
-
+                    elif self.computer_betting==4:
+                        beadsound3.play()
+                    elif self.computer_betting==5:
+                        beadsound4.play()
+                    elif self.computer_betting==6:
+                        beadsound5.play()
+                if self.fail_eff > 0:
+                    self.fail_eff_x = random.randint(-10, 10)
+                    self.fail_eff = self.fail_eff - 1
+                self.game_screen.blit(self.imgBG, [self.fail_eff_x, 0])
 
                 message_to_screen_left(self.game_screen, str(left_time), WHITE, korean_font,
                                        self.game_screen.get_width() / 2, self.game_screen.get_height() / 17, self.ref_w,
@@ -227,15 +257,16 @@ class MarbleGame:
                 message_to_screen_left(self.game_screen, "SCORE : " + str(self.score), WHITE, korean_font,
                                        self.game_screen.get_width() / 2, self.game_screen.get_height() / 5, self.ref_w,
                                        self.ref_h)
+                '''
                 message_to_screen_left(self.game_screen, "컴퓨터 배팅 test : " + str(self.computer_betting), WHITE, korean_font,
                                        self.game_screen.get_width() / 2, self.game_screen.get_height() / 7, self.ref_w,
                                        self.ref_h)
+                '''
             if self.idx == 11:
-                self.level_up()
+                self.level_up(left_time)
                 game_over_timer.__init__(60)
             if self.idx == 12: #클리어 화면
                 self.draw_clear()
-                self.score+=left_time
                 game_over_timer.__init__(60)
 
                 if key[pygame.K_RETURN] == 1: #엔터 또는 return 키가 눌리면
@@ -244,6 +275,7 @@ class MarbleGame:
                 self.draw_game_over()
                 if key[pygame.K_RETURN] == 1:
                     game_over_timer.__init__(60)
+                    self.score = 0
 
                     self.reset_variable()
             if self.idx == 14: # 홀짝 판정 화면으로
