@@ -3,8 +3,17 @@ import random
 from Games.game_settings import *
 
 class MarbleGame:
+    TITLE=0
+    MARBLE_GAME=1
+    CLEAR=12
+    MARBLE_GAME_INTRO=7
+    GGANBU=6
+    LEVEL_UP=11
+    GAME_OVER=13
+    TRUE_FALSE=14
+
     # 변수 선언
-    idx = 0  # 화면 전환 관리 변수 0 : 타이틀
+    idx = TITLE  # 화면 전환 관리 변수 0 : 타이틀
     player_beads = 10
     player_betting = 1
     computer_beads = 10
@@ -50,7 +59,7 @@ class MarbleGame:
         self.computer_betting = random.randint(1,2+self.marble_game_level)
         self.marble_game_level = 0
         self.marble_game_timer = 0
-        self.idx = 0  # 초기 화면으로
+        self.idx = self.TITLE  # 초기 화면으로
 
     def draw_title(self):
         self.game_screen.fill(PINK)
@@ -89,11 +98,11 @@ class MarbleGame:
             self.player_betting = 1
             self.computer_beads = 10
             self.computer_betting = random.randint(1,2+self.marble_game_level)
-            self.idx = 1
+            self.idx = self.MARBLE_GAME
             self.score += int(score)
         if self.player_beads <= 5:  # 플레이어 구슬이 5개 이하라면
             self.score += int(score)
-            self.idx = 12  # 클리어 화면으로
+            self.idx = self.CLEAR  # 12 클리어 화면으로
     def draw_true_false(self):
         self.game_screen.fill(BLACK)
         if self.screen_buffer <= self.marble_game_timer - 20:
@@ -103,13 +112,15 @@ class MarbleGame:
                 self.game_screen.blit(self.imgTrue, [0, 0])
                 if self.screen_buffer <= self.marble_game_timer - 30:
                     self.player_betting = 1
-                    self.idx = 1
+                    self.idx = self.MARBLE_GAME
                     if self.player_beads <= 0:
                         self.marble_game_timer=0
                         self.screen_buffer = self.marble_game_timer
-                        self.idx = 13
+                        self.idx = self.GAME_OVER
                     if self.computer_beads <= 0:
-                        self.idx = 11
+                        self.marble_game_timer = 0
+                        self.screen_buffer = self.marble_game_timer
+                        self.idx = self.LEVEL_UP
             else:
                 self.imgFalse = pygame.transform.scale(self.imgFalse, (
                 self.game_screen.get_width(), self.game_screen.get_height()))
@@ -121,13 +132,15 @@ class MarbleGame:
                 self.game_screen.blit(self.imgFalse, [self.fail_eff_x, self.fail_eff_y])
                 if self.screen_buffer <= self.marble_game_timer - 30:
                     self.player_betting = 1
-                    self.idx = 1
+                    self.idx = self.MARBLE_GAME
                     if self.player_beads <= 0:
                         self.marble_game_timer = 0
                         self.screen_buffer = self.marble_game_timer
-                        self.idx = 13
+                        self.idx = self.GAME_OVER
                     if self.computer_beads <= 0:
-                        self.idx = 11
+                        self.marble_game_timer = 0
+                        self.screen_buffer = self.marble_game_timer
+                        self.idx = self.LEVEL_UP
     def draw_clear(self):
         pygame.mixer.music.stop()
         self.game_screen.fill(BLACK)
@@ -151,7 +164,7 @@ class MarbleGame:
                 self.gganbuplay =False
                 self.marble_game_timer = 0
                 self.screen_buffer=0
-                self.idx = 11
+                self.idx = self.LEVEL_UP
     def draw_hand(self):
         self.imgBGbase = pygame.transform.scale(self.imgBGbase,(self.game_screen.get_width(), self.game_screen.get_height()))
         self.game_screen.blit(self.imgBGbase, [0, 0])
@@ -177,7 +190,7 @@ class MarbleGame:
                         if self.screen_buffer <= self.marble_game_timer - 50:
                             game_over_timer = GameOverTimer(60)
                             self.fail_eff = 0
-                            self.idx=1
+                            self.idx=self.MARBLE_GAME
 
     def start_marble_game(self):
         #배경 음악 로딩
@@ -202,18 +215,18 @@ class MarbleGame:
                     self.game_screen=pygame.display.set_mode((event.w,event.h),pygame.RESIZABLE)
 
             key = pygame.key.get_pressed() #모든 키 입력 감지
-            if self.idx==0: #0은 타이틀 화면
+            if self.idx==self.TITLE: #0은 타이틀 화면
                 self.draw_title()
                 if key[pygame.K_SPACE] == 1:
                     #game_over_timer = GameOverTimer(60)
                     self.screen_buffer = self.marble_game_timer
-                    self.idx = 7  # 스페이스키 입력시 1번 화면으로 이동
+                    self.idx = self.MARBLE_GAME_INTRO  # 스페이스키 입력시 1번 화면으로 이동
 
-            if self.idx==7:
+            if self.idx==self.MARBLE_GAME_INTRO:
                 self.fail_eff = 10
                 self.draw_hand()
                 game_over_timer = GameOverTimer(60)
-            if self.idx==1:
+            if self.idx==self.MARBLE_GAME:
                 # 타이머
                 left_time = game_over_timer.time_checker()
                 self.imgBG=pygame.transform.scale(self.imgBG,(self.game_screen.get_width(),self.game_screen.get_height()))
@@ -224,7 +237,7 @@ class MarbleGame:
                 if left_time<=0 :
                     self.marble_game_timer = 0
                     self.screen_buffer = self.marble_game_timer
-                    self.idx = 13
+                    self.idx = self.GAME_OVER
                 if key[pygame.K_UP] and self.player_betting < self.player_beads and self.player_betting<self.computer_beads: self.player_betting += 1
                 if key[pygame.K_DOWN] and self.player_betting > 0: self.player_betting -= 1
                 if self.betting_button_pressed == True and self.computer_beads > 1:
@@ -248,13 +261,13 @@ class MarbleGame:
                         self.computer_beads -= self.player_betting
                         self.score+=self.player_betting
                     self.screen_buffer = self.marble_game_timer
-                    self.idx = 14
+                    self.idx = self.TRUE_FALSE
                     self.fail_eff = 5
                     self.betting_button_pressed = True
                     if self.player_beads == 1:
                         if random.randint(0, 99) < 40 - self.marble_game_level * 5: #40%확률로 깐부 발동
                             self.score += 10
-                            self.idx = 6
+                            self.idx = self.GGANBU #6
 
                 if key[pygame.K_RIGHT]:
                     if self.computer_betting % 2 == 1:
@@ -267,13 +280,13 @@ class MarbleGame:
                         self.computer_beads -= self.player_betting
                         self.score += self.player_betting
                     self.screen_buffer = self.marble_game_timer
-                    self.idx = 14
+                    self.idx = self.TRUE_FALSE
                     self.fail_eff=5
                     self.betting_button_pressed = True
                     if self.player_beads == 1:
                         if random.randint(0, 99) < 40 - self.marble_game_level * 5: #40%확률로 깐부 발동
                             self.score+=10
-                            self.idx = 6
+                            self.idx = self.GGANBU
                 if key[pygame.K_RETURN]:
                     self.fail_eff=5
                     if self.computer_betting==2: #구슬이 2개일 때 1번 부딪치는 소리 재생
@@ -318,23 +331,23 @@ class MarbleGame:
                                        self.game_screen.get_width() / 2, self.game_screen.get_height() / 7, self.ref_w,
                                        self.ref_h)
                 '''
-            if self.idx == 11:
+            if self.idx == self.LEVEL_UP:
                 self.level_up(left_time)
                 game_over_timer.__init__(60)
-            if self.idx == 12: #클리어 화면
+            if self.idx == self.CLEAR: #클리어 화면
                 self.draw_clear()
                 game_over_timer.__init__(60)
                 if key[pygame.K_RETURN] == 1: #엔터 또는 return 키가 눌리면
                     self.reset_variable()
-            if self.idx == 13: #게임 오버 화면
+            if self.idx == self.GAME_OVER: #게임 오버 화면
                 self.draw_game_over()
                 if key[pygame.K_RETURN] == 1:
                     game_over_timer.__init__(60)
                     self.score = 0
                     self.reset_variable()
-            if self.idx == 14: # 홀짝 판정 화면으로
+            if self.idx == self.TRUE_FALSE: # 홀짝 판정 화면으로
                 self.draw_true_false()
-            if self.idx == 6:
+            if self.idx == self.GGANBU:
                 self.draw_gganbu()
             pygame.display.update()
             clock.tick(10)
