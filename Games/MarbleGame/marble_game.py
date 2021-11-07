@@ -32,7 +32,6 @@ class MarbleGame:
     imgHand4 = pygame.image.load("imgs/hand4.png")
     imgHand5 = pygame.image.load("imgs/hand5.png")
     imgNPC=pygame.image.load("imgs/NPC.png")
-
     gganbuplay=False
 
     def __init__(self,width,height):
