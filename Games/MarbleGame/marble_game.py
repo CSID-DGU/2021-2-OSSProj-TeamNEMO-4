@@ -33,7 +33,6 @@ class MarbleGame:
     imgHand5 = pygame.image.load("imgs/hand5.png")
     imgNPC=pygame.image.load("imgs/NPC.png")
     gganbuplay=False
-    gitpusherror=False
 
     def __init__(self,width,height):
         pygame.display.set_caption(SCREEN_TITLE)
