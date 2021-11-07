@@ -3,6 +3,11 @@
 import game_object
 from Games.game_settings import *
 
+
+def level_calculator(level):
+    return 'Level ' + str(int((level - 1) * 2 + 1))
+
+
 aim_location = 'NPC/aim.png'
 bgm_location = 'Sound/mugunghwa.mp3'
 particle_location = 'particle/Particle'
@@ -33,6 +38,8 @@ class Game:
     AIM_SIZE = (500, 350)
     AIM_SPEED = 2
     TIMER_UNIT = 1000
+    BOOST_EFFECT = (500, 500, 50, 50, particle_location, 10, 6)
+    LEVEL_UP_STEP = 0.5
 
     def __init__(self, image_path, title, width, height):
         self.title = title
@@ -57,6 +64,7 @@ class Game:
         self.aim = [self.AIM_SIZE[0], self.AIM_SIZE[1], 4]
         self.doll = [self.width * 0.456, self.height / 80, self.width / 8, self.height * 0.1875]
         # 화면 크기에 대한 술래의 비율
+        self.restart_message_y_pos = (180, 280)
 
         try:
             pygame.mixer.music.load(bgm_location)
@@ -103,32 +111,6 @@ class Game:
             npc.draw(self.game_screen)
             pygame.display.update()
 
-    def win_game(self):
-        npc = self.create_npc_1()
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    return False
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
-                        return False
-                    elif event.key == pygame.K_r:
-                        return True
-            # Render winning text
-            self.game_screen.fill(WHITE)
-            message_to_screen_left(
-                self.game_screen, 'You Won!', BLUE, large_font, 100, 50, self.ref_w, self.ref_w)
-            message_to_screen_left(
-                self.game_screen, 'Press R to Play Again', RED, large_font, 150, 200, self.ref_w, self.ref_w)
-            message_to_screen_left(
-                self.game_screen, 'Press Q or Esc', RED, large_font, 150, 350, self.ref_w, self.ref_w)
-            message_to_screen_left(
-                self.game_screen, 'to go to main menu', RED, large_font, 150, 400, self.ref_w, self.ref_w)
-            # Display the winner slime
-            npc.move(self.width)
-            npc.draw(self.game_screen)
-            pygame.display.update()
-
     def lose_game(self):
         message_to_screen_center(
             self.game_screen, '탈 락', RED, korean_font, self.width / 2, self.ref_w, self.ref_h)
@@ -147,9 +129,11 @@ class Game:
             # Display text for losing
             self.game_screen.fill(PINK)
             message_to_screen_center(
-                self.game_screen, '재시작 하려면 R ', WHITE, korean_font, 180, self.ref_w, self.ref_h)
+                self.game_screen, '재시작 하려면 R ', WHITE, korean_font, self.restart_message_y_pos[0], self.ref_w,
+                self.ref_h)
             message_to_screen_center(
-                self.game_screen, '메뉴로 돌아가려면 Q', WHITE, korean_font, 280, self.ref_w, self.ref_h)
+                self.game_screen, '메뉴로 돌아가려면 Q', WHITE, korean_font, self.restart_message_y_pos[1], self.ref_w,
+                self.ref_h)
             # Have the loser slime dance around lol
             npc.move(self.width)
             npc.draw(self.game_screen)
@@ -167,8 +151,7 @@ class Game:
             self.game_over_timer = GameOverTimer(self.GAME_OVER_TIMER)
 
         # 플레이어, 진행요원, 목표물 렌더링.
-        particle = game_object.AnimatedSprite(500, 500, 50, 50, particle_location, 10, 6)
-        count = 1
+        particle = game_object.AnimatedSprite(*self.BOOST_EFFECT)
         player = game_object.PC(self.width / 2 - 25, self.height * 0.85, 50, 70)
         # 진행요원 -> 사이즈 비율로 다 맞춰야함. 나중에
         npc_1 = game_object.NPC(npc_randrange, *self.npc_1)
@@ -264,7 +247,7 @@ class Game:
                 time = 5
                 time_checker = round(time - (timer) * (-1), 1)
                 if time_checker <= 0:
-                    DOLL.sprite_image('NPC/back.png')
+                    DOLL.sprite_image(doll_back_location)
                     self.stop_timer = False
                     start_ticks = pygame.time.get_ticks()
                     elapsed_time = (pygame.time.get_ticks() - start_ticks) / self.TIMER_UNIT
@@ -282,7 +265,7 @@ class Game:
                     if event.type == 768:  # keydown 감지되면 끝.
                         did_win = False
                         self.stop_timer = False  # 재시작을 위한 stop_timer 원상복귀.
-                        DOLL.sprite_image('NPC/back.png')
+                        DOLL.sprite_image(doll_back_location)
                         break
 
             if collision == 'dead':
@@ -296,13 +279,10 @@ class Game:
 
         # did_win 이용해 승패 판단 후 다음 프로세스 진행.
         if did_win:
-            if level >= self.WIN_LEVEL:
-                self.win_game()  # 전체 게임 클리어.
-            else:
-                message_to_screen_left(
-                    self.game_screen, 'Level ' + str(int((level - 1) * 2 + 1)), WHITE, level_font, 0, 0, self.ref_w,
-                    self.ref_h)
-                self.run_game_loop(level + 0.5)
+            message_to_screen_left(
+                self.game_screen, level_calculator(level), WHITE, level_font, 0, 0, self.ref_w,
+                self.ref_h)
+            self.run_game_loop(level + self.LEVEL_UP_STEP)
         elif self.game_restart():
             self.run_game_loop(1)
         else:
