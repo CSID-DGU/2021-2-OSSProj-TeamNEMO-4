@@ -83,10 +83,11 @@ class Game:
         self.shape = 3
         pygame.mixer.music.load("Media/bgm.mp3")
         self.ref_w, self.ref_h = self.game_screen.get_size()
+        self.pin_image = pygame.image.load("Media/pin.png")
 
     def start_game(self):
         # walking around NPC
-        npc = NPCs(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
+        npc = NPCs(random.randrange(20, 300), self.width * (1 / 5), 150, 150, 1)
 
         # 달고나 생성.
         if pygame.mixer.music.get_busy() == False:
@@ -95,10 +96,12 @@ class Game:
         game_over_timer = GameOverTimer(50)
         NPC_ticks = pygame.time.get_ticks()
         while True:
+
             left_time = game_over_timer.time_checker()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return
+
             self.game_screen.fill(PINK)
 
             message_to_screen_left(self.game_screen, 'GAME OVER: ' + str(left_time), WHITE, level_font, self.width / 5,
@@ -139,7 +142,16 @@ class Game:
 
             dalgona.draw()
 
-            ###NPC###
+            ######################### PIN IMAGE #############################
+
+            if pygame.mouse.get_pressed()[0]:
+                x_pos = pygame.mouse.get_pos()[0]
+                y_pos = pygame.mouse.get_pos()[1]
+                # print(x_pos, y_pos)
+                self.game_screen.blit(self.pin_image, (x_pos, y_pos - self.pin_image.get_size()[1]))
+            ##################################################################
+
+            ########################### NPC ##################################
             npc.move(self.width)
             npc.draw(self.game_screen)
             NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
@@ -148,7 +160,8 @@ class Game:
                 npc.change_direction()
                 NPC_ticks = pygame.time.get_ticks()
                 NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
-            ########
+            ################################################################
+
             if dalgona.check_win()["is_success"] is True:
                 self.game_screen.fill(PINK)
                 message_to_screen_center(self.game_screen, "승리!", WHITE, korean_font, self.width / 2, self.ref_w,
