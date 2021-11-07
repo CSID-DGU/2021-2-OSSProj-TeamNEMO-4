@@ -178,7 +178,6 @@ class MarbleGame:
                             game_over_timer = GameOverTimer(60)
                             self.fail_eff = 0
                             self.idx=1
-
     def start_marble_game(self):
         #배경 음악 로딩
         try:
