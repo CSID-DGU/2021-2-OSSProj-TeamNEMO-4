@@ -32,6 +32,7 @@ class MarbleGame:
     imgHand4 = pygame.image.load("imgs/hand4.png")
     imgHand5 = pygame.image.load("imgs/hand5.png")
     imgNPC=pygame.image.load("imgs/NPC.png")
+
     gganbuplay=False
 
     def __init__(self,width,height):
@@ -178,7 +179,6 @@ class MarbleGame:
                             game_over_timer = GameOverTimer(60)
                             self.fail_eff = 0
                             self.idx=1
-
     def start_marble_game(self):
         #배경 음악 로딩
         try:
