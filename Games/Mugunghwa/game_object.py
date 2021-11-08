@@ -4,6 +4,8 @@ import random
 
 import pygame
 
+AIM_LOCATION = 'NPC/aim.png'
+
 
 class GameObject:
 
@@ -23,23 +25,27 @@ class GameObject:
 
 class NPC(GameObject):
     BASE_SPEED = 3
+    # NPC 생성 시 필요한 y 좌표를 위한 값.
+    NPC_1_Y_POS = 1 / 5
+    NPC_2_Y_POS = 3 / 7
+    NPC_3_Y_POS = 2 / 3
 
-    # True  = right, False = Left
-
-    def __init__(self, x, y, width, height, kind_of_npc=3):
-        super().__init__(x, y, width / 2, height)  # 범위 보정
-        self.kind_of_npc = kind_of_npc
-        if kind_of_npc == 1:
-            object_image = pygame.image.load('NPC/NPC1.png')
-        elif kind_of_npc == 2:
-            object_image = pygame.image.load('NPC/NPC2.png')
-        elif kind_of_npc == 3:
-            object_image = pygame.image.load('NPC/NPC3.png')
+    def __init__(self, width, height, kind_of_object=1):
+        game_screen_size = pygame.display.get_window_size()
+        x_pos = game_screen_size[0] / 2  # npc 생성 x 좌표를 가운데로 설정한다.
+        if kind_of_object == 1:
+            value = self.NPC_1_Y_POS
+        elif kind_of_object == 2:
+            value = self.NPC_2_Y_POS
         else:
-            object_image = pygame.image.load('NPC/aim.png')
-        self.go_forward = False
-        self.direction = 1
-        # 1 right 2 left 3 up 4 down
+            value = self.NPC_3_Y_POS
+        y_pos = game_screen_size[1] * value  # 각 npc 의 y 좌표를 설정해준다.
+
+        super().__init__(x_pos, y_pos, width / 2, height)  # 게임 난이도 하향을 위한 판정 범위 보정
+        self.kind_of_object = kind_of_object
+        object_image = pygame.image.load(f'NPC/NPC{kind_of_object}.png')
+        self.go_forward = False  # go_forward 에 따라 이미지를 좌우로 flip.
+        self.direction = 1  # 1 right 2 left 3 up 4 down
         self.image = pygame.transform.scale(object_image, (width * (3 / 4), height))
 
     def draw(self, background):
@@ -50,24 +56,14 @@ class NPC(GameObject):
                 self.image, 1, 0), (self.x_pos, self.y_pos))
 
     def move(self, max_width):
-        if self.kind_of_npc != 4:
-            if self.x_pos <= 0:
-                self.direction = 1
-            elif self.x_pos >= max_width:
-                self.direction = 2
-            elif self.y_pos <= 0:
-                self.direction = 4
-            elif self.y_pos >= max_width:
-                self.direction = 3
-        else:
-            if self.x_pos <= 0 - self.width / 2:
-                self.direction = 1
-            elif self.x_pos >= max_width - self.width / 2:
-                self.direction = 2
-            elif self.y_pos <= 0 - self.width / 2:
-                self.direction = 4
-            elif self.y_pos >= max_width - self.width / 2:
-                self.direction = 3
+        if self.x_pos <= 0:
+            self.direction = 1
+        elif self.x_pos >= max_width:
+            self.direction = 2
+        elif self.y_pos <= 0:
+            self.direction = 4
+        elif self.y_pos >= max_width:
+            self.direction = 3
 
         if self.direction == 1:
             self.x_pos += self.BASE_SPEED
@@ -82,6 +78,26 @@ class NPC(GameObject):
 
     def change_direction(self):
         self.direction = random.randrange(1, 5)
+
+
+class Aim(NPC):
+    BASE_SPEED = 3
+
+    def __init__(self, width, height):
+        super().__init__(width / 2, height)  # 범위 보정
+        object_image = pygame.image.load(AIM_LOCATION)
+        self.image = pygame.transform.scale(object_image, (width * (3 / 4), height))
+
+    def move(self, max_width):
+        super().move(max_width)
+        if self.x_pos <= 0:
+            self.direction = 1
+        elif self.x_pos >= max_width - self.width * 2:
+            self.direction = 2
+        elif self.y_pos <= 0:
+            self.direction = 4
+        elif self.y_pos >= max_width - self.width * 2:
+            self.direction = 3
 
 
 class PC(GameObject):  # 플레이어 캐릭터
