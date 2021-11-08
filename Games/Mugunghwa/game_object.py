@@ -5,6 +5,7 @@ import random
 import pygame
 
 AIM_LOCATION = 'NPC/aim.png'
+DIRECTION_RANGE = (1, 5)  # [1: 우 2: 좌 3: 상 4: 하] 의 랜덤 범위를 위한 튜플.
 
 
 class GameObject:
@@ -77,7 +78,7 @@ class NPC(GameObject):
             self.y_pos += self.BASE_SPEED
 
     def change_direction(self):
-        self.direction = random.randrange(1, 5)
+        self.direction = random.randrange(*DIRECTION_RANGE)
 
 
 class Aim(NPC):

@@ -10,27 +10,25 @@ def level_calculator(level):
 
 AIM_LOCATION = 'NPC/aim.png'
 BGM_LOCATION = 'Sound/mugunghwa.mp3'
+BACKGROUND_LOCATION = BACKGROUND_LOCATION
 PARTICLE_LOCATION = 'particle/Particle'
 DOLL_BACK_LOCATION = 'NPC/back.png'
 DOLL_FRONT_LOCATION = 'NPC/front.png'
 SCREEN_STARTING_POINT = (0, 0)  # 화면 좌측 최상단 point.
 STARTING_MESSAGE_Y_POS = (300, 350, 400, 450, 500)  # 시작화면 메세지 출력 y 좌표 => 추후 상대적 값으로 변경 필요.
+NPC_1_CODE = 1
+NPC_2_CODE = 2
+NPC_3_CODE = 3
+DEAD_MESSAGE = 'dead'
+DOLL_MESSAGE = 'DOLL'
 
 
 class Game:
-    # 클래스변수
     TICK_RATE = 120  # FPS
-    MEDIUM_LEVEL = 2
-    HARD_LEVEL = 3
-    WIN_LEVEL = 4 + 1.5
     TIMER_TIME = 5  # 술래 뒤도는 카운터.
     NPC_CHANGE_DIRECTION_TIME = 2
     AIM_CHANGE_DIRECTION_TIME = 1.5
-    NPC1_POS = (100, 100)
     GAME_OVER_TIMER = 100
-    NPC_1_SIZE = 100
-    NPC_2_SIZE = 80
-    NPC_3_SIZE = 160
     NPC_1_SPEED = 1.8
     NPC_2_SPEED = 2
     NPC_3_SPEED = 1.5
@@ -44,7 +42,7 @@ class Game:
         self.title = title
         self.width = width
         self.height = height
-        self.half_screen = (width / 2, height / 2)
+        self.half_width = width / 2
         self.one_third_screen = (width / 3, height / 3)
         self.game_screen = pygame.display.set_mode((width, height))  # 게임 스크린.
         self.game_screen.fill(WHITE)
@@ -55,13 +53,17 @@ class Game:
         self.game_over_timer = None  # 전체 타이머
         self.aim_image = pygame.image.load(AIM_LOCATION)  # 조준경 이미지 로드
         self.ref_w, self.ref_h = self.game_screen.get_size()  # 리사이징을 위한 화면 크기
-        # npc 의 정보.
-        self.npc_1 = [self.NPC_1_SIZE, self.NPC_1_SIZE, 1]
-        self.npc_2 = [self.NPC_2_SIZE, self.NPC_2_SIZE, 2]
-        self.npc_3 = [self.NPC_3_SIZE, self.NPC_3_SIZE, 3]
-        self.aim = [self.AIM_SIZE[0], self.AIM_SIZE[1]]
+
+        # npc 정보.
+        self.npc_1_size = width / 8  # 각 npc 들의 화면 크기에 대한 상대적 size.
+        self.npc_2_size = width / 10
+        self.npc_3_size = width / 5
+        # 술래
         self.doll = [self.width * 0.456, self.height / 80, self.width / 8, self.height * 0.1875]
         # 화면 크기에 대한 술래의 비율
+
+        # 플레이어 사이즈
+        self.player_character_size = (width / 16, width / 11)
         self.restart_message_y_pos = (180, 280)
 
         try:
@@ -73,12 +75,12 @@ class Game:
     def create_npc(self, kind_of_npc):
 
         if kind_of_npc == 1:
-            npc_info = self.npc_1
+            size = self.npc_1_size
         elif kind_of_npc == 2:
-            npc_info = self.npc_2
+            size = self.npc_2_size
         elif kind_of_npc == 3:
-            npc_info = self.npc_3
-        return game_object.NPC(*npc_info)
+            size = self.npc_3_size
+        return game_object.NPC(size, size, kind_of_npc)
 
     def start_game(self):
         npc = self.create_npc(1)
@@ -119,7 +121,7 @@ class Game:
 
     def lose_game(self):
         message_to_screen_center(
-            self.game_screen, '탈 락', RED, korean_font, self.width / 2, self.ref_w, self.ref_h)
+            self.game_screen, '탈 락', RED, korean_font, self.half_width, self.ref_w, self.ref_h)
         pygame.display.update()
         clock.tick(1)
 
@@ -148,7 +150,6 @@ class Game:
     def run_game_loop(self, level):
         game_over = False
         did_win = True
-        boost = 1
         # 무궁화 SOUND EFFECTS
         pygame.mixer.music.play(-1)
 
@@ -158,18 +159,18 @@ class Game:
 
         # 플레이어, 진행요원, 목표물 렌더링.
         particle = game_object.AnimatedSprite(*self.BOOST_EFFECT)
-        player = game_object.PC(self.width / 2 - 25, self.height * 0.85, 50, 70)
+        player = game_object.PC(self.half_width, self.height, *self.player_character_size)
         # 진행요원 -> 사이즈 비율로 다 맞춰야함. 나중에
-        npc_1 = game_object.NPC(*self.npc_1)
+        npc_1 = self.create_npc(NPC_1_CODE)
+        npc_2 = self.create_npc(NPC_2_CODE)
+        npc_3 = self.create_npc(NPC_3_CODE)
         npc_1.BASE_SPEED *= level * self.NPC_1_SPEED
-        npc_2 = game_object.NPC(*self.npc_2)
         npc_2.BASE_SPEED *= level * self.NPC_2_SPEED
-        npc_3 = game_object.NPC(*self.npc_3)
         npc_3.BASE_SPEED *= level * self.NPC_3_SPEED
         npcs = [npc_1, npc_2, npc_3]
 
         # AIM
-        aim = game_object.Aim(*self.aim)
+        aim = game_object.Aim(*self.AIM_SIZE)
         aim.BASE_SPEED *= level * self.AIM_SPEED
 
         # 술래
@@ -251,7 +252,7 @@ class Game:
                 # 3초 타이머 걸고 지나면 해제. & 타이머 리셋.
                 DOLL.sprite_image(DOLL_FRONT_LOCATION)
                 self.mugunghwa_timer = True
-                time = 5
+                time = self.TIMER_TIME
                 time_checker = round(time - (timer) * (-1), 1)
                 if time_checker <= 0:
                     DOLL.sprite_image(DOLL_BACK_LOCATION)
@@ -275,10 +276,10 @@ class Game:
                         DOLL.sprite_image(DOLL_BACK_LOCATION)
                         break
 
-            if collision == 'dead':
+            if collision == DEAD_MESSAGE:
                 did_win = False
                 break
-            elif collision == 'DOLL':
+            elif collision == DOLL_MESSAGE:
                 # 목표물 도달시 did_win = True 상태로 while 문 탈출.
                 break
             pygame.display.update()
@@ -311,26 +312,24 @@ class Game:
 
     def detect_all_collisions(self, level, player, npc_1, npc_2, npc_3, DOLL):
         dead = 0
-        # if level > self.HARD_LEVEL:
         dead += player.detect_collision(npc_3)
-        # if level > self.MEDIUM_LEVEL:
         dead += player.detect_collision(npc_2)
         dead += player.detect_collision(npc_1)
         if dead:
             self.lose_game()
-            return 'dead'
+            return DEAD_MESSAGE
 
         if player.detect_collision(DOLL):
             message_to_screen_center(self.game_screen, 'Next Up, Level ' + str(
                 int(level * 2)), WHITE, STOP_font, self.height / 2, self.ref_w, self.ref_h)
             pygame.display.update()
             clock.tick(1)
-            return 'DOLL'
+            return DOLL_MESSAGE
 
 
 # Start the game up
 pygame.init()
-new_game = Game('NPC/background.png', SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
+new_game = Game(BACKGROUND_LOCATION, SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
 new_game.start_game()
 
 # After game is finished quit the program
