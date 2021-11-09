@@ -28,12 +28,12 @@ class Game:
         # 1 원 2 네모 3 세모 4 별
         # bgm 실행
         try:
-            pygame.mixer.music.load(BGM_LOCATION)
+            pygame.mixer.music.load(get_abs_path(BGM_LOCATION))
         except Exception as e:
             print(e)
 
         self.ref_w, self.ref_h = self.game_screen.get_size()
-        self.pin_image = pygame.image.load(PIN_LOCATION)
+        self.pin_image = pygame.image.load(get_abs_path(PIN_LOCATION))
         self.npc_size = width / 8
 
     def start_game(self):
