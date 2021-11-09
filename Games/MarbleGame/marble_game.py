@@ -193,13 +193,16 @@ class MarbleGame:
         #배경 음악 로딩
         try:
             pygame.mixer.music.load("sound/bgm.mp3")
+        except:
+            print("sound/bgm.mp3 파일이 존재하지 않습니다")
+        try:
             marblesound=pygame.mixer.Sound("sound/marblesound.mp3")
             marblesound2=pygame.mixer.Sound("sound/marblesound2.mp3")
             marblesound3=pygame.mixer.Sound("sound/marblesound3.mp3")
             marblesound4=pygame.mixer.Sound("sound/marblesound4.mp3")
             marblesound5=pygame.mixer.Sound("sound/marblesound5.mp3")
         except:
-            print("ogg 파일이 맞지 않거나, 오디오 기기가 접속되어 있지 않습니다")
+            print("해당 파일이 존재하지 않습니다")
 
         #게임 루프
         while True:
@@ -230,7 +233,10 @@ class MarbleGame:
                 self.game_screen.blit(self.imgBG,[0,0])
                 self.imgHand5 = pygame.transform.scale(self.imgHand5,(self.game_screen.get_width(), self.game_screen.get_height()))
                 if pygame.mixer.music.get_busy() == False: #bgm 재생 정지 상태라면
-                    pygame.mixer.music.play(-1) #bgm 재생
+                    try:
+                        pygame.mixer.music.play(-1) #bgm 재생
+                    except:
+                        pass
                 if left_time<=0 :
                     self.marble_game_timer = 0
                     self.screen_buffer = self.marble_game_timer
