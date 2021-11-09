@@ -3,6 +3,10 @@ import math
 import game_object
 from Games.game_settings import *
 
+bgm_location = "Media/bgm.mp3"
+pin_location = "Media/pin.png"
+npc_randrange = random.randrange(20, 300)
+
 
 class GameObject:
 
@@ -72,6 +76,8 @@ class NPCs(GameObject):
 
 class Game:
     NPC_CHANGE_DIRECTION_TIME = 3
+    NPC_SIZE = 150
+    BGM_VOLUME = 0.2
 
     def __init__(self, width, height):
         self.width = width
@@ -81,15 +87,17 @@ class Game:
         self.game_screen.fill(PINK)
         # self.shape = random.randrange(1,4)
         self.shape = 4
-        pygame.mixer.music.load("Media/bgm.mp3")
+        pygame.mixer.music.load(bgm_location)
         self.ref_w, self.ref_h = self.game_screen.get_size()
-        self.pin_image = pygame.image.load("Media/pin.png")
+        self.pin_image = pygame.image.load(pin_location)
+        self.npc = [npc_randrange, self.width * (1 / 5), 150, 150, 1]
 
     def start_game(self):
         # walking around NPC
-        npc = NPCs(random.randrange(20, 300), self.width * (1 / 5), 150, 150, 1)
+        npc = NPCs(*self.npc)
         # bgm
         if pygame.mixer.music.get_busy() == False:
+            pygame.mixer.music.set_volume(self.BGM_VOLUME)
             pygame.mixer.music.play(-1)
         # 달고나 생성
         dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, 100, self.shape)
