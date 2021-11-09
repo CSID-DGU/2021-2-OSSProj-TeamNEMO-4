@@ -2,13 +2,21 @@ import math
 
 from Games.game_settings import *
 
+CIRCLE = 1
+RECTANGLE = 2
+TRIANGLE = 3
+STAR = 4
+CLICKED_POINT_SIZE = 2
+UNCLICKED_POINT_SIZE = 6
+
 
 class Dalgona:
     def __init__(self, width, height, game_screen, points_num, shape):
         self.points = []
 
-        if shape == 1:
+        if shape == CIRCLE:
             for i in range(points_num):
+                # 원의 방정식 이용한 points 배치.
                 theta = (2 * math.pi / points_num) * i
                 pos_x = width / 2 + 10 + 210 * math.cos(theta)
                 pos_y = height / 2 + 210 * math.sin(theta)
@@ -17,7 +25,7 @@ class Dalgona:
                 else:
                     self.points.append(Point(game_screen, pos_x, pos_y, 5, wrong_point=True))
 
-        elif shape == 2:
+        elif shape == RECTANGLE:
             pos_x = width / 2 - 150 - 20
             pos_y = height / 2 - 150 - 20
             for i in range(int(points_num / 4)):
@@ -35,7 +43,7 @@ class Dalgona:
                     self.points.append(Point(game_screen, pos_x, pos_y + (width / 2.3), 5, wrong_point=True))
                 pos_x += (width / 2.2) / (points_num / 4)
 
-        elif shape == 3:
+        elif shape == TRIANGLE:
             pos_x = width / 2
             pos_y = height / 4 + 10
             # self.points.append(Point(game_screen, pos_x, pos_y, 5))
@@ -57,7 +65,7 @@ class Dalgona:
                 self.points.append(Point(game_screen, pos_x + (i + 1) * (width / 4 / (points_num / 6)), pos_y, 5))
                 self.points.append(Point(game_screen, pos_x - (i + 1) * (width / 4 / (points_num / 6)), pos_y, 5))
 
-        elif shape == 4:
+        elif shape == STAR:
             num_of_side = 12
             points_num_of_side = int(points_num / num_of_side)
             side_length = (width / 2) / 3
@@ -143,19 +151,22 @@ class Point:
         self.wrong_point = wrong_point
 
     def is_clicked(self):
-        mouse = pygame.mouse.get_pos()
-        if self.x + self.radius > mouse[0] > self.x - self.radius and self.y + self.radius > \
-                mouse[1] > self.y - self.radius:
+        mouse_x_pos = pygame.mouse.get_pos()[0]
+        mouse_y_pos = pygame.mouse.get_pos()[1]
+
+        if self.x + self.radius > mouse_x_pos > self.x - self.radius and self.y + self.radius > \
+                mouse_y_pos > self.y - self.radius:
+            # 마우스가 point 의 범위 내에서 클릭되었으면 clicked = True 로 설정.
             if pygame.mouse.get_pressed()[0]:
                 self.clicked = True
 
     def draw(self):
         if self.clicked and not self.wrong_point:
-            pygame.draw.circle(self.game_display, BLACK, [self.x, self.y], self.radius, 6)
+            pygame.draw.circle(self.game_display, BLACK, [self.x, self.y], self.radius, UNCLICKED_POINT_SIZE)
         elif not self.clicked and not self.wrong_point:
-            pygame.draw.circle(self.game_display, BROWN, [self.x, self.y], self.radius, 2)
+            pygame.draw.circle(self.game_display, BROWN, [self.x, self.y], self.radius, CLICKED_POINT_SIZE)
         elif not self.clicked and self.wrong_point:
-            pygame.draw.circle(self.game_display, RED, [self.x, self.y], self.radius, 6)
+            pygame.draw.circle(self.game_display, RED, [self.x, self.y], self.radius, UNCLICKED_POINT_SIZE)
 
     def punching(self):
         self.is_clicked()

@@ -1,11 +1,20 @@
 # Use base code from "https://github.com/AidenBurgess/CrossGame"
 
+import os
 import random
 
 import pygame
 
 AIM_LOCATION = 'NPC/aim.png'
+PC_FRONT_LOCATION = 'PC/LinkFront.png'
+PC_BACK_LOCATION = 'PC/LinkBack.png'
+PC_LEFT_LOCATION = 'PC/LinkLeft.png'
+PC_RIGHT_LOCATION = 'PC/LinkRight.png'
 DIRECTION_RANGE = (1, 5)  # [1: 우 2: 좌 3: 상 4: 하] 의 랜덤 범위를 위한 튜플.
+
+
+def get_abs_path(path):
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)), path)
 
 
 class GameObject:
@@ -44,7 +53,7 @@ class NPC(GameObject):
 
         super().__init__(x_pos, y_pos, width / 2, height)  # 게임 난이도 하향을 위한 판정 범위 보정
         self.kind_of_object = kind_of_object
-        object_image = pygame.image.load(f'NPC/NPC{kind_of_object}.png')
+        object_image = pygame.image.load(get_abs_path(f'NPC/NPC{kind_of_object}.png'))
         self.go_forward = False  # go_forward 에 따라 이미지를 좌우로 flip.
         self.direction = 1  # 1 right 2 left 3 up 4 down
         self.image = pygame.transform.scale(object_image, (width * (3 / 4), height))
@@ -103,37 +112,37 @@ class Aim(NPC):
 
 class PC(GameObject):  # 플레이어 캐릭터
     BASE_SPEED = 4
-    object_image = pygame.image.load('PC/LinkFront.png')
-    prev_sprite = pygame.transform.scale(object_image, (50, 70))
+    object_image = pygame.image.load(get_abs_path(PC_FRONT_LOCATION))
+    player_character = pygame.transform.scale(object_image, (50, 70))
 
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height)
         # Load in all the sprites
-        object_image = pygame.image.load('PC/LinkBack.png')
+        object_image = pygame.image.load(get_abs_path(PC_BACK_LOCATION))
         self.fr_image = pygame.transform.scale(object_image, (width, height))
-        object_image = pygame.image.load('PC/LinkFront.png')
+        object_image = pygame.image.load(get_abs_path(PC_FRONT_LOCATION))
         self.ba_image = pygame.transform.scale(object_image, (width, height))
-        object_image = pygame.image.load('PC/LinkLeft.png')
+        object_image = pygame.image.load(get_abs_path(PC_LEFT_LOCATION))
         self.le_image = pygame.transform.scale(object_image, (width, height))
-        object_image = pygame.image.load('PC/LinkRight.png')
+        object_image = pygame.image.load(get_abs_path(PC_RIGHT_LOCATION))
         self.ri_image = pygame.transform.scale(object_image, (width, height))
 
     # move() 를 통해 바뀐 direction 으로 캐릭터를 계속 그려낸다.
     def draw(self, background, dir_x, dir_y):
         if dir_y > 0:
             background.blit(self.fr_image, (self.x_pos, self.y_pos))
-            self.prev_sprite = self.fr_image
+            self.player_character = self.fr_image
         elif dir_y < 0:
             background.blit(self.ba_image, (self.x_pos, self.y_pos))
-            self.prev_sprite = self.ba_image
+            self.player_character = self.ba_image
         elif dir_x > 0:
             background.blit(self.ri_image, (self.x_pos, self.y_pos))
-            self.prev_sprite = self.ri_image
+            self.player_character = self.ri_image
         elif dir_x < 0:
             background.blit(self.le_image, (self.x_pos, self.y_pos))
-            self.prev_sprite = self.le_image
+            self.player_character = self.le_image
         else:
-            background.blit(self.prev_sprite, (self.x_pos, self.y_pos))
+            background.blit(self.player_character, (self.x_pos, self.y_pos))
 
     # 키 입력에 따른 방향변경
     def move(self, dir_x, dir_y, max_width, max_height):
