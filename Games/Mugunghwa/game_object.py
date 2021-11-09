@@ -102,7 +102,7 @@ class Aim(NPC):
 
 
 class PC(GameObject):  # 플레이어 캐릭터
-    BASE_SPEED = 3
+    BASE_SPEED = 4
     object_image = pygame.image.load('PC/LinkFront.png')
     prev_sprite = pygame.transform.scale(object_image, (50, 70))
 
@@ -136,16 +136,14 @@ class PC(GameObject):  # 플레이어 캐릭터
             background.blit(self.prev_sprite, (self.x_pos, self.y_pos))
 
     # 키 입력에 따른 방향변경
-    def move(self, dir_x, dir_y, max_width, max_height, boost):
+    def move(self, dir_x, dir_y, max_width, max_height):
         MOVE_BY = self.BASE_SPEED
         # 대각선 이동시 1/sqrt(2) 이동
         if dir_x != 0 and dir_y != 0:
             MOVE_BY *= 0.707
-        # 부스트 사용시 속도 증가.
-        MOVE_BY *= boost
         # Define X and Y  movement
-        self.y_pos += MOVE_BY * -dir_y * (2 / 3)
-        self.x_pos += MOVE_BY * dir_x * (2 / 3)
+        self.y_pos += MOVE_BY * -dir_y
+        self.x_pos += MOVE_BY * dir_x
         # Boundary detection
         if self.y_pos > max_height - self.height:
             self.y_pos = max_height - self.height
@@ -166,24 +164,3 @@ class PC(GameObject):  # 플레이어 캐릭터
         elif self.x_pos + self.width < other_body.x_pos:
             return False
         return True
-
-
-class AnimatedSprite(GameObject):
-
-    def __init__(self, x, y, width, height, root_image, num_sprites, speed):
-        super().__init__(x, y, width, height)
-        self.count = 0
-        self.root = root_image
-        self.num_sprites = num_sprites
-        self.speed = speed
-        object_image = pygame.image.load(f'{root_image}' + '1' + '.png')
-        self.image = pygame.transform.scale(object_image, (self.width, self.height))
-
-    def next_sprite(self):
-        object_image = pygame.image.load(f'{self.root}{self.count // self.speed + 1}.png')
-        self.image = pygame.transform.scale(object_image, (self.width, self.height))
-        self.x_pos = self.x_pos + 3
-        self.y_pos = self.y_pos + 30
-        self.count += 1
-        if self.count == self.speed * self.num_sprites:
-            self.count = 1

@@ -87,11 +87,12 @@ class Game:
         self.game_screen.fill(PINK)
         # self.shape = random.randrange(1,4)
         self.shape = 4
+        # 1 원 2 네모 3 세모 4 별
         try:
             pygame.mixer.music.load(bgm_location)
         except Exception as e:
             print(e)
-            
+
         self.ref_w, self.ref_h = self.game_screen.get_size()
         self.pin_image = pygame.image.load(pin_location)
         self.npc = [npc_randrange, self.width * (1 / 5), 150, 150, 1]
@@ -107,8 +108,8 @@ class Game:
         dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, 100, self.shape)
         game_over_timer = GameOverTimer(50)
         NPC_ticks = pygame.time.get_ticks()
-        while True:
 
+        while True:
             left_time = game_over_timer.time_checker()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
