@@ -13,22 +13,20 @@ class MarbleGame:
     TRUE_FALSE=14
 
     # 변수 선언
-    idx = TITLE  # 화면 전환 관리 변수 0 : 타이틀
-    player_marbles = 10
-    player_betting = 1
-    computer_marbles = 10
-    computer_betting = random.randint(1, 2)
-    marble_game_level = 0
+    idx = TITLE  # 화면 전환 관리 변수 idx 이 변수를 통해 화면 전환이 일어난다
+    player_marbles = 10 #처음 플레이어가 가진 구슬 개수
+    player_betting = 1 #처음 플레이어가 배팅하는 구슬 개수
+    computer_marbles = 10 #처음 컴퓨터가 가진 구슬 개수
+    computer_betting = random.randint(1, 2) #처음 컴퓨터는 1개, 2개 중 배팅을 하고 marble_game_level이 올라가면 그만큼 증가됨
+    marble_game_level = 0 #플레이어가 가진 구슬 개수에 관여하는 변수로 이후 +1 해서 레벨을 나타냄
     betting_success = True
     betting_button_pressed = False
     screen_buffer = 0  # 화면 대기 구현 변수
-    marble_game_timer = 0
-    fail_eff = 0
+    marble_game_timer = 0 #게임 루프문을 통해 이후 계속 1이 더해진다. 화면 대기 변수와 비교문을 통해 이미지 효과를 사용할 때 이용
+    fail_eff = 0 #게임 이펙트 화면에서 게임 루프문을 통해 계속 -1이 되는데 이때 양수 값을 주면 0이 될때까지 이펙트 효과를 사용할 때 이용
     fail_eff_x = 0 #random.randint(-20, 20)
     fail_eff_y = 0 #random.randint(-10, 10)
-    xlocation = []  # 추후 상대 위치 리스트 만들기
-    ylocation = []  # 추후 상대 위치 리스트 만들기
-    score=0
+    score=0 #게임의 점수를 저장하는 변수
     # 이미지 로딩
     imgBG = pygame.image.load("bg/bg.png")  # 배경 이미지
     imgBGbase=pygame.image.load("bg/bgbase.png")
