@@ -87,7 +87,11 @@ class Game:
         self.game_screen.fill(PINK)
         # self.shape = random.randrange(1,4)
         self.shape = 4
-        pygame.mixer.music.load(bgm_location)
+        try:
+            pygame.mixer.music.load(bgm_location)
+        except Exception as e:
+            print(e)
+            
         self.ref_w, self.ref_h = self.game_screen.get_size()
         self.pin_image = pygame.image.load(pin_location)
         self.npc = [npc_randrange, self.width * (1 / 5), 150, 150, 1]
