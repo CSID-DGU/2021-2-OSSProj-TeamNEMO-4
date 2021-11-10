@@ -235,6 +235,9 @@ class MarbleGame:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+                        return
                 if event.type==pygame.VIDEORESIZE:
                     self.game_screen=pygame.display.set_mode((event.w,event.h),pygame.RESIZABLE)
 
@@ -311,8 +314,8 @@ class MarbleGame:
                     self.fail_eff=5
                     self.betting_button_pressed = True
                     if self.player_marbles == 1:
-                        if random.randint(0, 99) < 40 - self.marble_game_level * 5: #40%확률로 깐부 발동
-                            self.score+=10
+                        if random.randint(0, 99) < 50 - self.marble_game_level * 5: #50%확률로 깐부 발동
+                            self.score+=51 #깐부로 승리시 51점 추가 점수를 받고 클리어
                             self.idx = self.GGANBU
                 if key[pygame.K_RETURN]:
                     self.fail_eff=5
@@ -332,6 +335,7 @@ class MarbleGame:
                     self.fail_eff_x = random.randint(-10, 10)
                     self.fail_eff = self.fail_eff - 1
                 self.game_screen.blit(self.imgHand5, [self.fail_eff_x, 0])
+                #if key[pygame.K_RETURN]:
 
 
                 if left_time>=30:
