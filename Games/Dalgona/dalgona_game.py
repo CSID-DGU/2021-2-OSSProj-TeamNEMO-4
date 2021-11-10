@@ -1,9 +1,9 @@
 import random
 
-import game_object
+from Games.Dalgona import game_object
 from Games.Mugunghwa.game_object import NPC
 from Games.game_settings import *
-from constants import *
+from Games.Dalgona.constants import *
 
 BGM_LOCATION = "Dalgona/Media/bgm.mp3"
 PIN_LOCATION = "Dalgona/Media/pin.png"

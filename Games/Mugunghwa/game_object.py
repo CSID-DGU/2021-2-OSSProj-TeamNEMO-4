@@ -95,7 +95,7 @@ class Aim(NPC):
 
     def __init__(self, width, height):
         super().__init__(width / 2, height)  # 범위 보정
-        object_image = pygame.image.load(AIM_LOCATION)
+        object_image = pygame.image.load(get_abs_path(AIM_LOCATION))
         self.image = pygame.transform.scale(object_image, (width * (3 / 4), height))
 
     def move(self, max_width):
