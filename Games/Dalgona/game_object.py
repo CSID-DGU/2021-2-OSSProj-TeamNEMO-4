@@ -1,5 +1,5 @@
 from Games.game_settings import *
-from constants import *
+from Games.Dalgona.constants import *
 
 CIRCLE = 1
 RECTANGLE = 2

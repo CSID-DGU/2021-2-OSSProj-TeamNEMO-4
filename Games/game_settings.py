@@ -2,6 +2,10 @@ import os
 
 import pygame
 
+# 절대경로 변경 함수
+def get_abs_path(path):
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)), path)
+
 # 화면 속성
 
 SCREEN_TITLE = '오징어 게임'
@@ -25,11 +29,15 @@ clock = pygame.time.Clock()
 pygame.font.init()
 
 # 폰트
+
+KOREAN_FONT_PATH = 'Font/Pretendard-Medium.otf'
+KOREAN_SMALL_FONT_PATH = 'Font/Pretendard-Light.otf'
+
 large_font = pygame.font.SysFont('comicsans', 75)
 STOP_font = pygame.font.SysFont('comicsans', 120)
 level_font = pygame.font.SysFont('calibri', 30)
-korean_font = pygame.font.Font('../../Font/Pretendard-Medium.otf', 60)
-korean_font_small_size = pygame.font.Font('../../Font/Pretendard-Light.otf', 30)
+korean_font = pygame.font.Font(os.path.join(os.getcwd(), KOREAN_FONT_PATH), 60)
+korean_font_small_size = pygame.font.Font(os.path.join(os.getcwd(), KOREAN_SMALL_FONT_PATH), 30)
 level_font.set_bold(True)
 
 
@@ -77,7 +85,7 @@ class GameOverTimer:
 # 점수
 SCORE = 0
 
-
 # 절대경로 변경 함수
 def get_abs_path(path):
     return os.path.join(os.path.abspath(os.path.dirname(__file__)), path)
+

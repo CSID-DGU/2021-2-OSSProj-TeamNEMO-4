@@ -1,30 +1,52 @@
 import pygame
+from Games.game_settings import *
+from Games.Mugunghwa.Mugunghwa_Game import start_game as start_mugunghwa_game
+from Games.Dalgona.dalgona_game import start_game as start_dalgona_game
+from Games.MarbleGame.marble_game import start_game as start_marble_game
 
-
-# 메인 함수 정의
-def main():
-    # 파이게임 모듈 초기화
-    pygame.init()
-
-    # 240 x 180 사이즈의 스크린 표면을 만듦
-    screen = pygame.display.set_mode((1000, 500))
-    # 메인 루프를 제어할 변수 정의
-    running = True
-
-    # 메인 루프
-    while running:
-        # 이벤트 핸들러, 이벤트 큐로부터 모든 이벤트를 얻는다.
-        for event in pygame.event.get():
-            # QUIT 타입의 이벤트라면 다음 코딩을 실행
-            if event.type == pygame.QUIT:
-                # 메인 루프를 탈출하기 위해 변수를 False 로 바꾼다.
-                running = False
-
-
-# 현재 모듈이 메인 스크립트라면 메인 함수 실행
-# (이 모듈을 임포트하면 아무것도 실행하지 않는다)
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 800
 
 
 if __name__ == "__main__":
-    # call the main function
-    main()
+    SCORE = 0
+
+    while True:
+        mugunghwa_score = start_mugunghwa_game()
+        if mugunghwa_score:
+            SCORE += mugunghwa_score
+            print(SCORE)
+        else:
+            print("패배")
+            break
+        dalgona_score = start_dalgona_game()
+        if dalgona_score:
+            SCORE += dalgona_score
+            print(SCORE)
+        else:
+            print("패배")
+            break
+        marble_score = start_marble_game()
+        if marble_score:
+            SCORE += marble_score
+            print(SCORE)
+        else:
+            print("패배")
+            break
+
+    pygame.init()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    ref_w, ref_h = screen.get_size()
+
+    while True:
+        screen.fill(PINK)
+        message_to_screen_center(screen, '게임 종료', WHITE, korean_font,
+                                 SCREEN_WIDTH / 3,
+                                 ref_w,
+                                 ref_h)
+        message_to_screen_center(screen, f'점수는 {SCORE} 점입니다. ', WHITE, korean_font,
+                                 SCREEN_WIDTH / 2,
+                                 ref_w,
+                                 ref_h)
+        clock.tick(60)
+        pygame.display.update()
