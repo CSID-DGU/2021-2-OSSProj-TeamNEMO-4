@@ -1,9 +1,9 @@
 import random
 
 from Games.Dalgona import game_object
+from Games.Dalgona.constants import *
 from Games.Mugunghwa.game_object import NPC
 from Games.game_settings import *
-from Games.Dalgona.constants import *
 
 BGM_LOCATION = "Dalgona/Media/bgm.mp3"
 PIN_LOCATION = "Dalgona/Media/pin.png"
@@ -140,9 +140,10 @@ class Game:
             clock.tick(FPS_RATE)
 
 
-pygame.init()
-new_game = Game(SCREEN_WIDTH, SCREEN_HEIGHT)
-new_game.start_game()
+def start_game():
+    pygame.init()
+    new_game = Game(SCREEN_WIDTH, SCREEN_HEIGHT)
+    new_game.start_game()
 
-pygame.quit()
-quit()
+    pygame.quit()
+    quit()

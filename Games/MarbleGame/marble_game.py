@@ -418,9 +418,10 @@ class MarbleGame:
 
 
 # if __name__ == '__main__':
-pygame.init()
-new_game = MarbleGame(SCREEN_WIDTH, SCREEN_HEIGHT)
-new_game.start_marble_game()
+def start_game():
+    pygame.init()
+    new_game = MarbleGame(SCREEN_WIDTH, SCREEN_HEIGHT)
+    new_game.start_marble_game()
 
-pygame.quit()
-quit()
+    pygame.quit()
+    quit()

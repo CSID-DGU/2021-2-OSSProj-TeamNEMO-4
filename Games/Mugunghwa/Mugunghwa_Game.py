@@ -243,7 +243,7 @@ class Game:
                 time = self.TIMER_TIME
                 time_checker = round(time - (timer) * (-1), 1)
                 if time_checker <= 0:
-                    DOLL.sprite_imageget_abs_path()(DOLL_BACK_LOCATION)
+                    DOLL.sprite_image(get_abs_path((DOLL_BACK_LOCATION)))
                     self.mugunghwa_timer = False
                     start_ticks = pygame.time.get_ticks()
                     elapsed_time = (pygame.time.get_ticks() - start_ticks) / self.TIMER_UNIT
@@ -318,10 +318,11 @@ class Game:
 
 
 # Start the game up
-pygame.init()
-new_game = Game(get_abs_path(BACKGROUND_LOCATION), SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
-new_game.start_game()
+def start_game():
+    pygame.init()
+    new_game = Game(get_abs_path(BACKGROUND_LOCATION), SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
+    new_game.start_game()
 
-# After game is finished quit the program
-pygame.quit()
-quit()
+    # After game is finished quit the program
+    pygame.quit()
+    quit()
