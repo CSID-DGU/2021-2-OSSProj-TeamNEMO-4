@@ -1,77 +1,15 @@
 import math
+import random
 
 import game_object
+from Games.Mugunghwa.game_object import NPC
 from Games.game_settings import *
 
-bgm_location = "Media/bgm.mp3"
-pin_location = "Media/pin.png"
-npc_randrange = random.randrange(20, 300)
-
-
-class GameObject:
-
-    def __init__(self, x, y, width, height):
-        self.x_pos = x
-        self.y_pos = y
-        self.width = width
-        self.height = height
-
-    def sprite_image(self, image_path):
-        object_image = pygame.image.load(image_path)
-        self.image = pygame.transform.scale(object_image, (self.width, self.height))
-
-    def draw(self, background):
-        background.blit(self.image, (self.x_pos, self.y_pos))
-
-
-class NPCs(GameObject):
-    BASE_SPEED = 10
-
-    # True  = right, False = Left
-
-    def __init__(self, x, y, width, height, kind_of_npc=1):
-        super().__init__(x, y, width / 2, height)  # 범위 보정
-        if kind_of_npc == 1:
-            object_image = pygame.image.load('Media/NPC1.png')
-        # elif kind_of_npc == 2:
-        #     object_image = pygame.image.load('common_images/NPC2.png')
-        # else:
-        #     object_image = pygame.image.load('common_images/NPC3.png')
-        self.go_forward = False
-        self.direction = 1
-        # 1 right 2 left 3 up 4 down
-        self.image = pygame.transform.scale(object_image, (width * (3 / 4), height))
-
-    def draw(self, background):
-        if self.go_forward:
-            background.blit(self.image, (self.x_pos, self.y_pos))
-        else:
-            background.blit(pygame.transform.flip(
-                self.image, 1, 0), (self.x_pos, self.y_pos))
-
-    def move(self, max_width):
-        if self.x_pos <= 0:
-            self.direction = 1
-        elif self.x_pos >= max_width:
-            self.direction = 2
-        elif self.y_pos <= 0:
-            self.direction = 4
-        elif self.y_pos >= max_width:
-            self.direction = 3
-
-        if self.direction == 1:
-            self.x_pos += self.BASE_SPEED
-            self.go_forward = False
-        elif self.direction == 2:
-            self.x_pos -= self.BASE_SPEED
-            self.go_forward = True
-        elif self.direction == 3:
-            self.y_pos -= self.BASE_SPEED
-        else:
-            self.y_pos += self.BASE_SPEED
-
-    def change_direction(self):
-        self.direction = random.randrange(1, 5)
+BGM_LOCATION = "Media/bgm.mp3"
+PIN_LOCATION = "Media/pin.png"
+NPC_RANDRANGE = random.randrange(20, 300)
+KIND_OF_NPC = 1
+NPC_SPEED = 10
 
 
 class Game:
@@ -87,14 +25,20 @@ class Game:
         self.game_screen.fill(PINK)
         # self.shape = random.randrange(1,4)
         self.shape = 4
-        pygame.mixer.music.load(bgm_location)
+        # 1 원 2 네모 3 세모 4 별
+        # bgm 실행
+        try:
+            pygame.mixer.music.load(BGM_LOCATION)
+        except Exception as e:
+            print(e)
+
         self.ref_w, self.ref_h = self.game_screen.get_size()
-        self.pin_image = pygame.image.load(pin_location)
-        self.npc = [npc_randrange, self.width * (1 / 5), 150, 150, 1]
+        self.pin_image = pygame.image.load(PIN_LOCATION)
+        self.npc_size = width / 8
 
     def start_game(self):
         # walking around NPC
-        npc = NPCs(*self.npc)
+        npc = NPC(self.npc_size, self.npc_size, KIND_OF_NPC)  # 화면을 돌아다닐 npc 생성.
         # bgm
         if pygame.mixer.music.get_busy() == False:
             pygame.mixer.music.set_volume(self.BGM_VOLUME)
@@ -103,8 +47,8 @@ class Game:
         dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, 100, self.shape)
         game_over_timer = GameOverTimer(50)
         NPC_ticks = pygame.time.get_ticks()
-        while True:
 
+        while True:
             left_time = game_over_timer.time_checker()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -159,7 +103,8 @@ class Game:
                 self.game_screen.blit(self.pin_image, (x_pos, y_pos - self.pin_image.get_size()[1]))
             ##################################################################
 
-            ########################### NPC ##################################
+            # npc 움직임 파트.
+            npc.BASE_SPEED = NPC_SPEED
             npc.move(self.width)
             npc.draw(self.game_screen)
             NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
@@ -168,7 +113,6 @@ class Game:
                 npc.change_direction()
                 NPC_ticks = pygame.time.get_ticks()
                 NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
-            ################################################################
 
             if dalgona.check_win()["is_success"] is True:
                 self.game_screen.fill(PINK)
