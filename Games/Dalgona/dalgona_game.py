@@ -1,15 +1,24 @@
-import math
 import random
 
 import game_object
 from Games.Mugunghwa.game_object import NPC
 from Games.game_settings import *
+from constants import *
 
-BGM_LOCATION = "Media/bgm.mp3"
-PIN_LOCATION = "Media/pin.png"
+BGM_LOCATION = "Dalgona/Media/bgm.mp3"
+PIN_LOCATION = "Dalgona/Media/pin.png"
 NPC_RANDRANGE = random.randrange(20, 300)
 KIND_OF_NPC = 1
 NPC_SPEED = 10
+NPC_SIZE_RATIO = 8
+GAME_TIME = 50
+NUMBER_OF_POINTS = 100
+DALGONA_SIZE_RATIO = (3 / 8)
+CIRCLE = 1
+RECTANGLE = 2
+TRIANGLE = 3
+STAR = 4
+FPS_RATE = 20
 
 
 class Game:
@@ -20,21 +29,26 @@ class Game:
     def __init__(self, width, height):
         self.width = width
         self.height = height
+        self.half_width = width / 2
+        self.half_height = height / 2
+        self.center = [self.width / 2, self.height / 2]
         # Screen set-up
         self.game_screen = pygame.display.set_mode((width, height))
         self.game_screen.fill(PINK)
         # self.shape = random.randrange(1,4)
-        self.shape = 4
-        # 1 원 2 네모 3 세모 4 별
+        self.shape = RECTANGLE
+        self.rectangle_size = width / RECTANGLE_SHAPE_SIZE_RATIO
+        self.half_rectangle = self.rectangle_size / 2
         # bgm 실행
         try:
-            pygame.mixer.music.load(BGM_LOCATION)
+            pygame.mixer.music.load(get_abs_path(BGM_LOCATION))
         except Exception as e:
             print(e)
 
         self.ref_w, self.ref_h = self.game_screen.get_size()
-        self.pin_image = pygame.image.load(PIN_LOCATION)
-        self.npc_size = width / 8
+        print(get_abs_path(PIN_LOCATION))
+        self.pin_image = pygame.image.load(get_abs_path(PIN_LOCATION))
+        self.npc_size = width / NPC_SIZE_RATIO
 
     def start_game(self):
         # walking around NPC
@@ -44,8 +58,8 @@ class Game:
             pygame.mixer.music.set_volume(self.BGM_VOLUME)
             pygame.mixer.music.play(-1)
         # 달고나 생성
-        dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, 100, self.shape)
-        game_over_timer = GameOverTimer(50)
+        dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, NUMBER_OF_POINTS, self.shape)
+        game_over_timer = GameOverTimer(GAME_TIME)
         NPC_ticks = pygame.time.get_ticks()
 
         while True:
@@ -60,21 +74,24 @@ class Game:
                                    self.height / 20,
                                    self.ref_w, self.ref_h)
 
-            pygame.draw.circle(self.game_screen, YELLOW_BROWN, [self.width / 2, self.height / 2], 300, 300)
+            pygame.draw.circle(self.game_screen, YELLOW_BROWN, self.center,
+                               int(self.width * DALGONA_SIZE_RATIO), int(self.width * DALGONA_SIZE_RATIO))
 
-            # 달고나 모양.
-            if self.shape == 1:
-                pygame.draw.circle(self.game_screen, DARK_BROWN, [self.width / 2 + 10, self.height / 2], 220, 15)
-            elif self.shape == 2:
+            # 달고나 모양 그리기.
+            if self.shape == CIRCLE:
+                pygame.draw.circle(self.game_screen, DARK_BROWN, self.center, int(self.width * CIRCLE_SHAPE_SIZE_RATIO),
+                                   int(self.width * SHAPE_WIDTH_RATIO))
+            elif self.shape == RECTANGLE:
                 pygame.draw.rect(self.game_screen, DARK_BROWN,
-                                 [self.width / 2 - 150 - 30, self.height / 2 - 150 - 30, self.width / 2.2,
-                                  self.width / 2.2],
-                                 15, border_radius=10)
-            elif self.shape == 3:
+                                 [self.half_width - self.half_rectangle, self.half_height - self.half_rectangle,
+                                  self.rectangle_size,
+                                  self.rectangle_size],
+                                 int(self.width * SHAPE_WIDTH_RATIO), border_radius=RECTANGLE_BORDER_RADIUS)
+            elif self.shape == TRIANGLE:
                 pygame.draw.polygon(self.game_screen, DARK_BROWN,
                                     [[self.width / 2, self.height / 4], [self.width / 4, self.height * (2 / 3)],
                                      [self.width * (3 / 4), self.height * (2 / 3)]], 15)
-            elif self.shape == 4:
+            elif self.shape == STAR:
                 side_length = self.width / 2
                 half_side_length = side_length / 2
                 ratio = math.sqrt(3)
@@ -94,16 +111,13 @@ class Game:
 
             dalgona.draw()
 
-            ######################### PIN IMAGE #############################
-
+            # 바늘 아트워크
             if pygame.mouse.get_pressed()[0]:
                 x_pos = pygame.mouse.get_pos()[0]
                 y_pos = pygame.mouse.get_pos()[1]
-                # print(x_pos, y_pos)
                 self.game_screen.blit(self.pin_image, (x_pos, y_pos - self.pin_image.get_size()[1]))
-            ##################################################################
 
-            # npc 움직임 파트.
+            # npc 의 랜덤 움직임.
             npc.BASE_SPEED = NPC_SPEED
             npc.move(self.width)
             npc.draw(self.game_screen)
@@ -123,7 +137,7 @@ class Game:
                 message_to_screen_center(self.game_screen, "패 배", WHITE, korean_font, self.width / 2, self.ref_w,
                                          self.ref_h)
             pygame.display.update()
-            clock.tick(20)
+            clock.tick(FPS_RATE)
 
 
 pygame.init()
