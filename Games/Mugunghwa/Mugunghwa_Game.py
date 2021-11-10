@@ -94,6 +94,7 @@ class Game:
                         return
                     elif event.key == pygame.K_x:
                         self.run_game_loop(1)
+                        return
             # Render background
             self.game_screen.fill(WHITE)
             self.game_screen.blit(self.image, SCREEN_STARTING_POINT)
@@ -277,10 +278,12 @@ class Game:
 
         # did_win 이용해 승패 판단 후 다음 프로세스 진행.
         if did_win:
-            message_to_screen_left(
-                self.game_screen, level_printer(level), WHITE, level_font, 0, 0, self.ref_w,
-                self.ref_h)
-            self.run_game_loop(level + self.LEVEL_UP_STEP)
+            # message_to_screen_left(
+            #     self.game_screen, level_printer(level), WHITE, level_font, 0, 0, self.ref_w,
+            #     self.ref_h)
+            # self.run_game_loop(level + self.LEVEL_UP_STEP)
+            # 다음 게임으로 넘어가기
+            return
         elif self.game_restart():
             self.run_game_loop(STARTING_LEVEL)
         else:
@@ -310,10 +313,16 @@ class Game:
 
         # 술래와 충돌했을 때 (게임 클리어) -> DOLL_MESSAGE 를 반환해 게임 승리를 상위 함수로 전달.
         if player.detect_collision(DOLL):
-            message_to_screen_center(self.game_screen, 'CLEAR!', PINK, STOP_font, self.half_width, self.ref_w,
+            message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
+                                     self.one_third_screen[0],
+                                     self.ref_w,
+                                     self.ref_h)
+            message_to_screen_center(self.game_screen, '다음 게임은 달고나 게임입니다. ', WHITE, korean_font,
+                                     self.half_width,
+                                     self.ref_w,
                                      self.ref_h)
             pygame.display.update()
-            clock.tick(1)
+            clock.tick(0.5)
             return DOLL_MESSAGE
 
 
@@ -324,5 +333,5 @@ def start_game():
     new_game.start_game()
 
     # After game is finished quit the program
-    pygame.quit()
-    quit()
+    # pygame.quit()
+    # quit()
