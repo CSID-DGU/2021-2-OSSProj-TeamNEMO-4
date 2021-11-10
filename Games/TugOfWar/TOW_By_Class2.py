@@ -245,4 +245,6 @@ new_game = TugOfWar(SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
 new_game.start_game()
 
 pygame.quit()
+
 quit()
+

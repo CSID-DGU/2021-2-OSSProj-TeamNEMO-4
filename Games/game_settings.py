@@ -85,3 +85,10 @@ class GameOverTimer:
 # 점수
 SCORE = 0
 
+<<<<<<< HEAD
+=======
+
+# 절대경로 변경 함수
+def get_abs_path(path):
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)), path)
+>>>>>>> aa06dfc2dd901eda6aea7a21470ebe01263024bc
