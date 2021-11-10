@@ -2,6 +2,28 @@ import sys
 import random
 from Games.game_settings import *
 
+#이미지 좌표
+BG_BG_LOCATION='MarbleGame/bg/bg.png'
+BG_BGBASE_LOCATION='MarbleGame/bg/bgbase.png'
+IMGS_TRUE_LOCATION = 'MarbleGame/imgs/True.png'
+IMGS_FALSE_LOCATION = 'MarbleGame/imgs/False.png'
+IMGS_START_LOCATION  = 'MarbleGame/imgs/gamestart.png'
+IMGS_HAND1_LOCATION = 'MarbleGame/imgs/hand1.png'
+IMGS_HAND2_LOCATION = 'MarbleGame/imgs/hand2.png'
+IMGS_HAND3_LOCATION = 'MarbleGame/imgs/hand3.png'
+IMGS_HAND4_LOCATION = 'MarbleGame/imgs/hand4.png'
+IMGS_HAND5_LOCATION = 'MarbleGame/imgs/hand5.png'
+IMGS_NPC_LOCATION= 'MarbleGame/imgs/NPC.png'
+
+#사운드 좌표
+SOUND_BGM_LOCATION='MarbleGame/sound/bgm.mp3'
+SOUND_MARBLE_LOCATION='MarbleGame/sound/marblesound.mp3'
+SOUND_MARBLE2_LOCATION='MarbleGame/sound/marblesound2.mp3'
+SOUND_MARBLE3_LOCATION='MarbleGame/sound/marblesound3.mp3'
+SOUND_MARBLE4_LOCATION='MarbleGame/sound/marblesound4.mp3'
+SOUND_MARBLE5_LOCATION='MarbleGame/sound/marblesound5.mp3'
+SOUND_GGANBU_LOCATION='MarbleGame/sound/gganbu.mp3'
+
 class MarbleGame:
     TITLE=0
     MARBLE_GAME=1
@@ -27,18 +49,19 @@ class MarbleGame:
     fail_eff_x = 0 #random.randint(-20, 20)
     fail_eff_y = 0 #random.randint(-10, 10)
     score=0 #게임의 점수를 저장하는 변수
+    hint = 5 #hint 사용 가능 수
     # 이미지 로딩
-    imgBG = pygame.image.load("bg/bg.png")  # 배경 이미지
-    imgBGbase=pygame.image.load("bg/bgbase.png")
-    imgTrue = pygame.image.load("imgs/True.png")  # 배팅 성공 이미지
-    imgFalse = pygame.image.load("imgs/False.png")  # 배팅 실패 이미지
-    imgStart = pygame.image.load("imgs/gamestart.png")
-    imgHand1 = pygame.image.load("imgs/hand1.png")
-    imgHand2 = pygame.image.load("imgs/hand2.png")
-    imgHand3 = pygame.image.load("imgs/hand3.png")
-    imgHand4 = pygame.image.load("imgs/hand4.png")
-    imgHand5 = pygame.image.load("imgs/hand5.png")
-    imgNPC=pygame.image.load("imgs/NPC.png")
+    imgBG = pygame.image.load(get_abs_path(BG_BG_LOCATION))  # 배경 이미지
+    imgBGbase=pygame.image.load(get_abs_path(BG_BGBASE_LOCATION))
+    imgTrue = pygame.image.load(get_abs_path(IMGS_TRUE_LOCATION))  # 배팅 성공 이미지
+    imgFalse = pygame.image.load(get_abs_path(IMGS_FALSE_LOCATION))  # 배팅 실패 이미지
+    imgStart = pygame.image.load(get_abs_path(IMGS_START_LOCATION))
+    imgHand1 = pygame.image.load(get_abs_path(IMGS_HAND1_LOCATION))
+    imgHand2 = pygame.image.load(get_abs_path(IMGS_HAND2_LOCATION))
+    imgHand3 = pygame.image.load(get_abs_path(IMGS_HAND3_LOCATION))
+    imgHand4 = pygame.image.load(get_abs_path(IMGS_HAND4_LOCATION))
+    imgHand5 = pygame.image.load(get_abs_path(IMGS_HAND5_LOCATION))
+    imgNPC=pygame.image.load(get_abs_path(IMGS_NPC_LOCATION))
     gganbuplay=False
 
     def __init__(self,width,height):
@@ -54,10 +77,11 @@ class MarbleGame:
         self.player_marbles = 10
         self.player_betting = 1
         self.computer_marbles = 10
-        self.computer_betting = random.randint(1,2+self.marble_game_level)
+        self.computer_betting = random.randint(1,2+self.marble_game_level) #컴퓨터는 레벨이 올라갈 때마다 1~2개에서 +1개수만큼 랜덤으로 배팅
         self.marble_game_level = 0
         self.marble_game_timer = 0
         self.idx = self.TITLE  # 초기 화면으로
+        self.hint=5 #힌트 5개로 초기화
 
     def draw_title(self):
         self.game_screen.fill(PINK)
@@ -152,12 +176,12 @@ class MarbleGame:
 
     def draw_gganbu(self):
         self.game_screen.fill(BLACK)
-        gganbu = pygame.mixer.Sound("sound/gganbu.mp3")
-        if self.screen_buffer <= self.marble_game_timer - 20:
+        gganbu = pygame.mixer.Sound(get_abs_path(SOUND_GGANBU_LOCATION))
+        if self.screen_buffer <= self.marble_game_timer - 20: #2초까지 버퍼
             if self.gganbuplay == False:
                 gganbu.play()
                 self.gganbuplay =True
-            if self.screen_buffer <= self.marble_game_timer - 40:
+            if self.screen_buffer <= self.marble_game_timer - 40: #4초까지 버퍼
                 self.player_marbles = 6
                 self.gganbuplay =False
                 self.marble_game_timer = 0
@@ -192,15 +216,15 @@ class MarbleGame:
     def start_marble_game(self):
         #배경 음악 로딩
         try:
-            pygame.mixer.music.load("sound/bgm.mp3")
+            pygame.mixer.music.load(get_abs_path(SOUND_BGM_LOCATION))
         except:
             print("sound/bgm.mp3 파일이 존재하지 않습니다")
         try:
-            marblesound=pygame.mixer.Sound("sound/marblesound.mp3")
-            marblesound2=pygame.mixer.Sound("sound/marblesound2.mp3")
-            marblesound3=pygame.mixer.Sound("sound/marblesound3.mp3")
-            marblesound4=pygame.mixer.Sound("sound/marblesound4.mp3")
-            marblesound5=pygame.mixer.Sound("sound/marblesound5.mp3")
+            marblesound=pygame.mixer.Sound(get_abs_path(SOUND_MARBLE_LOCATION))
+            marblesound2=pygame.mixer.Sound(get_abs_path(SOUND_MARBLE2_LOCATION))
+            marblesound3=pygame.mixer.Sound(get_abs_path(SOUND_MARBLE3_LOCATION))
+            marblesound4=pygame.mixer.Sound(get_abs_path(SOUND_MARBLE4_LOCATION))
+            marblesound5=pygame.mixer.Sound(get_abs_path(SOUND_MARBLE5_LOCATION))
         except:
             print("해당 파일이 존재하지 않습니다")
 
@@ -211,6 +235,9 @@ class MarbleGame:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+                        return
                 if event.type==pygame.VIDEORESIZE:
                     self.game_screen=pygame.display.set_mode((event.w,event.h),pygame.RESIZABLE)
 
@@ -287,25 +314,28 @@ class MarbleGame:
                     self.fail_eff=5
                     self.betting_button_pressed = True
                     if self.player_marbles == 1:
-                        if random.randint(0, 99) < 40 - self.marble_game_level * 5: #40%확률로 깐부 발동
-                            self.score+=10
+                        if random.randint(0, 99) < 50 - self.marble_game_level * 5: #50%확률로 깐부 발동
+                            self.score+=51 #깐부로 승리시 51점 추가 점수를 받고 클리어
                             self.idx = self.GGANBU
                 if key[pygame.K_RETURN]:
                     self.fail_eff=5
-                    if self.computer_betting==2: #구슬이 2개일 때 1번 부딪치는 소리 재생
-                        marblesound.play()
-                    elif self.computer_betting==3:
-                        marblesound2.play()
-                    elif self.computer_betting==4:
-                        marblesound3.play()
-                    elif self.computer_betting==5:
-                        marblesound4.play()
-                    elif self.computer_betting==6:
-                        marblesound5.play()
+                    if self.hint>0:
+                        if self.computer_betting == 2:  # 구슬이 2개일 때 1번 부딪치는 소리 재생
+                            marblesound.play()
+                        elif self.computer_betting == 3:
+                            marblesound2.play()
+                        elif self.computer_betting == 4:
+                            marblesound3.play()
+                        elif self.computer_betting == 5:
+                            marblesound4.play()
+                        elif self.computer_betting == 6:
+                            marblesound5.play()
+                        self.hint-=1
                 if self.fail_eff > 0:
                     self.fail_eff_x = random.randint(-10, 10)
                     self.fail_eff = self.fail_eff - 1
                 self.game_screen.blit(self.imgHand5, [self.fail_eff_x, 0])
+                #if key[pygame.K_RETURN]:
 
 
                 if left_time>=30:
@@ -329,6 +359,8 @@ class MarbleGame:
                 message_to_screen_left(self.game_screen, "SCORE : " + str(self.score), WHITE, korean_font_small_size,
                                        self.game_screen.get_width() / 10, self.game_screen.get_height() / 40, self.ref_w,
                                        self.ref_h)
+                message_to_screen_left(self.game_screen, "남은 힌트 : " + str(self.hint), WHITE,korean_font_small_size,
+                                       self.game_screen.get_width() / 1.2, self.game_screen.get_height() /17,self.ref_w,self.ref_h)
                 '''
                 message_to_screen_left(self.game_screen, "컴퓨터 배팅 test : " + str(self.computer_betting), WHITE, korean_font,
                                        self.game_screen.get_width() / 2, self.game_screen.get_height() / 7, self.ref_w,
