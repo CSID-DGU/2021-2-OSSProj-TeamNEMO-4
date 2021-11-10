@@ -1,6 +1,6 @@
 # Use base code from "https://github.com/AidenBurgess/CrossGame"
 
-import game_object
+from Games.Mugunghwa import game_object
 from Games.game_settings import *
 
 
