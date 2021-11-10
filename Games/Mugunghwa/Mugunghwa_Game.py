@@ -93,8 +93,8 @@ class Game:
                     if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
                         return
                     elif event.key == pygame.K_x:
-                        self.run_game_loop(1)
-                        return
+                        score = self.run_game_loop(1)
+                        return score
             # Render background
             self.game_screen.fill(WHITE)
             self.game_screen.blit(self.image, SCREEN_STARTING_POINT)
@@ -283,10 +283,11 @@ class Game:
             #     self.ref_h)
             # self.run_game_loop(level + self.LEVEL_UP_STEP)
             # 다음 게임으로 넘어가기
-            return
+            return left_time
         elif self.game_restart():
             self.run_game_loop(STARTING_LEVEL)
         else:
+
             return
 
     def get_PC_dir(self, dir_x=0, dir_y=0):
@@ -330,7 +331,7 @@ class Game:
 def start_game():
     pygame.init()
     new_game = Game(get_abs_path(BACKGROUND_LOCATION), SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
-    new_game.start_game()
+    return new_game.start_game()
 
     # After game is finished quit the program
     # pygame.quit()

@@ -1,5 +1,4 @@
 import random
-import sys
 
 from Games.game_settings import *
 
@@ -250,8 +249,9 @@ class MarbleGame:
             self.marble_game_timer += 1
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    # pygame.quit()
+                    # sys.exit()
+                    return
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
                         return
@@ -423,5 +423,5 @@ def start_game():
     new_game = MarbleGame(SCREEN_WIDTH, SCREEN_HEIGHT)
     new_game.start_marble_game()
 
-    pygame.quit()
-    quit()
+    # pygame.quit()
+    # quit()

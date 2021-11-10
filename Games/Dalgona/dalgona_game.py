@@ -137,7 +137,7 @@ class Game:
                                          self.half_width,
                                          self.ref_w,
                                          self.ref_h)
-                return
+                return left_time
             if left_time <= 0 or dalgona.check_win()["wrong_point_clicked"]:
                 self.game_screen.fill(PINK)
                 message_to_screen_center(self.game_screen, "패 배", WHITE, korean_font, self.width / 2, self.ref_w,
@@ -149,7 +149,7 @@ class Game:
 def start_game():
     pygame.init()
     new_game = Game(SCREEN_WIDTH, SCREEN_HEIGHT)
-    new_game.start_game()
+    return new_game.start_game()
 
     # pygame.quit()
     # quit()
