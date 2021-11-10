@@ -242,5 +242,3 @@ new_game.start_game()
 pygame.quit()
 quit()
 
-
-
