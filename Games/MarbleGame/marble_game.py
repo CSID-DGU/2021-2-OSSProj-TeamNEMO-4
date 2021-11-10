@@ -27,6 +27,7 @@ class MarbleGame:
     fail_eff_x = 0 #random.randint(-20, 20)
     fail_eff_y = 0 #random.randint(-10, 10)
     score=0 #게임의 점수를 저장하는 변수
+    hint = 5 #hint 사용 가능 수
     # 이미지 로딩
     imgBG = pygame.image.load("bg/bg.png")  # 배경 이미지
     imgBGbase=pygame.image.load("bg/bgbase.png")
@@ -58,6 +59,7 @@ class MarbleGame:
         self.marble_game_level = 0
         self.marble_game_timer = 0
         self.idx = self.TITLE  # 초기 화면으로
+        self.hint=5 #힌트 5개로 초기화
 
     def draw_title(self):
         self.game_screen.fill(PINK)
@@ -292,16 +294,18 @@ class MarbleGame:
                             self.idx = self.GGANBU
                 if key[pygame.K_RETURN]:
                     self.fail_eff=5
-                    if self.computer_betting==2: #구슬이 2개일 때 1번 부딪치는 소리 재생
-                        marblesound.play()
-                    elif self.computer_betting==3:
-                        marblesound2.play()
-                    elif self.computer_betting==4:
-                        marblesound3.play()
-                    elif self.computer_betting==5:
-                        marblesound4.play()
-                    elif self.computer_betting==6:
-                        marblesound5.play()
+                    if self.hint>0:
+                        if self.computer_betting == 2:  # 구슬이 2개일 때 1번 부딪치는 소리 재생
+                            marblesound.play()
+                        elif self.computer_betting == 3:
+                            marblesound2.play()
+                        elif self.computer_betting == 4:
+                            marblesound3.play()
+                        elif self.computer_betting == 5:
+                            marblesound4.play()
+                        elif self.computer_betting == 6:
+                            marblesound5.play()
+                        self.hint-=1
                 if self.fail_eff > 0:
                     self.fail_eff_x = random.randint(-10, 10)
                     self.fail_eff = self.fail_eff - 1
@@ -329,6 +333,8 @@ class MarbleGame:
                 message_to_screen_left(self.game_screen, "SCORE : " + str(self.score), WHITE, korean_font_small_size,
                                        self.game_screen.get_width() / 10, self.game_screen.get_height() / 40, self.ref_w,
                                        self.ref_h)
+                message_to_screen_left(self.game_screen, "남은 힌트 : " + str(self.hint), WHITE,korean_font_small_size,
+                                       self.game_screen.get_width() / 1.2, self.game_screen.get_height() /17,self.ref_w,self.ref_h)
                 '''
                 message_to_screen_left(self.game_screen, "컴퓨터 배팅 test : " + str(self.computer_betting), WHITE, korean_font,
                                        self.game_screen.get_width() / 2, self.game_screen.get_height() / 7, self.ref_w,
