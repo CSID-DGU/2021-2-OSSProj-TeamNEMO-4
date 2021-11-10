@@ -11,12 +11,15 @@ pygame.display.set_caption(SCREEN_TITLE)
 
 imgbutton = pygame.image.load('button.png')
 
-run = True
-while run:
+while True:
 	button = game_button.game_button(screen.get_width() / 3, screen.get_height() / 10, imgbutton)
 	button2 = game_button.game_button(screen.get_width() / 3, screen.get_height() / 3.1, imgbutton)
 	button3 = game_button.game_button(screen.get_width() / 3, screen.get_height() / 1.85, imgbutton)
 	button4 = game_button.game_button(screen.get_width() / 3, screen.get_height() / 1.3, imgbutton)
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			pygame.quit()
+			sys.exit()
 	screen.fill(PINK)
 	if button.draw(screen):
 		print('Mugunghwa')
@@ -46,8 +49,5 @@ while run:
 	if exit_button.draw(screen):
 		print('EXIT')
 	'''
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			run = False
 	pygame.display.update()
 pygame.quit()
