@@ -29,7 +29,7 @@ class Game:
     TIMER_TIME = 5  # 술래 뒤도는 카운터.
     NPC_CHANGE_DIRECTION_TIME = 2
     AIM_CHANGE_DIRECTION_TIME = 1.5
-    GAME_OVER_TIMER = 100
+    GAME_OVER_TIMER = 30
     NPC_1_SPEED = 1.8
     NPC_2_SPEED = 2
     NPC_3_SPEED = 1.5
@@ -284,10 +284,9 @@ class Game:
             # self.run_game_loop(level + self.LEVEL_UP_STEP)
             # 다음 게임으로 넘어가기
             return left_time
-        elif self.game_restart():
-            self.run_game_loop(STARTING_LEVEL)
+        # elif self.game_restart():
+        #     self.run_game_loop(STARTING_LEVEL)
         else:
-
             return
 
     def get_PC_dir(self, dir_x=0, dir_y=0):

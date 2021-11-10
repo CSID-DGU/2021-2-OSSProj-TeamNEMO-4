@@ -142,6 +142,8 @@ class Game:
                 self.game_screen.fill(PINK)
                 message_to_screen_center(self.game_screen, "패 배", WHITE, korean_font, self.width / 2, self.ref_w,
                                          self.ref_h)
+                clock.tick(0.5)
+                return
             pygame.display.update()
             clock.tick(FPS_RATE)
 
