@@ -4,16 +4,15 @@ import game_object
 from Games.game_settings import *
 
 
-def level_calculator(level):
+def level_printer(level):
     return 'Level ' + str(int((level - 1) * 2 + 1))
 
 
-AIM_LOCATION = 'NPC/aim.png'
-BGM_LOCATION = 'Sound/mugunghwa.mp3'
-BACKGROUND_LOCATION = 'NPC/background.png'
-PARTICLE_LOCATION = 'particle/Particle'
-DOLL_BACK_LOCATION = 'NPC/back.png'
-DOLL_FRONT_LOCATION = 'NPC/front.png'
+AIM_LOCATION = 'Mugunghwa/NPC/aim.png'
+BGM_LOCATION = 'Mugunghwa/Sound/mugunghwa.mp3'
+BACKGROUND_LOCATION = 'Mugunghwa/NPC/background.png'
+DOLL_BACK_LOCATION = 'Mugunghwa/NPC/back.png'
+DOLL_FRONT_LOCATION = 'Mugunghwa/NPC/front.png'
 SCREEN_STARTING_POINT = (0, 0)  # 화면 좌측 최상단 point.
 STARTING_MESSAGE_Y_POS = (300, 400, 450)  # 시작화면 메세지 출력 y 좌표 => 추후 상대적 값으로 변경 필요.
 NPC_1_CODE = 1
@@ -22,6 +21,7 @@ NPC_3_CODE = 3
 DEAD_MESSAGE = 'dead'
 DOLL_MESSAGE = 'DOLL'
 STARTING_LEVEL = 1
+KEY_INPUT = 768
 
 
 class Game:
@@ -51,7 +51,7 @@ class Game:
         self.image = pygame.transform.scale(background_image, (width, height))
         self.mugunghwa_timer = False  # 술래가 뒤도는 타이머.
         self.game_over_timer = None  # 전체 타이머
-        self.aim_image = pygame.image.load(AIM_LOCATION)  # 조준경 이미지 로드
+        self.aim_image = pygame.image.load(get_abs_path(AIM_LOCATION))  # 조준경 이미지 로드
         self.ref_w, self.ref_h = self.game_screen.get_size()  # 리사이징을 위한 화면 크기
 
         # npc 정보.
@@ -67,7 +67,7 @@ class Game:
         self.restart_message_y_pos = (180, 280)
 
         try:
-            pygame.mixer.music.load(BGM_LOCATION)
+            pygame.mixer.music.load(get_abs_path(BGM_LOCATION))
         except Exception as e:
             print(e)
             print("사운드 로드 오류")
@@ -169,7 +169,7 @@ class Game:
 
         # 술래
         DOLL = game_object.GameObject(*self.doll)
-        DOLL.sprite_image(DOLL_BACK_LOCATION)
+        DOLL.sprite_image(get_abs_path(DOLL_BACK_LOCATION))
 
         # 술래 타이머, 진행요원 타이머, 조준경 타이머를 위한 현재 시간 얻어오기.
         start_ticks = pygame.time.get_ticks()
@@ -214,7 +214,7 @@ class Game:
 
             # 현재 레벨, 게임 오버 타이머 화면 좌측 상단에 render
             message_to_screen_left(
-                self.game_screen, 'Level ' + str(int((level - 1) * 2 + 1)), WHITE, level_font, 70, 30, self.ref_w,
+                self.game_screen, level_printer(level), WHITE, level_font, 70, 30, self.ref_w,
                 self.ref_h)
             message_to_screen_left(
                 self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w, self.ref_h)
@@ -238,12 +238,12 @@ class Game:
             # 무궁화 발동
             if timer <= 0:
                 # 3초 타이머 걸고 지나면 해제. & 타이머 리셋.
-                DOLL.sprite_image(DOLL_FRONT_LOCATION)
+                DOLL.sprite_image(get_abs_path(DOLL_FRONT_LOCATION))
                 self.mugunghwa_timer = True
                 time = self.TIMER_TIME
                 time_checker = round(time - (timer) * (-1), 1)
                 if time_checker <= 0:
-                    DOLL.sprite_image(DOLL_BACK_LOCATION)
+                    DOLL.sprite_imageget_abs_path()(DOLL_BACK_LOCATION)
                     self.mugunghwa_timer = False
                     start_ticks = pygame.time.get_ticks()
                     elapsed_time = (pygame.time.get_ticks() - start_ticks) / self.TIMER_UNIT
@@ -259,10 +259,10 @@ class Game:
                         aim_ticks = pygame.time.get_ticks()
                         aim_elapsed_time = (pygame.time.get_ticks() - aim_ticks) / self.TIMER_UNIT
 
-                    if event.type == 768:  # keydown 감지되면 끝.
+                    if event.type == KEY_INPUT:
                         did_win = False
                         self.mugunghwa_timer = False  # 재시작을 위한 mugunghwa_timer 원상복귀.
-                        DOLL.sprite_image(DOLL_BACK_LOCATION)
+                        DOLL.sprite_image(get_abs_path(DOLL_BACK_LOCATION))
                         break
 
             if collision == DEAD_MESSAGE:
@@ -278,7 +278,7 @@ class Game:
         # did_win 이용해 승패 판단 후 다음 프로세스 진행.
         if did_win:
             message_to_screen_left(
-                self.game_screen, level_calculator(level), WHITE, level_font, 0, 0, self.ref_w,
+                self.game_screen, level_printer(level), WHITE, level_font, 0, 0, self.ref_w,
                 self.ref_h)
             self.run_game_loop(level + self.LEVEL_UP_STEP)
         elif self.game_restart():
@@ -319,7 +319,7 @@ class Game:
 
 # Start the game up
 pygame.init()
-new_game = Game(BACKGROUND_LOCATION, SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
+new_game = Game(get_abs_path(BACKGROUND_LOCATION), SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
 new_game.start_game()
 
 # After game is finished quit the program
