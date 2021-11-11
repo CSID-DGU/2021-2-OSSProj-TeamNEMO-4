@@ -33,12 +33,14 @@ if __name__ == "__main__":
         else:
             print("패배")
             break
-
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     ref_w, ref_h = screen.get_size()
-
-    while True:
+    RUNNING = True
+    while RUNNING:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                RUNNING = False
         screen.fill(PINK)
         message_to_screen_center(screen, '게임 종료', WHITE, korean_font,
                                  SCREEN_WIDTH / 3,
@@ -48,5 +50,4 @@ if __name__ == "__main__":
                                  SCREEN_WIDTH / 2,
                                  ref_w,
                                  ref_h)
-        clock.tick(60)
         pygame.display.update()

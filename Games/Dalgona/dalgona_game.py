@@ -139,10 +139,10 @@ class Game:
                                          self.ref_h)
                 return left_time
             if left_time <= 0 or dalgona.check_win()["wrong_point_clicked"]:
-                self.game_screen.fill(PINK)
-                message_to_screen_center(self.game_screen, "패 배", WHITE, korean_font, self.width / 2, self.ref_w,
+                message_to_screen_center(self.game_screen, "패 배", RED, korean_font, self.width / 2, self.ref_w,
                                          self.ref_h)
-                clock.tick(0.5)
+                pygame.display.update()
+                clock.tick(1)
                 return
             pygame.display.update()
             clock.tick(FPS_RATE)

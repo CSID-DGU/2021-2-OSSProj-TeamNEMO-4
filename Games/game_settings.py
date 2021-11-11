@@ -2,9 +2,11 @@ import os
 
 import pygame
 
+
 # 절대경로 변경 함수
 def get_abs_path(path):
     return os.path.join(os.path.abspath(os.path.dirname(__file__)), path)
+
 
 # 화면 속성
 
@@ -81,11 +83,10 @@ class GameOverTimer:
         return timer
 
 
-# 유저명
-# 점수
-SCORE = 0
-
 # 절대경로 변경 함수
 def get_abs_path(path):
     return os.path.join(os.path.abspath(os.path.dirname(__file__)), path)
 
+
+# 게임 오버 이미지 경로
+GAME_OVER_LOCATION = 'common_images/game_over.png'
