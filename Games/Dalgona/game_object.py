@@ -1,63 +1,89 @@
-import math
-
 from Games.game_settings import *
+from Games.Dalgona.constants import *
+
+CIRCLE = 1
+RECTANGLE = 2
+TRIANGLE = 3
+STAR = 4
+CLICKED_POINT_SIZE = 2
+UNCLICKED_POINT_SIZE = 6
+POINT_SIZE = 5
 
 
 class Dalgona:
     def __init__(self, width, height, game_screen, points_num, shape):
         self.points = []
+        self.half_width = width / 2
+        self.half_height = height / 2
+        self.rectangle_size = width / POINT_RECTANGLE_RATIO
+        self.half_rectangle = self.rectangle_size / 2
 
-        if shape == 1:
+        if shape == CIRCLE:
             for i in range(points_num):
-                theta = (2 * math.pi / points_num) * i
-                pos_x = width / 2 + 10 + 210 * math.cos(theta)
-                pos_y = height / 2 + 210 * math.sin(theta)
-                if i % 10 != 0:
-                    self.points.append(Point(game_screen, pos_x, pos_y, 5))
+                # 원의 방정식 이용한 points 배치.
+                theta = get_theta(points_num, i)
+                pos_x = self.half_width + (int(width * POINT_CIRCLE_RATIO) * math.cos(theta))
+                pos_y = self.half_height + (int(width * POINT_CIRCLE_RATIO) * math.sin(theta))
+                # wrong_point 찍기.
+                if i % WRONG_POINT_INTERVAL != 0:
+                    self.points.append(Point(game_screen, pos_x, pos_y, POINT_SIZE))
                 else:
-                    self.points.append(Point(game_screen, pos_x, pos_y, 5, wrong_point=True))
+                    self.points.append(Point(game_screen, pos_x, pos_y, POINT_SIZE, wrong_point=True))
 
-        elif shape == 2:
-            pos_x = width / 2 - 150 - 20
-            pos_y = height / 2 - 150 - 20
-            for i in range(int(points_num / 4)):
-                self.points.append(Point(game_screen, pos_x, pos_y, 5))
-                self.points.append(Point(game_screen, pos_x + (width / 2.3), pos_y, 5))
-                pos_y += (width / 2.2) / (points_num / 4)
-            pos_x = width / 2 - 150 - 20
-            pos_y = height / 2 - 150 - 20
-            for i in range(int(points_num / 4)):
-                if i % 10 != 0:
-                    self.points.append(Point(game_screen, pos_x, pos_y, 5))
-                    self.points.append(Point(game_screen, pos_x, pos_y + (width / 2.3), 5))
+        elif shape == RECTANGLE:
+            pos_x = self.half_width - self.half_rectangle
+            pos_y = self.half_height - self.half_rectangle
+            # 사각형의 좌측 상단 점에서부터 세로줄을 긋고 다시 돌아와 가로줄을 긋는다.
+            for i in range(1, int(points_num / 4)):
+                if i % WRONG_POINT_INTERVAL != 0:
+                    self.points.append(Point(game_screen, pos_x, pos_y, POINT_SIZE))
+                    self.points.append(Point(game_screen, pos_x + self.rectangle_size, pos_y, POINT_SIZE))
                 else:
-                    self.points.append(Point(game_screen, pos_x, pos_y, 5, wrong_point=True))
-                    self.points.append(Point(game_screen, pos_x, pos_y + (width / 2.3), 5, wrong_point=True))
-                pos_x += (width / 2.2) / (points_num / 4)
+                    self.points.append(Point(game_screen, pos_x, pos_y, POINT_SIZE, wrong_point=True))
+                    self.points.append(
+                        Point(game_screen, pos_x + self.rectangle_size, pos_y, POINT_SIZE, wrong_point=True))
+                pos_y += (width / RECTANGLE_SHAPE_SIZE_RATIO) / (points_num / 4)
+            pos_x = self.half_width - self.half_rectangle
+            pos_y = self.half_height - self.half_rectangle
+            for i in range(1, int(points_num / 4)):
+                if i % WRONG_POINT_INTERVAL != 0:
+                    self.points.append(Point(game_screen, pos_x, pos_y, POINT_SIZE))
+                    self.points.append(Point(game_screen, pos_x, pos_y + self.rectangle_size, POINT_SIZE))
+                else:
+                    self.points.append(Point(game_screen, pos_x, pos_y, POINT_SIZE, wrong_point=True))
+                    self.points.append(
+                        Point(game_screen, pos_x, pos_y + self.rectangle_size, POINT_SIZE, wrong_point=True))
+                pos_x += (width / RECTANGLE_SHAPE_SIZE_RATIO) / (points_num / 4)
 
-        elif shape == 3:
-            pos_x = width / 2
+        elif shape == TRIANGLE:
+            pos_x = self.half_width
             pos_y = height / 4 + 10
             # self.points.append(Point(game_screen, pos_x, pos_y, 5))
             for i in range(int(points_num / 3)):
                 move = ((5 / 12) * height) / (points_num / 3)
                 if i % 10 != 0:
-                    self.points.append(Point(game_screen, pos_x + ((i + 1) * move * (1 / math.sqrt(3))), pos_y, 5))
-                    self.points.append(Point(game_screen, pos_x - ((i + 1) * move * (1 / math.sqrt(3))), pos_y, 5))
+                    self.points.append(
+                        Point(game_screen, pos_x + ((i + 1) * move * (1 / math.sqrt(3))), pos_y, POINT_SIZE))
+                    self.points.append(
+                        Point(game_screen, pos_x - ((i + 1) * move * (1 / math.sqrt(3))), pos_y, POINT_SIZE))
                 else:
                     self.points.append(
-                        Point(game_screen, pos_x + ((i + 1) * move * (1 / math.sqrt(3))), pos_y, 5, wrong_point=True))
+                        Point(game_screen, pos_x + ((i + 1) * move * (1 / math.sqrt(3))), pos_y, POINT_SIZE,
+                              wrong_point=True))
                     self.points.append(
-                        Point(game_screen, pos_x - ((i + 1) * move * (1 / math.sqrt(3))), pos_y, 5, wrong_point=True))
+                        Point(game_screen, pos_x - ((i + 1) * move * (1 / math.sqrt(3))), pos_y, POINT_SIZE,
+                              wrong_point=True))
                 pos_y += move
 
             pos_y = height * (2 / 3)
             self.points.append(Point(game_screen, pos_x, pos_y, 5))
             for i in range(int(points_num / 6)):
-                self.points.append(Point(game_screen, pos_x + (i + 1) * (width / 4 / (points_num / 6)), pos_y, 5))
-                self.points.append(Point(game_screen, pos_x - (i + 1) * (width / 4 / (points_num / 6)), pos_y, 5))
+                self.points.append(
+                    Point(game_screen, pos_x + (i + 1) * (width / 4 / (points_num / 6)), pos_y, POINT_SIZE))
+                self.points.append(
+                    Point(game_screen, pos_x - (i + 1) * (width / 4 / (points_num / 6)), pos_y, POINT_SIZE))
 
-        elif shape == 4:
+        elif shape == STAR:
             num_of_side = 12
             points_num_of_side = int(points_num / num_of_side)
             side_length = (width / 2) / 3
@@ -71,10 +97,10 @@ class Dalgona:
             for i in range(points_num_of_side):
                 increase = i * ((half_side_length * ratio) / points_num_of_side)
                 self.points.append(
-                    Point(game_screen, pos_x + increase / ratio, pos_y + increase, 5))
+                    Point(game_screen, pos_x + increase / ratio, pos_y + increase, POINT_SIZE))
                 self.points.append(
                     Point(game_screen, pos_x - increase / ratio,
-                          pos_y + i * ((half_side_length * ratio) / points_num_of_side), 5))
+                          pos_y + i * ((half_side_length * ratio) / points_num_of_side), POINT_SIZE))
                 self.points.append(Point(game_screen, reverse_pos_x + increase / ratio, reverse_pos_y - increase, 5))
                 self.points.append(Point(game_screen, reverse_pos_x - increase / ratio, reverse_pos_y - increase, 5))
 
@@ -82,12 +108,14 @@ class Dalgona:
             for i in range(points_num_of_side * 2, points_num_of_side * 3):
                 increase = i * ((half_side_length * ratio) / points_num_of_side)
                 self.points.append(
-                    Point(game_screen, pos_x + increase / ratio, pos_y + increase, 5))
+                    Point(game_screen, pos_x + increase / ratio, pos_y + increase, POINT_SIZE))
                 self.points.append(
                     Point(game_screen, pos_x - increase / ratio,
-                          pos_y + i * ((half_side_length * ratio) / points_num_of_side), 5))
-                self.points.append(Point(game_screen, reverse_pos_x + increase / ratio, reverse_pos_y - increase, 5))
-                self.points.append(Point(game_screen, reverse_pos_x - increase / ratio, reverse_pos_y - increase, 5))
+                          pos_y + i * ((half_side_length * ratio) / points_num_of_side), POINT_SIZE))
+                self.points.append(
+                    Point(game_screen, reverse_pos_x + increase / ratio, reverse_pos_y - increase, POINT_SIZE))
+                self.points.append(
+                    Point(game_screen, reverse_pos_x - increase / ratio, reverse_pos_y - increase, POINT_SIZE))
 
             # 가로줄 그리기
             pos_y += half_side_length * ratio
@@ -95,9 +123,11 @@ class Dalgona:
             for i in range(points_num_of_side):
                 if i % 10 != 0:
                     self.points.append(
-                        Point(game_screen, pos_x + half_side_length + i * (side_length / points_num_of_side), pos_y, 5))
+                        Point(game_screen, pos_x + half_side_length + i * (side_length / points_num_of_side), pos_y,
+                              POINT_SIZE))
                     self.points.append(
-                        Point(game_screen, pos_x - half_side_length - i * (side_length / points_num_of_side), pos_y, 5))
+                        Point(game_screen, pos_x - half_side_length - i * (side_length / points_num_of_side), pos_y,
+                              POINT_SIZE))
                     self.points.append(
                         Point(game_screen, reverse_pos_x + half_side_length + i * (side_length / points_num_of_side),
                               reverse_pos_y, 5))
@@ -107,17 +137,19 @@ class Dalgona:
                 else:
                     # wrong_point 그리기.
                     self.points.append(
-                        Point(game_screen, pos_x + half_side_length + i * (side_length / points_num_of_side), pos_y, 5,
+                        Point(game_screen, pos_x + half_side_length + i * (side_length / points_num_of_side), pos_y,
+                              POINT_SIZE,
                               wrong_point=True))
                     self.points.append(
-                        Point(game_screen, pos_x - half_side_length - i * (side_length / points_num_of_side), pos_y, 5,
+                        Point(game_screen, pos_x - half_side_length - i * (side_length / points_num_of_side), pos_y,
+                              POINT_SIZE,
                               wrong_point=True))
                     self.points.append(
                         Point(game_screen, reverse_pos_x + half_side_length + i * (side_length / points_num_of_side),
-                              reverse_pos_y, 5, wrong_point=True))
+                              reverse_pos_y, POINT_SIZE, wrong_point=True))
                     self.points.append(
                         Point(game_screen, reverse_pos_x - half_side_length - i * (side_length / points_num_of_side),
-                              reverse_pos_y, 5, wrong_point=True))
+                              reverse_pos_y, POINT_SIZE, wrong_point=True))
 
     def draw(self):
         for i in self.points:
@@ -143,19 +175,22 @@ class Point:
         self.wrong_point = wrong_point
 
     def is_clicked(self):
-        mouse = pygame.mouse.get_pos()
-        if self.x + self.radius > mouse[0] > self.x - self.radius and self.y + self.radius > \
-                mouse[1] > self.y - self.radius:
+        mouse_x_pos = pygame.mouse.get_pos()[0]
+        mouse_y_pos = pygame.mouse.get_pos()[1]
+
+        if self.x + self.radius > mouse_x_pos > self.x - self.radius and self.y + self.radius > \
+                mouse_y_pos > self.y - self.radius:
+            # 마우스가 point 의 범위 내에서 클릭되었으면 clicked = True 로 설정.
             if pygame.mouse.get_pressed()[0]:
                 self.clicked = True
 
     def draw(self):
         if self.clicked and not self.wrong_point:
-            pygame.draw.circle(self.game_display, BLACK, [self.x, self.y], self.radius, 6)
+            pygame.draw.circle(self.game_display, BLACK, [self.x, self.y], self.radius, UNCLICKED_POINT_SIZE)
         elif not self.clicked and not self.wrong_point:
-            pygame.draw.circle(self.game_display, BROWN, [self.x, self.y], self.radius, 2)
+            pygame.draw.circle(self.game_display, BROWN, [self.x, self.y], self.radius, CLICKED_POINT_SIZE)
         elif not self.clicked and self.wrong_point:
-            pygame.draw.circle(self.game_display, RED, [self.x, self.y], self.radius, 6)
+            pygame.draw.circle(self.game_display, RED, [self.x, self.y], self.radius, UNCLICKED_POINT_SIZE)
 
     def punching(self):
         self.is_clicked()

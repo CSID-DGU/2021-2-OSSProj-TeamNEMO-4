@@ -1,6 +1,10 @@
-import random
+import os
 
 import pygame
+
+# 절대경로 변경 함수
+def get_abs_path(path):
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)), path)
 
 # 화면 속성
 
@@ -25,11 +29,15 @@ clock = pygame.time.Clock()
 pygame.font.init()
 
 # 폰트
+
+KOREAN_FONT_PATH = 'Font/Pretendard-Medium.otf'
+KOREAN_SMALL_FONT_PATH = 'Font/Pretendard-Light.otf'
+
 large_font = pygame.font.SysFont('comicsans', 75)
 STOP_font = pygame.font.SysFont('comicsans', 120)
 level_font = pygame.font.SysFont('calibri', 30)
-korean_font = pygame.font.Font('../../Font/Pretendard-Medium.otf', 60)
-korean_font_small_size = pygame.font.Font('../../Font/Pretendard-Light.otf', 30)
+korean_font = pygame.font.Font(os.path.join(os.getcwd(), KOREAN_FONT_PATH), 60)
+korean_font_small_size = pygame.font.Font(os.path.join(os.getcwd(), KOREAN_SMALL_FONT_PATH), 30)
 level_font.set_bold(True)
 
 
@@ -77,68 +85,7 @@ class GameOverTimer:
 # 점수
 SCORE = 0
 
+# 절대경로 변경 함수
+def get_abs_path(path):
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)), path)
 
-class GameObject:
-
-    def __init__(self, x, y, width, height):
-        self.x_pos = x
-        self.y_pos = y
-        self.width = width
-        self.height = height
-
-    def sprite_image(self, image_path):
-        object_image = pygame.image.load(image_path)
-        self.image = pygame.transform.scale(object_image, (self.width, self.height))
-
-    def draw(self, background):
-        background.blit(self.image, (self.x_pos, self.y_pos))
-
-
-class NPC(GameObject):
-    BASE_SPEED = 3
-
-    # True  = right, False = Left
-
-    def __init__(self, x, y, width, height, kind_of_npc=1):
-        super().__init__(x, y, width / 2, height)  # 범위 보정
-        if kind_of_npc == 1:
-            object_image = pygame.image.load('common_images/NPC1.png')
-        # elif kind_of_npc == 2:
-        #     object_image = pygame.image.load('common_images/NPC2.png')
-        # else:
-        #     object_image = pygame.image.load('common_images/NPC3.png')
-        self.go_forward = False
-        self.direction = 1
-        # 1 right 2 left 3 up 4 down
-        self.image = pygame.transform.scale(object_image, (width * (3 / 4), height))
-
-    def draw(self, background):
-        if self.go_forward:
-            background.blit(self.image, (self.x_pos, self.y_pos))
-        else:
-            background.blit(pygame.transform.flip(
-                self.image, 1, 0), (self.x_pos, self.y_pos))
-
-    def move(self, max_width):
-        if self.x_pos <= 0:
-            self.direction = 1
-        elif self.x_pos >= max_width:
-            self.direction = 2
-        elif self.y_pos <= 0:
-            self.direction = 4
-        elif self.y_pos >= max_width:
-            self.direction = 3
-
-        if self.direction == 1:
-            self.x_pos += self.BASE_SPEED
-            self.go_forward = False
-        elif self.direction == 2:
-            self.x_pos -= self.BASE_SPEED
-            self.go_forward = True
-        elif self.direction == 3:
-            self.y_pos -= self.BASE_SPEED
-        else:
-            self.y_pos += self.BASE_SPEED
-
-    def change_direction(self):
-        self.direction = random.randrange(1, 5)

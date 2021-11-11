@@ -1,77 +1,90 @@
 # Use base code from "https://github.com/AidenBurgess/CrossGame"
 
-import game_object
+from Games.Mugunghwa import game_object
 from Games.game_settings import *
 
-# Screen properties
-SCREEN_TITLE = '오징어 게임'
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 800
-# Colors
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
-GREEN = (0, 255, 0)
-PINK = (227, 62, 126)
-# Clock of game
-clock = pygame.time.Clock()
-pygame.font.init()
-# Initiate fonts
-large_font = pygame.font.SysFont('comicsans', 75)
-STOP_font = pygame.font.SysFont('comicsans', 120)
-level_font = pygame.font.SysFont('calibri', 30)
-korean_font = pygame.font.Font('../../Font/Pretendard-Medium.otf', 60)
-korean_font_small_size = pygame.font.Font('../../Font/Pretendard-Light.otf', 30)
-level_font.set_bold(True)
+
+def level_printer(level):
+    return 'Level ' + str(int((level - 1) * 2 + 1))
 
 
-def text_objects(text, color, text_font):
-    textSurface = text_font.render(text, True, color)
-    return textSurface, textSurface.get_rect()
-
-
-def message_to_screen_center(surface, msg, color, text_font, y):
-    textSurf, textRect = text_objects(msg, color, text_font)
-    textRect.center = SCREEN_WIDTH / 2, y
-    surface.blit(textSurf, textRect)
-
-
-def message_to_screen_left(surface, msg, color, font, x, y):
-    textSurf, textRect = text_objects(msg, color, font)
-    surface.blit(textSurf, (x, y))
+AIM_LOCATION = 'Mugunghwa/NPC/aim.png'
+BGM_LOCATION = 'Mugunghwa/Sound/mugunghwa.mp3'
+BACKGROUND_LOCATION = 'Mugunghwa/NPC/background.png'
+DOLL_BACK_LOCATION = 'Mugunghwa/NPC/back.png'
+DOLL_FRONT_LOCATION = 'Mugunghwa/NPC/front.png'
+SCREEN_STARTING_POINT = (0, 0)  # 화면 좌측 최상단 point.
+STARTING_MESSAGE_Y_POS = (300, 400, 450)  # 시작화면 메세지 출력 y 좌표 => 추후 상대적 값으로 변경 필요.
+NPC_1_CODE = 1
+NPC_2_CODE = 2
+NPC_3_CODE = 3
+DEAD_MESSAGE = 'dead'
+DOLL_MESSAGE = 'DOLL'
+STARTING_LEVEL = 1
+KEY_INPUT = 768
 
 
 class Game:
-    # 클래스변수
     TICK_RATE = 120  # FPS
-    MEDIUM_LEVEL = 2
-    HARD_LEVEL = 3
-    WIN_LEVEL = 4 + 1.5
     TIMER_TIME = 5  # 술래 뒤도는 카운터.
     NPC_CHANGE_DIRECTION_TIME = 2
     AIM_CHANGE_DIRECTION_TIME = 1.5
+    GAME_OVER_TIMER = 30
+    NPC_1_SPEED = 1.8
+    NPC_2_SPEED = 2
+    NPC_3_SPEED = 1.5
+    AIM_SIZE = (500, 350)  # 조준경의 가로 세로 사이즈 => 상대적 값으로 변경 필요.
+    AIM_SPEED = 2
+    TIMER_UNIT = 1000
+    LEVEL_UP_STEP = 0.5
 
     def __init__(self, image_path, title, width, height):
         self.title = title
         self.width = width
         self.height = height
-        # Screen set-up
-        self.game_screen = pygame.display.set_mode((width, height))
+        self.half_width = width / 2
+        self.one_third_screen = (width / 3, height / 3)
+        self.game_screen = pygame.display.set_mode((width, height))  # 게임 스크린.
         self.game_screen.fill(WHITE)
-        pygame.display.set_caption(title)
+        pygame.display.set_caption(title)  # 창 제목을 설정한다.
         background_image = pygame.image.load(image_path)
         self.image = pygame.transform.scale(background_image, (width, height))
-        self.stop_timer = False
-        self.game_over_timer = None
-        self.aim_image = pygame.image.load("NPC/aim.png")
+        self.mugunghwa_timer = False  # 술래가 뒤도는 타이머.
+        self.game_over_timer = None  # 전체 타이머
+        self.aim_image = pygame.image.load(get_abs_path(AIM_LOCATION))  # 조준경 이미지 로드
+        self.ref_w, self.ref_h = self.game_screen.get_size()  # 리사이징을 위한 화면 크기
+
+        # npc 정보.
+        self.npc_1_size = width / 8  # 각 npc 들의 화면 크기에 대한 상대적 size.
+        self.npc_2_size = width / 10
+        self.npc_3_size = width / 5
+        # 술래
+        self.doll = [self.width * 0.456, self.height / 80, self.width / 8, self.height * 0.1875]
+        # 화면 크기에 대한 술래의 비율
+
+        # 플레이어 사이즈. 창 크기에 대한 비율로 나타낸다.
+        self.player_character_size = (width / 16, width / 11)
+        self.restart_message_y_pos = (180, 280)
+
         try:
-            pygame.mixer.music.load("Sound/mugunghwa.mp3")
-        except:
+            pygame.mixer.music.load(get_abs_path(BGM_LOCATION))
+        except Exception as e:
+            print(e)
             print("사운드 로드 오류")
 
+    # npc 생성을 위한 메소드.
+    def create_npc(self, kind_of_npc):
+
+        if kind_of_npc == NPC_1_CODE:
+            size = self.npc_1_size
+        elif kind_of_npc == NPC_2_CODE:
+            size = self.npc_2_size
+        elif kind_of_npc == NPC_3_CODE:
+            size = self.npc_3_size
+        return game_object.NPC(size, size, kind_of_npc)
+
     def start_game(self):
-        NPC_1 = game_object.NPC(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
+        npc = self.create_npc(NPC_1_CODE)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -80,91 +93,36 @@ class Game:
                     if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
                         return
                     elif event.key == pygame.K_x:
-                        self.run_game_loop(1)
+                        score = self.run_game_loop(1)
+                        return score
             # Render background
             self.game_screen.fill(WHITE)
-            self.game_screen.blit(self.image, (0, 0))
+            self.game_screen.blit(self.image, SCREEN_STARTING_POINT)
+
             # Display main menu text
             message_to_screen_center(
-                self.game_screen, '무궁화 꽃이 피었습니다', PINK, korean_font, self.height / 4)
-            message_to_screen_left(
-                self.game_screen, '[ 조작법 ]', BLACK, korean_font_small_size, 150, 300)
-            message_to_screen_left(
-                self.game_screen, '방향키로 이동 ', BLACK, korean_font_small_size, 150, 350)
-            message_to_screen_left(
-                self.game_screen, 'Esc 또는 Q - 일시정지', BLACK, korean_font_small_size, 150, 400)
-            message_to_screen_left(
-                self.game_screen, 'X - 부스트', BLACK, korean_font_small_size, 150, 450)
-            message_to_screen_left(
-                self.game_screen, 'X 로 시작, Q 로 종료.', BLACK, korean_font_small_size, 150, 500)
-            NPC_1.move(self.width)
-            NPC_1.draw(self.game_screen)
-            pygame.display.update()
-
-    def pause(self):
-        # Render background
-        image = pygame.Surface([self.width, self.height])
-        image.fill(BLACK)
-        # image = pygame.Surface([640,480], pygame.SRCALPHA, 32)
-        image.set_alpha(100)
-        # image = image.convert_alpha()
-        self.game_screen.blit(image, (0, 0))
-        # Render text
-        message_to_screen_center(
-            self.game_screen, 'You have paused', RED, large_font, 50)
-        message_to_screen_center(
-            self.game_screen, 'Press X to continue', WHITE, large_font, 200)
-        message_to_screen_center(
-            self.game_screen, 'Press Q or esc to return', WHITE, large_font, 330)
-        message_to_screen_center(
-            self.game_screen, 'to Main Menu', WHITE, large_font, 380)
-        # Update screen
-        pygame.display.update()
-        # Pause options checking
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    return True
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
-                        return True
-                    elif event.key == pygame.K_x:
-                        return False
-
-    def win_game(self):
-        NPC_1 = game_object.NPC(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    return False
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
-                        return False
-                    elif event.key == pygame.K_r:
-                        return True
-            # Render winning text
-            self.game_screen.fill(WHITE)
-            message_to_screen_left(
-                self.game_screen, 'You Won!', BLUE, large_font, 100, 50)
-            message_to_screen_left(
-                self.game_screen, 'Press R to Play Again', RED, large_font, 150, 200)
-            message_to_screen_left(
-                self.game_screen, 'Press Q or Esc', RED, large_font, 150, 350)
-            message_to_screen_left(
-                self.game_screen, 'to go to main menu', RED, large_font, 150, 400)
-            # Display the winner slime
-            NPC_1.move(self.width)
-            NPC_1.draw(self.game_screen)
+                self.game_screen, '무궁화 꽃이 피었습니다', PINK, korean_font, self.height / 4, self.ref_w, self.ref_h)
+            message_to_screen_center(
+                self.game_screen, '[ 조작법 ]', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[0], self.ref_w,
+                self.ref_h)
+            message_to_screen_center(
+                self.game_screen, '방향키로 이동 ', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[1], self.ref_w,
+                self.ref_h)
+            message_to_screen_center(
+                self.game_screen, 'X 로 시작', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[2],
+                self.ref_w, self.ref_h)
+            npc.move(self.width)
+            npc.draw(self.game_screen)
             pygame.display.update()
 
     def lose_game(self):
         message_to_screen_center(
-            self.game_screen, '탈 락', RED, korean_font, self.width / 2)
+            self.game_screen, '탈 락', RED, korean_font, self.half_width, self.ref_w, self.ref_h)
         pygame.display.update()
         clock.tick(1)
 
     def game_restart(self):
-        NPC_1 = game_object.NPC(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
+        npc = self.create_npc(NPC_1_CODE)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN
@@ -175,177 +133,163 @@ class Game:
             # Display text for losing
             self.game_screen.fill(PINK)
             message_to_screen_center(
-                self.game_screen, '재시작 하려면 R ', WHITE, korean_font, 180)
+                self.game_screen, '재시작 하려면 R ', WHITE, korean_font, self.restart_message_y_pos[0], self.ref_w,
+                self.ref_h)
             message_to_screen_center(
-                self.game_screen, '메뉴로 돌아가려면 Q', WHITE, korean_font, 280)
+                self.game_screen, '메뉴로 돌아가려면 Q', WHITE, korean_font, self.restart_message_y_pos[1], self.ref_w,
+                self.ref_h)
             # Have the loser slime dance around lol
-            NPC_1.move(self.width)
-            NPC_1.draw(self.game_screen)
+            npc.move(self.width)
+            npc.draw(self.game_screen)
             pygame.display.update()
 
     def run_game_loop(self, level):
         game_over = False
         did_win = True
-        boost = 1
         # 무궁화 SOUND EFFECTS
         pygame.mixer.music.play(-1)
 
-        # 타이머 설정.
-        if level == 1:
-            self.game_over_timer = GameOverTimer(100)
-
-        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        print('LEVEL: ', int((level - 1) * 2 + 1))
+        # 전체 타이머 설정.
+        if level == STARTING_LEVEL:
+            self.game_over_timer = GameOverTimer(self.GAME_OVER_TIMER)
 
         # 플레이어, 진행요원, 목표물 렌더링.
-        particle = game_object.AnimatedSprite(500, 500, 50, 50, 'particle/Particle', 10, 6)
-        count = 1
-        player = game_object.PC(self.width / 2 - 25, self.height * 0.85, 50, 70)
+        player = game_object.PC(self.half_width, self.height, *self.player_character_size)
         # 진행요원 -> 사이즈 비율로 다 맞춰야함. 나중에
-        NPC_1 = game_object.NPC(random.randrange(20, 300), self.width * (1 / 5), 100, 100, 1)
-        NPC_1.BASE_SPEED *= level * 1.8
-        NPC_2 = game_object.NPC(random.randrange(20, 700), self.width * (3 / 7), 80, 80, 2)
-        NPC_2.BASE_SPEED *= level * 1.5
-        NPC_3 = game_object.NPC(random.randrange(20, 700), self.width * (2 / 3), 160, 150)
-        NPC_3.BASE_SPEED *= level * 2
-        aim = game_object.NPC(self.width / 3, self.width / 3, 500, 350, 4)
-        aim.BASE_SPEED *= level * 2
-        # 술래
-        DOLL = game_object.GameObject(self.width / 2 - 45, 10, 100, 150)
-        DOLL.sprite_image('NPC/back.png')
+        npc_1 = self.create_npc(NPC_1_CODE)
+        npc_2 = self.create_npc(NPC_2_CODE)
+        npc_3 = self.create_npc(NPC_3_CODE)
+        npc_1.BASE_SPEED *= level * self.NPC_1_SPEED
+        npc_2.BASE_SPEED *= level * self.NPC_2_SPEED
+        npc_3.BASE_SPEED *= level * self.NPC_3_SPEED
+        npcs = [npc_1, npc_2, npc_3]
 
+        # AIM
+        aim = game_object.Aim(*self.AIM_SIZE)
+        aim.BASE_SPEED *= level * self.AIM_SPEED
+
+        # 술래
+        DOLL = game_object.GameObject(*self.doll)
+        DOLL.sprite_image(get_abs_path(DOLL_BACK_LOCATION))
+
+        # 술래 타이머, 진행요원 타이머, 조준경 타이머를 위한 현재 시간 얻어오기.
         start_ticks = pygame.time.get_ticks()
-        NPC_ticks = pygame.time.get_ticks()
+        npc_ticks = pygame.time.get_ticks()
         aim_ticks = pygame.time.get_ticks()
 
         while not game_over:
             for event in pygame.event.get():
-                # Quit if player tries to exit
                 if event.type == pygame.QUIT:
                     exit()
-                if event.type == pygame.KEYDOWN and (event.key == pygame.K_ESCAPE or event.key == pygame.K_q):
-                    if self.pause():
-                        return
 
             # 전체 타이머
             left_time = self.game_over_timer.time_checker()
 
             # 캐릭터 방향전환.
-            dir_x, dir_y, boost = self.get_PC_dir()
+            dir_x, dir_y = self.get_PC_dir()
             # Redraw screen
             self.game_screen.fill(WHITE)
-            self.game_screen.blit(self.image, (0, 0))
-            # 게임 오브젝트 render
+            self.game_screen.blit(self.image, SCREEN_STARTING_POINT)
+            # 술래 render
             DOLL.draw(self.game_screen)
-            NPC_1.move(self.width)
-            NPC_1.draw(self.game_screen)
-            NPC_2.move(self.width)
-            NPC_2.draw(self.game_screen)
-            NPC_3.move(self.width)
-            NPC_3.draw(self.game_screen)
-            player.move(dir_x, dir_y, self.width, self.height, boost)
+
+            # npc 1,2,3 이 담긴 리스트 npcs 의 원소들을 move 후 draw 를 반복.
+            for npc in npcs:
+                npc.move(self.width)
+                npc.draw(self.game_screen)
+            player.move(dir_x, dir_y, self.width, self.height)
             player.draw(self.game_screen, dir_x, dir_y)
+
             # NPC turning timer 설정.
-            if level >= 1:
-                NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
-                NPC_timer = round(float(self.NPC_CHANGE_DIRECTION_TIME - NPC_elapsed_time), 1)
-                if NPC_timer <= 0:
-                    NPC_1.change_direction()
-                    NPC_2.change_direction()
-                    NPC_3.change_direction()
-                    NPC_ticks = pygame.time.get_ticks()
-                    NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
+            npc_elapsed_time = (pygame.time.get_ticks() - npc_ticks) / self.TIMER_UNIT
+            npc_timer = round(float(self.NPC_CHANGE_DIRECTION_TIME - npc_elapsed_time), 1)
+            if npc_timer <= 0:  # npc_timer 가 0 이 되면 모든 NPC 의 진행방향을 변경한다.
+                for npc in npcs:
+                    npc.change_direction()
+                npc_ticks = pygame.time.get_ticks()
+                npc_elapsed_time = (pygame.time.get_ticks() - npc_ticks) / self.TIMER_UNIT
 
             # 무궁화 타이머 설정 stop 이 false 일 때만 진행.
-            elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
+            elapsed_time = (pygame.time.get_ticks() - start_ticks) / self.TIMER_UNIT
             timer = round(float(self.TIMER_TIME - elapsed_time), 1)
 
-            # Render boost effects
-            if boost > 1:
-                particle.next_sprite()
-                # Offset the particle to be roughly mid-body
-                particle.x_pos = player.x_pos + 3
-                particle.y_pos = player.y_pos + 30
-                particle.draw(self.game_screen)
-            # Display level counter in corner
+            # 현재 레벨, 게임 오버 타이머 화면 좌측 상단에 render
             message_to_screen_left(
-                self.game_screen, 'Level ' + str(int((level - 1) * 2 + 1)), WHITE, level_font, 0, 0)
+                self.game_screen, level_printer(level), WHITE, level_font, 70, 30, self.ref_w,
+                self.ref_h)
             message_to_screen_left(
-                self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 0, 35)
-            # if not self.stop_timer:
-            #     message_to_screen_center(
-            #         self.game_screen, f'Timer: {timer}', BLACK, level_font, self.width * (1 / 2))
+                self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w, self.ref_h)
 
-            # Detect collision
             try:
                 collision = self.detect_all_collisions(
-                    level, player, NPC_1, NPC_2, NPC_3, DOLL)
+                    level, player, npc_1, npc_2, npc_3, DOLL)
             except:
                 try:
                     collision = self.detect_all_collisions(
-                        level, player, NPC_1, NPC_2, 0, DOLL)
+                        level, player, npc_1, npc_2, 0, DOLL)
                 except:
                     collision = self.detect_all_collisions(
-                        level, player, NPC_1, 0, 0, DOLL)
+                        level, player, npc_1, 0, 0, DOLL)
 
             # 무궁화 SOUND EFFECTS
-            if pygame.mixer.music.get_busy() == False:
+            # 게임 내내 반복된다.
+            if pygame.mixer.music.get_busy() is False:
                 pygame.mixer.music.play(-1)
+
             # 무궁화 발동
             if timer <= 0:
                 # 3초 타이머 걸고 지나면 해제. & 타이머 리셋.
-                DOLL.sprite_image('NPC/front.png')
-                self.stop_timer = True
-                time = 5
+                DOLL.sprite_image(get_abs_path(DOLL_FRONT_LOCATION))
+                self.mugunghwa_timer = True
+                time = self.TIMER_TIME
                 time_checker = round(time - (timer) * (-1), 1)
-                # message_to_screen_center(
-                #     self.game_screen, "S T O P !", RED, large_font, self.height / 2)
-                # message_to_screen_center(
-                #     self.game_screen, f'{time_checker}', RED, large_font, self.height / 3)
                 if time_checker <= 0:
-                    DOLL.sprite_image('NPC/back.png')
-                    self.stop_timer = False
+                    DOLL.sprite_image(get_abs_path((DOLL_BACK_LOCATION)))
+                    self.mugunghwa_timer = False
                     start_ticks = pygame.time.get_ticks()
-                    elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
+                    elapsed_time = (pygame.time.get_ticks() - start_ticks) / self.TIMER_UNIT
                     timer = round(float(self.TIMER_TIME - elapsed_time), 2)
                 else:
+                    # 술래가 뒤돌았을 때 조준경이 돌아다니는 effect
                     aim.move(self.width)
                     aim.draw(self.game_screen)
-                    aim_elapsed_time = (pygame.time.get_ticks() - aim_ticks) / 1000
+                    aim_elapsed_time = (pygame.time.get_ticks() - aim_ticks) / self.TIMER_UNIT
                     aim_timer = round(float(self.AIM_CHANGE_DIRECTION_TIME - aim_elapsed_time), 1)
                     if aim_timer <= 0:
                         aim.change_direction()
                         aim_ticks = pygame.time.get_ticks()
-                        aim_elapsed_time = (pygame.time.get_ticks() - aim_ticks) / 1000
+                        aim_elapsed_time = (pygame.time.get_ticks() - aim_ticks) / self.TIMER_UNIT
 
-                    if event.type == 768:  # keydown 감지되면 끝.
+                    if event.type == KEY_INPUT:
                         did_win = False
-                        self.stop_timer = False  # 재시작을 위한 stop_timer 원상복귀.
-                        DOLL.sprite_image('NPC/back.png')
+                        self.mugunghwa_timer = False  # 재시작을 위한 mugunghwa_timer 원상복귀.
+                        DOLL.sprite_image(get_abs_path(DOLL_BACK_LOCATION))
                         break
 
-            if collision == 'dead':
+            if collision == DEAD_MESSAGE:
+                # npc 와 충돌시, did_win = False 로 while 문 탈출.
                 did_win = False
                 break
-            elif collision == 'DOLL':
+            elif collision == DOLL_MESSAGE:
                 # 목표물 도달시 did_win = True 상태로 while 문 탈출.
                 break
             pygame.display.update()
             clock.tick(self.TICK_RATE)
+
         # did_win 이용해 승패 판단 후 다음 프로세스 진행.
         if did_win:
-            if level >= self.WIN_LEVEL:
-                self.win_game()  # 전체 게임 클리어.
-            else:
-                message_to_screen_left(
-                    self.game_screen, 'Level ' + str(int((level - 1) * 2 + 1)), WHITE, level_font, 0, 0)
-                self.run_game_loop(level + 0.5)
-        elif self.game_restart():
-            self.run_game_loop(1)
+            # message_to_screen_left(
+            #     self.game_screen, level_printer(level), WHITE, level_font, 0, 0, self.ref_w,
+            #     self.ref_h)
+            # self.run_game_loop(level + self.LEVEL_UP_STEP)
+            # 다음 게임으로 넘어가기
+            return left_time
+        # elif self.game_restart():
+        #     self.run_game_loop(STARTING_LEVEL)
         else:
             return
 
-    def get_PC_dir(self, dir_x=0, dir_y=0, boost=1):
+    def get_PC_dir(self, dir_x=0, dir_y=0):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
             dir_y = 1
@@ -355,34 +299,39 @@ class Game:
             dir_x = -1
         if keys[pygame.K_RIGHT]:
             dir_x = 1
-        if keys[pygame.K_x]:
-            boost = 2
-        return (dir_x, dir_y, boost)
+        return dir_x, dir_y
 
-    def detect_all_collisions(self, level, player, NPC_1, NPC_2, NPC_3, DOLL):
+    def detect_all_collisions(self, level, player, npc_1, npc_2, npc_3, DOLL):
         dead = 0
-        # if level > self.HARD_LEVEL:
-        dead += player.detect_collision(NPC_3)
-        # if level > self.MEDIUM_LEVEL:
-        dead += player.detect_collision(NPC_2)
-        dead += player.detect_collision(NPC_1)
+        dead += player.detect_collision(npc_3)
+        dead += player.detect_collision(npc_2)
+        dead += player.detect_collision(npc_1)
+        # 충돌이 있었을 경우 lose_game 을 호출 후 DEAD_MESSAGE 를 반환하여 게임을 종료.
         if dead:
             self.lose_game()
-            return 'dead'
+            return DEAD_MESSAGE
 
+        # 술래와 충돌했을 때 (게임 클리어) -> DOLL_MESSAGE 를 반환해 게임 승리를 상위 함수로 전달.
         if player.detect_collision(DOLL):
-            message_to_screen_center(self.game_screen, 'Next Up, Level ' + str(
-                int(level * 2)), WHITE, STOP_font, self.height / 2)
+            message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
+                                     self.one_third_screen[0],
+                                     self.ref_w,
+                                     self.ref_h)
+            message_to_screen_center(self.game_screen, '다음 게임은 달고나 게임입니다. ', WHITE, korean_font,
+                                     self.half_width,
+                                     self.ref_w,
+                                     self.ref_h)
             pygame.display.update()
-            clock.tick(1)
-            return 'DOLL'
+            clock.tick(0.5)
+            return DOLL_MESSAGE
 
 
 # Start the game up
-pygame.init()
-new_game = Game('NPC/background.png', SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
-new_game.start_game()
+def start_game():
+    pygame.init()
+    new_game = Game(get_abs_path(BACKGROUND_LOCATION), SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
+    return new_game.start_game()
 
-# After game is finished quit the program
-pygame.quit()
-quit()
+    # After game is finished quit the program
+    # pygame.quit()
+    # quit()

@@ -1,102 +1,67 @@
-import math
+import random
 
-import game_object
+from Games.Dalgona import game_object
+from Games.Dalgona.constants import *
+from Games.Mugunghwa.game_object import NPC
 from Games.game_settings import *
 
-
-class GameObject:
-
-    def __init__(self, x, y, width, height):
-        self.x_pos = x
-        self.y_pos = y
-        self.width = width
-        self.height = height
-
-    def sprite_image(self, image_path):
-        object_image = pygame.image.load(image_path)
-        self.image = pygame.transform.scale(object_image, (self.width, self.height))
-
-    def draw(self, background):
-        background.blit(self.image, (self.x_pos, self.y_pos))
-
-
-class NPCs(GameObject):
-    BASE_SPEED = 10
-
-    # True  = right, False = Left
-
-    def __init__(self, x, y, width, height, kind_of_npc=1):
-        super().__init__(x, y, width / 2, height)  # 범위 보정
-        if kind_of_npc == 1:
-            object_image = pygame.image.load('Media/NPC1.png')
-        # elif kind_of_npc == 2:
-        #     object_image = pygame.image.load('common_images/NPC2.png')
-        # else:
-        #     object_image = pygame.image.load('common_images/NPC3.png')
-        self.go_forward = False
-        self.direction = 1
-        # 1 right 2 left 3 up 4 down
-        self.image = pygame.transform.scale(object_image, (width * (3 / 4), height))
-
-    def draw(self, background):
-        if self.go_forward:
-            background.blit(self.image, (self.x_pos, self.y_pos))
-        else:
-            background.blit(pygame.transform.flip(
-                self.image, 1, 0), (self.x_pos, self.y_pos))
-
-    def move(self, max_width):
-        if self.x_pos <= 0:
-            self.direction = 1
-        elif self.x_pos >= max_width:
-            self.direction = 2
-        elif self.y_pos <= 0:
-            self.direction = 4
-        elif self.y_pos >= max_width:
-            self.direction = 3
-
-        if self.direction == 1:
-            self.x_pos += self.BASE_SPEED
-            self.go_forward = False
-        elif self.direction == 2:
-            self.x_pos -= self.BASE_SPEED
-            self.go_forward = True
-        elif self.direction == 3:
-            self.y_pos -= self.BASE_SPEED
-        else:
-            self.y_pos += self.BASE_SPEED
-
-    def change_direction(self):
-        self.direction = random.randrange(1, 5)
+BGM_LOCATION = "Dalgona/Media/bgm.mp3"
+PIN_LOCATION = "Dalgona/Media/pin.png"
+NPC_RANDRANGE = random.randrange(20, 300)
+KIND_OF_NPC = 1
+NPC_SPEED = 10
+NPC_SIZE_RATIO = 8
+GAME_TIME = 50
+NUMBER_OF_POINTS = 100
+DALGONA_SIZE_RATIO = (3 / 8)
+CIRCLE = 1
+RECTANGLE = 2
+TRIANGLE = 3
+STAR = 4
+FPS_RATE = 20
 
 
 class Game:
     NPC_CHANGE_DIRECTION_TIME = 3
+    NPC_SIZE = 150
+    BGM_VOLUME = 0.2
 
     def __init__(self, width, height):
         self.width = width
         self.height = height
+        self.half_width = width / 2
+        self.half_height = height / 2
+        self.center = [self.width / 2, self.height / 2]
         # Screen set-up
         self.game_screen = pygame.display.set_mode((width, height))
         self.game_screen.fill(PINK)
         # self.shape = random.randrange(1,4)
-        self.shape = 3
-        pygame.mixer.music.load("Media/bgm.mp3")
+        self.shape = RECTANGLE
+        self.rectangle_size = width / RECTANGLE_SHAPE_SIZE_RATIO
+        self.half_rectangle = self.rectangle_size / 2
+        # bgm 실행
+        try:
+            pygame.mixer.music.load(get_abs_path(BGM_LOCATION))
+        except Exception as e:
+            print(e)
+
         self.ref_w, self.ref_h = self.game_screen.get_size()
-        self.pin_image = pygame.image.load("Media/pin.png")
+        self.pin_image = pygame.image.load(get_abs_path(PIN_LOCATION))
+        self.npc_size = width / NPC_SIZE_RATIO
 
     def start_game(self):
         # walking around NPC
-        npc = NPCs(random.randrange(20, 300), self.width * (1 / 5), 150, 150, 1)
-
-        # 달고나 생성.
+        npc = NPC(self.npc_size, self.npc_size, KIND_OF_NPC)  # 화면을 돌아다닐 npc 생성.
+        # bgm
         if pygame.mixer.music.get_busy() == False:
+            pygame.mixer.music.set_volume(self.BGM_VOLUME)
             pygame.mixer.music.play(-1)
-        dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, 100, self.shape)
-        game_over_timer = GameOverTimer(50)
+        # 달고나 생성
+        dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, NUMBER_OF_POINTS, self.shape)
+        game_over_timer = GameOverTimer(GAME_TIME)
         NPC_ticks = pygame.time.get_ticks()
-        while True:
 
+        while True:
             left_time = game_over_timer.time_checker()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -108,21 +73,24 @@ class Game:
                                    self.height / 20,
                                    self.ref_w, self.ref_h)
 
-            pygame.draw.circle(self.game_screen, YELLOW_BROWN, [self.width / 2, self.height / 2], 300, 300)
+            pygame.draw.circle(self.game_screen, YELLOW_BROWN, self.center,
+                               int(self.width * DALGONA_SIZE_RATIO), int(self.width * DALGONA_SIZE_RATIO))
 
-            # 달고나 모양.
-            if self.shape == 1:
-                pygame.draw.circle(self.game_screen, DARK_BROWN, [self.width / 2 + 10, self.height / 2], 220, 15)
-            elif self.shape == 2:
+            # 달고나 모양 그리기.
+            if self.shape == CIRCLE:
+                pygame.draw.circle(self.game_screen, DARK_BROWN, self.center, int(self.width * CIRCLE_SHAPE_SIZE_RATIO),
+                                   int(self.width * SHAPE_WIDTH_RATIO))
+            elif self.shape == RECTANGLE:
                 pygame.draw.rect(self.game_screen, DARK_BROWN,
-                                 [self.width / 2 - 150 - 30, self.height / 2 - 150 - 30, self.width / 2.2,
-                                  self.width / 2.2],
-                                 15, border_radius=10)
-            elif self.shape == 3:
+                                 [self.half_width - self.half_rectangle, self.half_height - self.half_rectangle,
+                                  self.rectangle_size,
+                                  self.rectangle_size],
+                                 int(self.width * SHAPE_WIDTH_RATIO), border_radius=RECTANGLE_BORDER_RADIUS)
+            elif self.shape == TRIANGLE:
                 pygame.draw.polygon(self.game_screen, DARK_BROWN,
                                     [[self.width / 2, self.height / 4], [self.width / 4, self.height * (2 / 3)],
                                      [self.width * (3 / 4), self.height * (2 / 3)]], 15)
-            elif self.shape == 4:
+            elif self.shape == STAR:
                 side_length = self.width / 2
                 half_side_length = side_length / 2
                 ratio = math.sqrt(3)
@@ -142,16 +110,14 @@ class Game:
 
             dalgona.draw()
 
-            ######################### PIN IMAGE #############################
-
+            # 바늘 아트워크
             if pygame.mouse.get_pressed()[0]:
                 x_pos = pygame.mouse.get_pos()[0]
                 y_pos = pygame.mouse.get_pos()[1]
-                # print(x_pos, y_pos)
                 self.game_screen.blit(self.pin_image, (x_pos, y_pos - self.pin_image.get_size()[1]))
-            ##################################################################
 
-            ########################### NPC ##################################
+            # npc 의 랜덤 움직임.
+            npc.BASE_SPEED = NPC_SPEED
             npc.move(self.width)
             npc.draw(self.game_screen)
             NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
@@ -160,23 +126,32 @@ class Game:
                 npc.change_direction()
                 NPC_ticks = pygame.time.get_ticks()
                 NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
-            ################################################################
 
             if dalgona.check_win()["is_success"] is True:
                 self.game_screen.fill(PINK)
-                message_to_screen_center(self.game_screen, "승리!", WHITE, korean_font, self.width / 2, self.ref_w,
+                message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
+                                         self.width / 3,
+                                         self.ref_w,
                                          self.ref_h)
+                message_to_screen_center(self.game_screen, '다음 게임은 구슬치기 게임입니다. ', WHITE, korean_font,
+                                         self.half_width,
+                                         self.ref_w,
+                                         self.ref_h)
+                return left_time
             if left_time <= 0 or dalgona.check_win()["wrong_point_clicked"]:
                 self.game_screen.fill(PINK)
                 message_to_screen_center(self.game_screen, "패 배", WHITE, korean_font, self.width / 2, self.ref_w,
                                          self.ref_h)
+                clock.tick(0.5)
+                return
             pygame.display.update()
-            clock.tick(20)
+            clock.tick(FPS_RATE)
 
 
-pygame.init()
-new_game = Game(SCREEN_WIDTH, SCREEN_HEIGHT)
-new_game.start_game()
+def start_game():
+    pygame.init()
+    new_game = Game(SCREEN_WIDTH, SCREEN_HEIGHT)
+    return new_game.start_game()
 
-pygame.quit()
-quit()
+    # pygame.quit()
+    # quit()

@@ -12,5 +12,10 @@
         <option value="rearrange" />
       </set>
     </option>
+    <option name="exclusions">
+      <set>
+        <option value="main.py" />
+      </set>
+    </option>
   </component>
 </project>
