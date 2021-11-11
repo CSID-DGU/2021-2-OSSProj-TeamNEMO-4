@@ -7,26 +7,27 @@ from Games.MarbleGame.marble_game import start_game as start_marble_game
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
 
-
 if __name__ == "__main__":
     SCORE = 0
+    LEVEL = 1
 
     while True:
-        mugunghwa_score = start_mugunghwa_game()
+        mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
         if mugunghwa_score:
             SCORE += mugunghwa_score
         else:
             break
-        dalgona_score = start_dalgona_game()
+        dalgona_score = start_dalgona_game(LEVEL, SCORE)
         if dalgona_score:
             SCORE += dalgona_score
         else:
             break
-        marble_score = start_marble_game()
+        marble_score = start_marble_game(LEVEL, SCORE)
         if marble_score:
             SCORE += marble_score
         else:
             break
+        LEVEL += 1
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     ref_w, ref_h = screen.get_size()

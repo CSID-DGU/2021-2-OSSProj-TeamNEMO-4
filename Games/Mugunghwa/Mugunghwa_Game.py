@@ -83,37 +83,39 @@ class Game:
             size = self.npc_3_size
         return game_object.NPC(size, size, kind_of_npc)
 
-    def start_game(self):
+    def start_game(self, level, score):
         npc = self.create_npc(NPC_1_CODE)
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    return
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
-                        return
-                    elif event.key == pygame.K_x:
-                        score = self.run_game_loop(1)
-                        return score
-            # Render background
-            self.game_screen.fill(WHITE)
-            self.game_screen.blit(self.image, SCREEN_STARTING_POINT)
-
-            # Display main menu text
-            message_to_screen_center(
-                self.game_screen, '무궁화 꽃이 피었습니다', PINK, korean_font, self.height / 4, self.ref_w, self.ref_h)
-            message_to_screen_center(
-                self.game_screen, '[ 조작법 ]', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[0], self.ref_w,
-                self.ref_h)
-            message_to_screen_center(
-                self.game_screen, '방향키로 이동 ', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[1], self.ref_w,
-                self.ref_h)
-            message_to_screen_center(
-                self.game_screen, 'X 로 시작', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[2],
-                self.ref_w, self.ref_h)
-            npc.move(self.width)
-            npc.draw(self.game_screen)
-            pygame.display.update()
+        score = self.run_game_loop(level, score)
+        return score
+        # while True:
+        #     for event in pygame.event.get():
+        #         if event.type == pygame.QUIT:
+        #             return
+        #         elif event.type == pygame.KEYDOWN:
+        #             if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+        #                 return
+        #             elif event.key == pygame.K_x:
+        #                 score = self.run_game_loop(level, score)
+        #                 return score
+        # Render background
+        # self.game_screen.fill(WHITE)
+        # self.game_screen.blit(self.image, SCREEN_STARTING_POINT)
+        #
+        # # Display main menu text
+        # message_to_screen_center(
+        #     self.game_screen, '무궁화 꽃이 피었습니다', PINK, korean_font, self.height / 4, self.ref_w, self.ref_h)
+        # message_to_screen_center(
+        #     self.game_screen, '[ 조작법 ]', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[0], self.ref_w,
+        #     self.ref_h)
+        # message_to_screen_center(
+        #     self.game_screen, '방향키로 이동 ', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[1], self.ref_w,
+        #     self.ref_h)
+        # message_to_screen_center(
+        #     self.game_screen, 'X 로 시작', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[2],
+        #     self.ref_w, self.ref_h)
+        # npc.move(self.width)
+        # npc.draw(self.game_screen)
+        # pygame.display.update()
 
     def lose_game(self):
         game_over_image = pygame.image.load(get_abs_path(GAME_OVER_LOCATION))
@@ -124,37 +126,36 @@ class Game:
         pygame.display.update()
         clock.tick(0.5)
 
-    def game_restart(self):
-        npc = self.create_npc(NPC_1_CODE)
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN
-                                                 and (event.key == pygame.K_q or event.key == pygame.K_ESCAPE)):
-                    return False
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
-                    return True
-            # Display text for losing
-            self.game_screen.fill(PINK)
-            message_to_screen_center(
-                self.game_screen, '재시작 하려면 R ', WHITE, korean_font, self.restart_message_y_pos[0], self.ref_w,
-                self.ref_h)
-            message_to_screen_center(
-                self.game_screen, '메뉴로 돌아가려면 Q', WHITE, korean_font, self.restart_message_y_pos[1], self.ref_w,
-                self.ref_h)
-            # Have the loser slime dance around lol
-            npc.move(self.width)
-            npc.draw(self.game_screen)
-            pygame.display.update()
+    # def game_restart(self):
+    #     npc = self.create_npc(NPC_1_CODE)
+    #     while True:
+    #         for event in pygame.event.get():
+    #             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN
+    #                                              and (event.key == pygame.K_q or event.key == pygame.K_ESCAPE)):
+    #                 return False
+    #             elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+    #                 return True
+    #         # Display text for losing
+    #         self.game_screen.fill(PINK)
+    #         message_to_screen_center(
+    #             self.game_screen, '재시작 하려면 R ', WHITE, korean_font, self.restart_message_y_pos[0], self.ref_w,
+    #             self.ref_h)
+    #         message_to_screen_center(
+    #             self.game_screen, '메뉴로 돌아가려면 Q', WHITE, korean_font, self.restart_message_y_pos[1], self.ref_w,
+    #             self.ref_h)
+    #         # Have the loser slime dance around lol
+    #         npc.move(self.width)
+    #         npc.draw(self.game_screen)
+    #         pygame.display.update()
 
-    def run_game_loop(self, level):
+    def run_game_loop(self, level, score):
         game_over = False
         did_win = True
         # 무궁화 SOUND EFFECTS
         pygame.mixer.music.play(-1)
 
         # 전체 타이머 설정.
-        if level == STARTING_LEVEL:
-            self.game_over_timer = GameOverTimer(self.GAME_OVER_TIMER)
+        self.game_over_timer = GameOverTimer(self.GAME_OVER_TIMER)
 
         # 플레이어, 진행요원, 목표물 렌더링.
         player = game_object.PC(self.half_width, self.height, *self.player_character_size)
@@ -162,14 +163,14 @@ class Game:
         npc_1 = self.create_npc(NPC_1_CODE)
         npc_2 = self.create_npc(NPC_2_CODE)
         npc_3 = self.create_npc(NPC_3_CODE)
-        npc_1.BASE_SPEED *= level * self.NPC_1_SPEED
-        npc_2.BASE_SPEED *= level * self.NPC_2_SPEED
-        npc_3.BASE_SPEED *= level * self.NPC_3_SPEED
+        npc_1.BASE_SPEED = (level * 4) + self.NPC_1_SPEED
+        npc_2.BASE_SPEED = (level * 4) + self.NPC_2_SPEED
+        npc_3.BASE_SPEED = (level * 4) + self.NPC_3_SPEED
         npcs = [npc_1, npc_2, npc_3]
 
         # AIM
         aim = game_object.Aim(*self.AIM_SIZE)
-        aim.BASE_SPEED *= level * self.AIM_SPEED
+        aim.BASE_SPEED *= self.AIM_SPEED
 
         # 술래
         DOLL = game_object.GameObject(*self.doll)
@@ -218,21 +219,24 @@ class Game:
 
             # 현재 레벨, 게임 오버 타이머 화면 좌측 상단에 render
             message_to_screen_left(
-                self.game_screen, level_printer(level), WHITE, level_font, 70, 30, self.ref_w,
+                self.game_screen, 'Level:' + str(level), WHITE, level_font, 70, 30, self.ref_w,
                 self.ref_h)
             message_to_screen_left(
                 self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w, self.ref_h)
+            message_to_screen_left(
+                self.game_screen, "SCORE : " + str(score), BLACK, level_font, self.width - 130, 40, self.ref_w,
+                self.ref_h)
 
             try:
                 collision = self.detect_all_collisions(
-                    level, player, npc_1, npc_2, npc_3, DOLL)
+                    player, npc_1, npc_2, npc_3, DOLL)
             except:
                 try:
                     collision = self.detect_all_collisions(
-                        level, player, npc_1, npc_2, 0, DOLL)
+                        player, npc_1, npc_2, 0, DOLL)
                 except:
                     collision = self.detect_all_collisions(
-                        level, player, npc_1, 0, 0, DOLL)
+                        player, npc_1, 0, 0, DOLL)
 
             # 무궁화 SOUND EFFECTS
             # 게임 내내 반복된다.
@@ -304,7 +308,7 @@ class Game:
             dir_x = 1
         return dir_x, dir_y
 
-    def detect_all_collisions(self, level, player, npc_1, npc_2, npc_3, DOLL):
+    def detect_all_collisions(self, player, npc_1, npc_2, npc_3, DOLL):
         dead = 0
         dead += player.detect_collision(npc_3)
         dead += player.detect_collision(npc_2)
@@ -330,10 +334,10 @@ class Game:
 
 
 # Start the game up
-def start_game():
+def start_game(level, score):
     pygame.init()
     new_game = Game(get_abs_path(BACKGROUND_LOCATION), SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
-    return new_game.start_game()
+    return new_game.start_game(level, score)
 
     # After game is finished quit the program
     # pygame.quit()
