@@ -1,9 +1,9 @@
 import random
 
-import game_object
+from Games.Dalgona import game_object
+from Games.Dalgona.constants import *
 from Games.Mugunghwa.game_object import NPC
 from Games.game_settings import *
-from constants import *
 
 BGM_LOCATION = "Dalgona/Media/bgm.mp3"
 PIN_LOCATION = "Dalgona/Media/pin.png"
@@ -46,7 +46,6 @@ class Game:
             print(e)
 
         self.ref_w, self.ref_h = self.game_screen.get_size()
-        print(get_abs_path(PIN_LOCATION))
         self.pin_image = pygame.image.load(get_abs_path(PIN_LOCATION))
         self.npc_size = width / NPC_SIZE_RATIO
 
@@ -130,19 +129,29 @@ class Game:
 
             if dalgona.check_win()["is_success"] is True:
                 self.game_screen.fill(PINK)
-                message_to_screen_center(self.game_screen, "승리!", WHITE, korean_font, self.width / 2, self.ref_w,
+                message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
+                                         self.width / 3,
+                                         self.ref_w,
                                          self.ref_h)
+                message_to_screen_center(self.game_screen, '다음 게임은 구슬치기 게임입니다. ', WHITE, korean_font,
+                                         self.half_width,
+                                         self.ref_w,
+                                         self.ref_h)
+                return left_time
             if left_time <= 0 or dalgona.check_win()["wrong_point_clicked"]:
                 self.game_screen.fill(PINK)
                 message_to_screen_center(self.game_screen, "패 배", WHITE, korean_font, self.width / 2, self.ref_w,
                                          self.ref_h)
+                clock.tick(0.5)
+                return
             pygame.display.update()
             clock.tick(FPS_RATE)
 
 
-pygame.init()
-new_game = Game(SCREEN_WIDTH, SCREEN_HEIGHT)
-new_game.start_game()
+def start_game():
+    pygame.init()
+    new_game = Game(SCREEN_WIDTH, SCREEN_HEIGHT)
+    return new_game.start_game()
 
-pygame.quit()
-quit()
+    # pygame.quit()
+    # quit()

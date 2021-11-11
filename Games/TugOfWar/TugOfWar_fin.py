@@ -1,19 +1,16 @@
-import random
-import time
-
 import pygame.time
+import time
 
 from Games.game_settings import *
 
 korean_font_bigSize = pygame.font.Font('../../Font/Pretendard-Medium.otf', 90)
 
-
 class TugOfWar:
     # 클래스 변수
-    WIN_LEVEL = 5  # LEVEL 5 통과하면 게임 끝
-    A_TIME = random.randint(2, 4)  # A 누를 수 있는 시간
+    WIN_LEVEL = 5 # LEVEL 5 통과하면 게임 끝
+    A_TIME = random.randint(2, 4) # A 누를 수 있는 시간
     D_TIME = random.randint(2, 4)
-    numClick = 30  # level마다 눌러야하는 키 수
+    numClick = 30 # level마다 눌러야하는 키 수
     TotalTime = 40
     wrong_click_lim = 3
 
@@ -62,7 +59,7 @@ class TugOfWar:
                 self.screen.get_height() / 1.66, self.ref_w, self.ref_h)
             message_to_screen_center(
                 self.screen, 'E 로 시작, Q 또는 Esc로 종료', WHITE, korean_font_small_size,
-                self.screen.get_height() / 1.4, self.ref_w, self.ref_h)
+                self.screen.get_height()/ 1.4, self.ref_w, self.ref_h)
             pygame.display.update()
 
     # 통과 화면
@@ -113,9 +110,9 @@ class TugOfWar:
             self.screen.fill(BLACK)
             # 문구 넣기
             message_to_screen_center(
-                self.screen, '재시도 : R', RED, korean_font, self.height * 3 / 8, self.ref_w, self.ref_h)
+                self.screen, '재시도 : R', RED, korean_font, self.height * 3/8, self.ref_w, self.ref_h)
             message_to_screen_center(
-                self.screen, '시작화면으로 이동 : Q', RED, korean_font, self.height / 2, self.ref_w, self.ref_h)
+                self.screen, '시작화면으로 이동 : Q', RED, korean_font, self.height/2, self.ref_w, self.ref_h)
             pygame.display.update()
 
     def run_game_loop(self, level):
@@ -149,7 +146,8 @@ class TugOfWar:
 
             # 캐릭터 배치
             imgChar = pygame.transform.scale(self.char, (self.screen.get_width(), self.screen.get_height()))
-            self.screen.blit(imgChar, (0, 0))
+            # 캐릭터 움직이도록 설정
+            self.screen.blit(imgChar, ((click-nClick), 0))
 
             # d 누르는 타이머 설정
             elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
@@ -157,12 +155,10 @@ class TugOfWar:
             # LEVEL 표시
             message_to_screen_left(
                 self.screen, 'LEVEL {}'.format(level), WHITE, level_font, self.screen.get_width() / 13,
-                                                                          self.screen.get_height() / 40, self.ref_w,
-                self.ref_h)
+                self.screen.get_height() / 40, self.ref_w, self.ref_h)
             # 남은 전체 시간 화면에 표시
             message_to_screen_left(
                 self.screen, 'Left Time : {}'.format(all_left_time), WHITE, level_font, self.screen.get_width() / 6.5,
-
                 self.screen.get_height() / 11, self.ref_w, self.ref_h)
             # 남은 클릭 수 화면에 표시
             message_to_screen_center(
@@ -174,6 +170,8 @@ class TugOfWar:
                     self.screen, "Press D", WHITE, large_font, self.height / 2, self.ref_w, self.ref_h)
                 message_to_screen_center(
                     self.screen, f'{d_timer}', WHITE, large_font, self.height / 3, self.ref_w, self.ref_h)
+                #if event.key == pygame.K_d:
+                #             click += 1
 
             # a 누르는 시간 (d 누르는 시간 끝남)
             if d_timer <= 0:
@@ -218,29 +216,13 @@ class TugOfWar:
 
             key = pygame.key.get_pressed()
             if d_timer > 0:
-                if key == pygame.K_d:
-                    click += 1
-                elif key[pygame.K_q] == 0: # 키 입력이 없을 때
-                    click -= 0.03
-            elif d_timer < 0:
-                if key == pygame.K_a:
-                    click += 1
-                elif key != pygame.K_a: # 다른 키 입력 받을 때
-                    click += 0
-
-                elif event.type == pygame.KEYDOWN:
-                    if d_timer > 0:  # d 누르는 타이머 돌아갈 때
-                        if event.key == pygame.K_d:
-                            click += 1
-                        elif event.key == pygame.K_a:
-                            click_wrong = True
-                            break
-                    elif d_timer < 0:  # a 누르는 타이머 돌아갈 때
-                        if event.key == pygame.K_a:
-                            click += 1
-                        elif event.key == pygame.K_d:
-                            click_wrong = True
-                            break
+                if key[pygame.K_d]!=True: ##############d가 눌리지 않으면 클릭수 늘어남
+                    click -= 0.1
+                elif key[pygame.K_a]:
+                    click -= 0.2 #####d타임에 a를 잘못 누르면 두배로 클릭수 늘어남
+            elif d_timer < 0:  ##############a를 누르면 클릭수 줄어듬
+                if key[pygame.K_a]:
+                    click += 0.1
 
             # 키 잘못 입력 or 전체 시간 끝나면 게임 종료
             if click_wrong or all_left_time < 0:
@@ -249,7 +231,7 @@ class TugOfWar:
                 time.sleep(1)
                 break
             # 클릭 수 채운 경우 ~> did_win이 True인 상태로 반복문 탈출
-            if click == nClick:
+            if click >= nClick:  ################수정 소수점 단위로 빠르게 지나가기 때문에 조건 변경함
                 self.level_clear()
                 time.sleep(1)
                 break
@@ -261,8 +243,7 @@ class TugOfWar:
             else:
                 message_to_screen_left(
                     self.screen, 'LEVEL {}'.format(level), WHITE, level_font, self.screen.get_width() / 13,
-                                                                              self.screen.get_height() / 40, self.ref_w,
-                    self.ref_h)
+                    self.screen.get_height() / 40, self.ref_w, self.ref_h)
                 self.run_game_loop(level + 1)
         elif self.game_restart():
             self.run_game_loop(1)
@@ -270,11 +251,14 @@ class TugOfWar:
             return
 
 
+
+
 pygame.init()
 new_game = TugOfWar(SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
 new_game.start_game()
 
 pygame.quit()
-
 quit()
+
+
 

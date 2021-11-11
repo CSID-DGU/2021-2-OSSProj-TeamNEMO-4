@@ -1,6 +1,6 @@
 # Use base code from "https://github.com/AidenBurgess/CrossGame"
 
-import game_object
+from Games.Mugunghwa import game_object
 from Games.game_settings import *
 
 
@@ -29,7 +29,7 @@ class Game:
     TIMER_TIME = 5  # 술래 뒤도는 카운터.
     NPC_CHANGE_DIRECTION_TIME = 2
     AIM_CHANGE_DIRECTION_TIME = 1.5
-    GAME_OVER_TIMER = 100
+    GAME_OVER_TIMER = 30
     NPC_1_SPEED = 1.8
     NPC_2_SPEED = 2
     NPC_3_SPEED = 1.5
@@ -93,7 +93,8 @@ class Game:
                     if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
                         return
                     elif event.key == pygame.K_x:
-                        self.run_game_loop(1)
+                        score = self.run_game_loop(1)
+                        return score
             # Render background
             self.game_screen.fill(WHITE)
             self.game_screen.blit(self.image, SCREEN_STARTING_POINT)
@@ -243,7 +244,7 @@ class Game:
                 time = self.TIMER_TIME
                 time_checker = round(time - (timer) * (-1), 1)
                 if time_checker <= 0:
-                    DOLL.sprite_imageget_abs_path()(DOLL_BACK_LOCATION)
+                    DOLL.sprite_image(get_abs_path((DOLL_BACK_LOCATION)))
                     self.mugunghwa_timer = False
                     start_ticks = pygame.time.get_ticks()
                     elapsed_time = (pygame.time.get_ticks() - start_ticks) / self.TIMER_UNIT
@@ -277,12 +278,14 @@ class Game:
 
         # did_win 이용해 승패 판단 후 다음 프로세스 진행.
         if did_win:
-            message_to_screen_left(
-                self.game_screen, level_printer(level), WHITE, level_font, 0, 0, self.ref_w,
-                self.ref_h)
-            self.run_game_loop(level + self.LEVEL_UP_STEP)
-        elif self.game_restart():
-            self.run_game_loop(STARTING_LEVEL)
+            # message_to_screen_left(
+            #     self.game_screen, level_printer(level), WHITE, level_font, 0, 0, self.ref_w,
+            #     self.ref_h)
+            # self.run_game_loop(level + self.LEVEL_UP_STEP)
+            # 다음 게임으로 넘어가기
+            return left_time
+        # elif self.game_restart():
+        #     self.run_game_loop(STARTING_LEVEL)
         else:
             return
 
@@ -310,18 +313,25 @@ class Game:
 
         # 술래와 충돌했을 때 (게임 클리어) -> DOLL_MESSAGE 를 반환해 게임 승리를 상위 함수로 전달.
         if player.detect_collision(DOLL):
-            message_to_screen_center(self.game_screen, 'CLEAR!', PINK, STOP_font, self.half_width, self.ref_w,
+            message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
+                                     self.one_third_screen[0],
+                                     self.ref_w,
+                                     self.ref_h)
+            message_to_screen_center(self.game_screen, '다음 게임은 달고나 게임입니다. ', WHITE, korean_font,
+                                     self.half_width,
+                                     self.ref_w,
                                      self.ref_h)
             pygame.display.update()
-            clock.tick(1)
+            clock.tick(0.5)
             return DOLL_MESSAGE
 
 
 # Start the game up
-pygame.init()
-new_game = Game(get_abs_path(BACKGROUND_LOCATION), SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
-new_game.start_game()
+def start_game():
+    pygame.init()
+    new_game = Game(get_abs_path(BACKGROUND_LOCATION), SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
+    return new_game.start_game()
 
-# After game is finished quit the program
-pygame.quit()
-quit()
+    # After game is finished quit the program
+    # pygame.quit()
+    # quit()
