@@ -223,8 +223,6 @@ class TugOfWar:
                 elif key != pygame.K_a: # 다른 키 입력 받을 때
                     click += 0
 
-
-
             # 키 잘못 입력 or 전체 시간 끝나면 게임 종료
             if click_wrong or all_left_time < 0:
                 self.lose_game()
