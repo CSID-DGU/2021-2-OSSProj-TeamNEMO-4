@@ -427,7 +427,7 @@ class MarbleGame:
 
 
 # if __name__ == '__main__':
-def start_game():
+def start_game(level, score):
     pygame.init()
     new_game = MarbleGame(SCREEN_WIDTH, SCREEN_HEIGHT)
     score = new_game.start_marble_game()

@@ -49,7 +49,7 @@ class Game:
         self.pin_image = pygame.image.load(get_abs_path(PIN_LOCATION))
         self.npc_size = width / NPC_SIZE_RATIO
 
-    def start_game(self):
+    def start_game(self, level, score):
         # walking around NPC
         npc = NPC(self.npc_size, self.npc_size, KIND_OF_NPC)  # 화면을 돌아다닐 npc 생성.
         # bgm
@@ -69,9 +69,14 @@ class Game:
 
             self.game_screen.fill(PINK)
 
-            message_to_screen_left(self.game_screen, 'GAME OVER: ' + str(left_time), WHITE, level_font, self.width / 5,
-                                   self.height / 20,
-                                   self.ref_w, self.ref_h)
+            message_to_screen_left(
+                self.game_screen, 'Level:' + str(level), WHITE, level_font, 70, 30, self.ref_w,
+                self.ref_h)
+            message_to_screen_left(
+                self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w, self.ref_h)
+            message_to_screen_left(
+                self.game_screen, "SCORE : " + str(score), BLACK, level_font, self.width - 130, 40, self.ref_w,
+                self.ref_h)
 
             pygame.draw.circle(self.game_screen, YELLOW_BROWN, self.center,
                                int(self.width * DALGONA_SIZE_RATIO), int(self.width * DALGONA_SIZE_RATIO))
@@ -138,7 +143,7 @@ class Game:
                                          self.ref_h)
                 pygame.display.update()
                 clock.tick(0.5)
-                return left_time
+                return round(left_time)
             if left_time <= 0 or dalgona.check_win()["wrong_point_clicked"]:
                 game_over_image = pygame.image.load(get_abs_path(GAME_OVER_LOCATION))
                 game_over_image = pygame.transform.scale(game_over_image, (self.width, self.height))
@@ -152,10 +157,10 @@ class Game:
             clock.tick(FPS_RATE)
 
 
-def start_game():
+def start_game(level, score):
     pygame.init()
     new_game = Game(SCREEN_WIDTH, SCREEN_HEIGHT)
-    return new_game.start_game()
+    return new_game.start_game(level, score)
 
     # pygame.quit()
     # quit()
