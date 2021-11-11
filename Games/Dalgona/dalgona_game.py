@@ -9,7 +9,7 @@ BGM_LOCATION = "Dalgona/Media/bgm.mp3"
 PIN_LOCATION = "Dalgona/Media/pin.png"
 NPC_RANDRANGE = random.randrange(20, 300)
 KIND_OF_NPC = 1
-NPC_SPEED = 10
+NPC_SPEED = 3
 NPC_SIZE_RATIO = 8
 GAME_TIME = 50
 NUMBER_OF_POINTS = 100
@@ -18,7 +18,8 @@ CIRCLE = 1
 RECTANGLE = 2
 TRIANGLE = 3
 STAR = 4
-FPS_RATE = 20
+FPS_RATE = 60
+SCREEN_STARTING_POINT = (0, 0)
 
 
 class Game:
@@ -35,8 +36,7 @@ class Game:
         # Screen set-up
         self.game_screen = pygame.display.set_mode((width, height))
         self.game_screen.fill(PINK)
-        # self.shape = random.randrange(1,4)
-        self.shape = RECTANGLE
+        self.shape = random.randrange(CIRCLE, STAR + 1)
         self.rectangle_size = width / RECTANGLE_SHAPE_SIZE_RATIO
         self.half_rectangle = self.rectangle_size / 2
         # bgm 실행
@@ -128,21 +128,25 @@ class Game:
                 NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
 
             if dalgona.check_win()["is_success"] is True:
-                self.game_screen.fill(PINK)
                 message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
                                          self.width / 3,
                                          self.ref_w,
                                          self.ref_h)
-                message_to_screen_center(self.game_screen, '다음 게임은 구슬치기 게임입니다. ', WHITE, korean_font,
+                message_to_screen_center(self.game_screen, '다음 게임은 구슬홀짝입니다. ', WHITE, korean_font,
                                          self.half_width,
                                          self.ref_w,
                                          self.ref_h)
+                pygame.display.update()
+                clock.tick(0.5)
                 return left_time
             if left_time <= 0 or dalgona.check_win()["wrong_point_clicked"]:
+                game_over_image = pygame.image.load(get_abs_path(GAME_OVER_LOCATION))
+                game_over_image = pygame.transform.scale(game_over_image, (self.width, self.height))
+                self.game_screen.blit(game_over_image, SCREEN_STARTING_POINT)
                 message_to_screen_center(self.game_screen, "패 배", RED, korean_font, self.width / 2, self.ref_w,
                                          self.ref_h)
                 pygame.display.update()
-                clock.tick(1)
+                clock.tick(0.5)
                 return
             pygame.display.update()
             clock.tick(FPS_RATE)
