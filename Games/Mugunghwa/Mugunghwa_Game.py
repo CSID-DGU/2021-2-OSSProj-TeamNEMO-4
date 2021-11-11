@@ -116,10 +116,13 @@ class Game:
             pygame.display.update()
 
     def lose_game(self):
+        game_over_image = pygame.image.load(get_abs_path(GAME_OVER_LOCATION))
+        game_over_image = pygame.transform.scale(game_over_image, (self.width, self.height))
+        self.game_screen.blit(game_over_image, SCREEN_STARTING_POINT)
         message_to_screen_center(
             self.game_screen, '탈 락', RED, korean_font, self.half_width, self.ref_w, self.ref_h)
         pygame.display.update()
-        clock.tick(1)
+        clock.tick(0.5)
 
     def game_restart(self):
         npc = self.create_npc(NPC_1_CODE)
@@ -180,7 +183,7 @@ class Game:
         while not game_over:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    return
 
             # 전체 타이머
             left_time = self.game_over_timer.time_checker()

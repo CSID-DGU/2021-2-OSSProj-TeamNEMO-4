@@ -15,38 +15,33 @@ if __name__ == "__main__":
         mugunghwa_score = start_mugunghwa_game()
         if mugunghwa_score:
             SCORE += mugunghwa_score
-            print(SCORE)
         else:
-            print("패배")
             break
         dalgona_score = start_dalgona_game()
         if dalgona_score:
             SCORE += dalgona_score
-            print(SCORE)
         else:
-            print("패배")
             break
         marble_score = start_marble_game()
         if marble_score:
             SCORE += marble_score
-            print(SCORE)
         else:
-            print("패배")
             break
-
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     ref_w, ref_h = screen.get_size()
-
-    while True:
+    RUNNING = True
+    while RUNNING:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                RUNNING = False
         screen.fill(PINK)
         message_to_screen_center(screen, '게임 종료', WHITE, korean_font,
                                  SCREEN_WIDTH / 3,
                                  ref_w,
                                  ref_h)
-        message_to_screen_center(screen, f'점수는 {SCORE} 점입니다. ', WHITE, korean_font,
+        message_to_screen_center(screen, f'점수는 {round(SCORE)} 점입니다. ', WHITE, korean_font,
                                  SCREEN_WIDTH / 2,
                                  ref_w,
                                  ref_h)
-        clock.tick(60)
         pygame.display.update()
