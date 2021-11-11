@@ -108,6 +108,8 @@ class MarbleGame:
         self.game_screen.fill(BLACK)
         self.imgNPC = pygame.transform.scale(self.imgNPC, (self.game_screen.get_width(), self.game_screen.get_height()))
         self.game_screen.blit(self.imgNPC, STARTING_POINT)
+        message_to_screen_center(
+            self.game_screen, '탈 락', RED, korean_font, self.width / 2, self.ref_w, self.ref_h)
         pygame.display.update()
         clock.tick(0.5)
         if self.screen_buffer <= self.marble_game_timer - 20:
@@ -133,6 +135,8 @@ class MarbleGame:
                                  self.width / 2,
                                  self.ref_w,
                                  self.ref_h)
+        pygame.display.update()
+        clock.tick(0.5)
         return self.score
         # if self.screen_buffer <= self.marble_game_timer - 20:
         #     self.marble_game_timer = 0
@@ -148,43 +152,63 @@ class MarbleGame:
         #     self.idx = CLEAR  # 12 클리어 화면으로
 
     def draw_true_false(self):
-        self.game_screen.fill(BLACK)
-        if self.screen_buffer <= self.marble_game_timer - 20:
-            if self.betting_success:
-                self.imgTrue = pygame.transform.scale(self.imgTrue, (
-                    self.game_screen.get_width(), self.game_screen.get_height()))
-                self.game_screen.blit(self.imgTrue, STARTING_POINT)
-                if self.screen_buffer <= self.marble_game_timer - 30:
-                    self.player_betting = 1
-                    self.idx = MARBLE_GAME
-                    if self.player_marbles <= 0:
-                        self.marble_game_timer = 0
-                        self.screen_buffer = self.marble_game_timer
-                        self.idx = GAME_OVER
-                    if self.computer_marbles <= 0:
-                        self.marble_game_timer = 0
-                        self.screen_buffer = self.marble_game_timer
-                        self.idx = WIN
-            else:
-                self.imgFalse = pygame.transform.scale(self.imgFalse, (
-                    self.game_screen.get_width(), self.game_screen.get_height()))
-                self.game_screen.blit(self.imgFalse, STARTING_POINT)
-                if self.fail_eff > 0:
-                    self.fail_eff_x = random.randint(-20, 20)
-                    self.fail_eff_y = random.randint(-10, 10)
-                    self.fail_eff = self.fail_eff - 1
-                self.game_screen.blit(self.imgFalse, [self.fail_eff_x, self.fail_eff_y])
-                if self.screen_buffer <= self.marble_game_timer - 30:
-                    self.player_betting = 1
-                    self.idx = MARBLE_GAME
-                    if self.player_marbles <= 0:
-                        self.marble_game_timer = 0
-                        self.screen_buffer = self.marble_game_timer
-                        self.idx = GAME_OVER
-                    if self.computer_marbles <= 0:
-                        self.marble_game_timer = 0
-                        self.screen_buffer = self.marble_game_timer
-                        self.idx = WIN
+        # if self.screen_buffer <= self.marble_game_timer - 20:
+        self.game_screen.blit(self.imgBGbase, STARTING_POINT)
+        self.imgHand4 = pygame.transform.scale(self.imgHand4,
+                                               (self.game_screen.get_width(), self.game_screen.get_height()))
+        self.game_screen.blit(self.imgHand4, STARTING_POINT)
+        if self.screen_buffer <= self.marble_game_timer - 3:
+            self.imgHand3 = pygame.transform.scale(self.imgHand3,
+                                                   (self.game_screen.get_width(), self.game_screen.get_height()))
+            self.game_screen.blit(self.imgHand3, STARTING_POINT)
+            if self.screen_buffer <= self.marble_game_timer - 10:
+                self.game_screen.blit(self.imgBGbase, STARTING_POINT)
+                self.imgHand1 = pygame.transform.scale(self.imgHand1,
+                                                       (
+                                                           self.game_screen.get_width(),
+                                                           self.game_screen.get_height()))
+                self.game_screen.blit(self.imgHand1, [self.fail_eff_x, 0])
+                if self.screen_buffer <= self.marble_game_timer - 9:
+                    self.game_screen.blit(self.imgBGbase, STARTING_POINT)
+                    self.game_screen.blit(self.imgHand1, STARTING_POINT)
+                if self.betting_success:
+                    message_to_screen_center(
+                        self.game_screen, '정답 !', RED, korean_large_font, self.width / 2, self.ref_w,
+                        self.ref_h)
+                else:
+                    message_to_screen_center(
+                        self.game_screen, '틀렸습니다 !', RED, korean_large_font, self.width / 2, self.ref_w,
+                        self.ref_h)
+                # if self.screen_buffer <= self.marble_game_timer - 40:
+                #     self.imgStart = pygame.transform.scale(self.imgStart, (
+                #         self.game_screen.get_width(), self.game_screen.get_height()))
+                #     self.game_screen.blit(self.imgStart, STARTING_POINT)
+        if self.betting_success:
+
+            if self.screen_buffer <= self.marble_game_timer - 20:
+                self.player_betting = 1
+                self.idx = MARBLE_GAME
+                if self.player_marbles <= 0:
+                    self.marble_game_timer = 0
+                    self.screen_buffer = self.marble_game_timer
+                    self.idx = GAME_OVER
+                if self.computer_marbles <= 0:
+                    self.marble_game_timer = 0
+                    self.screen_buffer = self.marble_game_timer
+                    self.idx = WIN
+        else:
+
+            if self.screen_buffer <= self.marble_game_timer - 20:
+                self.player_betting = 1
+                self.idx = MARBLE_GAME
+                if self.player_marbles <= 0:
+                    self.marble_game_timer = 0
+                    self.screen_buffer = self.marble_game_timer
+                    self.idx = GAME_OVER
+                if self.computer_marbles <= 0:
+                    self.marble_game_timer = 0
+                    self.screen_buffer = self.marble_game_timer
+                    self.idx = WIN
 
     def draw_clear(self):
         pygame.mixer.music.stop()
@@ -287,7 +311,6 @@ class MarbleGame:
 
             if self.idx == MARBLE_GAME:
                 # 타이머
-
                 left_time = self.game_over_timer.time_checker()
                 self.imgBG = pygame.transform.scale(self.imgBG,
                                                     (self.game_screen.get_width(), self.game_screen.get_height()))
@@ -306,7 +329,7 @@ class MarbleGame:
                     self.idx = GAME_OVER
                 if key[
                     pygame.K_UP] and self.player_betting < self.player_marbles and self.player_betting < self.computer_marbles: self.player_betting += 1
-                if key[pygame.K_DOWN] and self.player_betting > 0: self.player_betting -= 1
+                if key[pygame.K_DOWN] and self.player_betting > 1: self.player_betting -= 1
                 if self.betting_button_pressed == True and self.computer_marbles > 1:
                     if self.computer_marbles > 6:
                         self.computer_betting = random.randint(1, 2 + self.marble_game_level)
@@ -318,7 +341,7 @@ class MarbleGame:
                     self.computer_betting = 1
                     self.player_betting = 1
                     self.betting_button_pressed = False
-                if key[pygame.K_LEFT]:  # 홀 버튼 누름&배팅
+                if key[pygame.K_LEFT]:  # 홀 버튼 누름&배팅r
                     if self.computer_betting % 2 == 0:  # 컴퓨터 배팅이 짝이면
                         self.betting_success = False
                         self.player_marbles -= self.player_betting
@@ -405,18 +428,14 @@ class MarbleGame:
                                        self.game_screen.get_width() / 1.2, self.game_screen.get_height() / 2,
                                        self.ref_w,
                                        self.ref_h)
-                message_to_screen_left(self.game_screen, "BET " + str(self.player_betting), WHITE,
+                message_to_screen_left(self.game_screen, "BET " + str(self.player_betting), GREEN,
                                        korean_font,
                                        self.game_screen.get_width() / 2, self.game_screen.get_height() / 1.25,
                                        self.ref_w,
                                        self.ref_h)
-                # message_to_screen_left(self.game_screen, "SCORE : " + str(self.score), WHITE, korean_font_small_size,
-                #                        self.game_screen.get_width() / 10, self.game_screen.get_height() / 40,
-                #                        self.ref_w,
-                #                        self.ref_h)
-                message_to_screen_left(self.game_screen, "남은 힌트 : " + str(self.hint), WHITE, korean_font_small_size,
-                                       self.game_screen.get_width() / 1.2, self.game_screen.get_height() / 17,
-                                       self.ref_w, self.ref_h)
+                # message_to_screen_left(self.game_screen, "남은 힌트 : " + str(self.hint), WHITE, korean_font_small_size,
+                #                        self.game_screen.get_width() / 1.2, self.game_screen.get_height() / 17,
+                #                        self.ref_w, self.ref_h)
             if self.idx == WIN:
                 self.win(left_time)
                 return self.score

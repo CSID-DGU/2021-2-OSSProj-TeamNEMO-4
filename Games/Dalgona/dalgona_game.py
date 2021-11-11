@@ -148,7 +148,7 @@ class Game:
                 game_over_image = pygame.image.load(get_abs_path(GAME_OVER_LOCATION))
                 game_over_image = pygame.transform.scale(game_over_image, (self.width, self.height))
                 self.game_screen.blit(game_over_image, SCREEN_STARTING_POINT)
-                message_to_screen_center(self.game_screen, "패 배", RED, korean_font, self.width / 2, self.ref_w,
+                message_to_screen_center(self.game_screen, "탈 락", RED, korean_font, self.width / 2, self.ref_w,
                                          self.ref_h)
                 pygame.display.update()
                 clock.tick(0.5)

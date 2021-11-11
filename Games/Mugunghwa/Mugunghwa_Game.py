@@ -85,35 +85,37 @@ class Game:
 
     def start_game(self, level, score):
         npc = self.create_npc(NPC_1_CODE)
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    return
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
-                        return
-                    elif event.key == pygame.K_x:
-                        score = self.run_game_loop(level, score)
-                        return score
-            # Render background
-            self.game_screen.fill(WHITE)
-            self.game_screen.blit(self.image, SCREEN_STARTING_POINT)
-
-            # Display main menu text
-            message_to_screen_center(
-                self.game_screen, '무궁화 꽃이 피었습니다', PINK, korean_font, self.height / 4, self.ref_w, self.ref_h)
-            message_to_screen_center(
-                self.game_screen, '[ 조작법 ]', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[0], self.ref_w,
-                self.ref_h)
-            message_to_screen_center(
-                self.game_screen, '방향키로 이동 ', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[1], self.ref_w,
-                self.ref_h)
-            message_to_screen_center(
-                self.game_screen, 'X 로 시작', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[2],
-                self.ref_w, self.ref_h)
-            npc.move(self.width)
-            npc.draw(self.game_screen)
-            pygame.display.update()
+        score = self.run_game_loop(level, score)
+        return score
+        # while True:
+        #     for event in pygame.event.get():
+        #         if event.type == pygame.QUIT:
+        #             return
+        #         elif event.type == pygame.KEYDOWN:
+        #             if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+        #                 return
+        #             elif event.key == pygame.K_x:
+        #                 score = self.run_game_loop(level, score)
+        #                 return score
+        # Render background
+        # self.game_screen.fill(WHITE)
+        # self.game_screen.blit(self.image, SCREEN_STARTING_POINT)
+        #
+        # # Display main menu text
+        # message_to_screen_center(
+        #     self.game_screen, '무궁화 꽃이 피었습니다', PINK, korean_font, self.height / 4, self.ref_w, self.ref_h)
+        # message_to_screen_center(
+        #     self.game_screen, '[ 조작법 ]', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[0], self.ref_w,
+        #     self.ref_h)
+        # message_to_screen_center(
+        #     self.game_screen, '방향키로 이동 ', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[1], self.ref_w,
+        #     self.ref_h)
+        # message_to_screen_center(
+        #     self.game_screen, 'X 로 시작', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[2],
+        #     self.ref_w, self.ref_h)
+        # npc.move(self.width)
+        # npc.draw(self.game_screen)
+        # pygame.display.update()
 
     def lose_game(self):
         game_over_image = pygame.image.load(get_abs_path(GAME_OVER_LOCATION))

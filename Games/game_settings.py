@@ -39,6 +39,7 @@ large_font = pygame.font.SysFont('comicsans', 75)
 STOP_font = pygame.font.SysFont('comicsans', 120)
 level_font = pygame.font.SysFont('calibri', 30)
 korean_font = pygame.font.Font(os.path.join(os.getcwd(), KOREAN_FONT_PATH), 60)
+korean_large_font = pygame.font.Font(os.path.join(os.getcwd(), KOREAN_FONT_PATH), 90)
 korean_font_small_size = pygame.font.Font(os.path.join(os.getcwd(), KOREAN_SMALL_FONT_PATH), 30)
 level_font.set_bold(True)
 
