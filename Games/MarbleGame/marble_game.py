@@ -38,7 +38,7 @@ STARTING_POINT = [0, 0]
 
 class MarbleGame:
     # 변수 선언
-    idx = TITLE  # 화면 전환 관리 변수 idx 이 변수를 통해 화면 전환이 일어난다
+    idx = MARBLE_GAME  # 화면 전환 관리 변수 idx 이 변수를 통해 화면 전환이 일어난다
     player_marbles = 10  # 처음 플레이어가 가진 구슬 개수
     player_betting = 1  # 처음 플레이어가 배팅하는 구슬 개수
     computer_marbles = 10  # 처음 컴퓨터가 가진 구슬 개수
@@ -76,6 +76,7 @@ class MarbleGame:
         self.game_screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
         self.ref_w, self.ref_h = self.game_screen.get_size()
         self.game_screen.fill(PINK)
+        self.game_over_timer = GameOverTimer(60)
 
     def reset_variable(self):
         self.player_marbles = 10
@@ -275,7 +276,7 @@ class MarbleGame:
             if self.idx == TITLE:  # 0은 타이틀 화면
                 self.draw_title()
                 if key[pygame.K_SPACE] == 1:
-                    # game_over_timer = GameOverTimer(60)
+                    game_over_timer = GameOverTimer(60)
                     self.screen_buffer = self.marble_game_timer
                     self.idx = MARBLE_GAME_INTRO  # 스페이스키 입력시 1번 화면으로 이동
 
@@ -283,9 +284,11 @@ class MarbleGame:
                 self.fail_eff = 10
                 self.draw_hand()
                 game_over_timer = GameOverTimer(60)
+
             if self.idx == MARBLE_GAME:
                 # 타이머
-                left_time = game_over_timer.time_checker()
+
+                left_time = self.game_over_timer.time_checker()
                 self.imgBG = pygame.transform.scale(self.imgBG,
                                                     (self.game_screen.get_width(), self.game_screen.get_height()))
                 self.game_screen.blit(self.imgBG, STARTING_POINT)
@@ -384,25 +387,25 @@ class MarbleGame:
 
                 message_to_screen_left(self.game_screen, "내 구슬", WHITE,
                                        korean_font,
-                                       self.game_screen.get_width() / 10, self.game_screen.get_height() / 5,
+                                       self.game_screen.get_width() / 7, self.game_screen.get_height() / 3 + 50,
                                        self.ref_w,
                                        self.ref_h)
                 message_to_screen_left(self.game_screen, str(self.player_marbles), WHITE,
                                        korean_font,
-                                       self.game_screen.get_width() / 10, self.game_screen.get_height() / 4,
+                                       self.game_screen.get_width() / 7, self.game_screen.get_height() / 2,
                                        self.ref_w,
                                        self.ref_h)
                 message_to_screen_left(self.game_screen, "상대 구슬 ", WHITE,
                                        korean_font,
-                                       self.game_screen.get_width() / 1.2, self.game_screen.get_height() / 5,
+                                       self.game_screen.get_width() / 1.2, self.game_screen.get_height() / 3 + 50,
                                        self.ref_w,
                                        self.ref_h)
                 message_to_screen_left(self.game_screen, str(self.computer_marbles), WHITE,
                                        korean_font,
-                                       self.game_screen.get_width() / 1.2, self.game_screen.get_height() / 4,
+                                       self.game_screen.get_width() / 1.2, self.game_screen.get_height() / 2,
                                        self.ref_w,
                                        self.ref_h)
-                message_to_screen_left(self.game_screen, "베팅 : " + str(self.player_betting), WHITE,
+                message_to_screen_left(self.game_screen, "BET " + str(self.player_betting), WHITE,
                                        korean_font,
                                        self.game_screen.get_width() / 2, self.game_screen.get_height() / 1.25,
                                        self.ref_w,
