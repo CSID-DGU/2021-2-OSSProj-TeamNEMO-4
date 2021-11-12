@@ -1,16 +1,17 @@
-import pygame.time
+import random
 import time
+
+import pygame.time
 
 from Games.game_settings import *
 
-korean_font_bigSize = pygame.font.Font('../../Font/Pretendard-Medium.otf', 90)
 
 class TugOfWar:
     # 클래스 변수
-    WIN_LEVEL = 5 # LEVEL 5 통과하면 게임 끝
+    WIN_LEVEL = 5  # LEVEL 5 통과하면 게임 끝
     # A_TIME = random.randint(3, 5) # A 누를 수 있는 시간
     # D_TIME = random.randint(1, 2)
-    numClick = 15 # level마다 눌러야하는 키 수
+    numClick = 15  # level마다 눌러야하는 키 수
     TotalTime = 100
     wrong_click_lim = 3
 
@@ -59,7 +60,7 @@ class TugOfWar:
                 self.screen.get_height() / 1.66, self.ref_w, self.ref_h)
             message_to_screen_center(
                 self.screen, 'E 로 시작, Q 또는 Esc로 종료', WHITE, korean_font_small_size,
-                self.screen.get_height()/ 1.4, self.ref_w, self.ref_h)
+                self.screen.get_height() / 1.4, self.ref_w, self.ref_h)
             pygame.display.update()
 
     # 통과 화면
@@ -87,13 +88,13 @@ class TugOfWar:
     # 실패 화면
     def lose_game(self):
         message_to_screen_center(
-            self.screen, '탈 락 하 셨 습 니 다', RED, korean_font_bigSize, self.width / 2, self.ref_w, self.ref_h)
+            self.screen, '탈 락 하 셨 습 니 다', RED, korean_large_font, self.width / 2, self.ref_w, self.ref_h)
         pygame.display.update()
 
     # LEVEL 통과 함수
     def level_clear(self):
         message_to_screen_center(
-            self.screen, 'LEVEL CLEAR', BLUE, korean_font_bigSize, self.width / 2, self.ref_w, self.ref_h)
+            self.screen, 'LEVEL CLEAR', BLUE, korean_large_font, self.width / 2, self.ref_w, self.ref_h)
         pygame.display.update()
 
     def game_restart(self):
@@ -110,9 +111,9 @@ class TugOfWar:
             self.screen.fill(BLACK)
             # 문구 넣기
             message_to_screen_center(
-                self.screen, '재시도 : R', RED, korean_font, self.height * 3/8, self.ref_w, self.ref_h)
+                self.screen, '재시도 : R', RED, korean_font, self.height * 3 / 8, self.ref_w, self.ref_h)
             message_to_screen_center(
-                self.screen, '시작화면으로 이동 : Q', RED, korean_font, self.height/2, self.ref_w, self.ref_h)
+                self.screen, '시작화면으로 이동 : Q', RED, korean_font, self.height / 2, self.ref_w, self.ref_h)
             pygame.display.update()
 
     def run_game_loop(self, level):
@@ -121,9 +122,9 @@ class TugOfWar:
         click_wrong = False
         aTime_init = True
         click = 0
-        nClick = level * self.numClick # level마다 클릭해야 하는 횟수
-        game_over_click = 2 * nClick # 클릭해야하는 횟수 이 값 넘기면 게임 오버
-        wrong_click_num = 0     # 잘못 클릭한 횟수
+        nClick = level * self.numClick  # level마다 클릭해야 하는 횟수
+        game_over_click = 2 * nClick  # 클릭해야하는 횟수 이 값 넘기면 게임 오버
+        wrong_click_num = 0  # 잘못 클릭한 횟수
         A_TIME = random.randint(3, 6)  # A 누를 수 있는 시간
         D_TIME = random.randint(2, 4)
 
@@ -149,7 +150,7 @@ class TugOfWar:
             # 캐릭터 배치
             imgChar = pygame.transform.scale(self.char, (self.screen.get_width(), self.screen.get_height()))
             # 캐릭터 움직이도록 설정
-            self.screen.blit(imgChar, ((nClick-click), 0))
+            self.screen.blit(imgChar, ((nClick - click), 0))
 
             # d 누르는 타이머 설정
             elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
@@ -157,18 +158,21 @@ class TugOfWar:
             # LEVEL 표시
             message_to_screen_left(
                 self.screen, 'LEVEL {}'.format(level), WHITE, level_font, self.screen.get_width() / 13,
-                self.screen.get_height() / 40, self.ref_w, self.ref_h)
+                                                                          self.screen.get_height() / 40, self.ref_w,
+                self.ref_h)
             # 남은 전체 시간 화면에 표시
             message_to_screen_left(
                 self.screen, 'Left Time : {}'.format(all_left_time), WHITE, level_font, self.screen.get_width() / 6.5,
-                self.screen.get_height() / 11, self.ref_w, self.ref_h)
+                                                                                        self.screen.get_height() / 11,
+                self.ref_w, self.ref_h)
             # 남은 클릭에러 허용 횟수 화면에 표시
             message_to_screen_left(
                 self.screen, 'Left Time : {}'.format(self.wrong_click_lim - wrong_click_num), WHITE, level_font,
                 self.screen.get_width() / 8, self.screen.get_height() / 8, self.ref_w, self.ref_h)
             # 남은 클릭 수 화면에 표시
             message_to_screen_center(
-                self.screen, 'Left Click : {}'.format(int(nClick - click)), WHITE, level_font, self.screen.get_height()/40,
+                self.screen, 'Left Click : {}'.format(int(nClick - click)), WHITE, level_font,
+                self.screen.get_height() / 40,
                 self.ref_w, self.ref_h)
             # 메세지 표시 when d 누르는 시간일 때
             if d_timer > 0:
@@ -202,22 +206,20 @@ class TugOfWar:
                         a_ticks = pygame.time.get_ticks()
                         a_elapsed_time = (pygame.time.get_ticks() - a_ticks) / 1000
 
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
                 elif event.type == pygame.KEYDOWN:
-                    if d_timer > 0: # d 누르는 타이머 돌아갈 때
+                    if d_timer > 0:  # d 누르는 타이머 돌아갈 때
                         if event.key == pygame.K_a:
                             wrong_click_num += 1
-                    if d_timer < 0: # a 누르는 타이머 돌아갈 때
+                    if d_timer < 0:  # a 누르는 타이머 돌아갈 때
                         if event.key == pygame.K_d:
                             wrong_click_num += 1
 
-
             key = pygame.key.get_pressed()
             if d_timer > 0:
-                if key[pygame.K_d]!=True:
+                if key[pygame.K_d] != True:
                     click -= 0.1
                 elif key[pygame.K_a]:
                     click -= 0.2
@@ -268,14 +270,13 @@ class TugOfWar:
             else:
                 message_to_screen_left(
                     self.screen, 'LEVEL {}'.format(level), WHITE, level_font, self.screen.get_width() / 13,
-                    self.screen.get_height() / 40, self.ref_w, self.ref_h)
+                                                                              self.screen.get_height() / 40, self.ref_w,
+                    self.ref_h)
                 self.run_game_loop(level + 1)
         elif self.game_restart():
             self.run_game_loop(1)
         else:
             return
-
-
 
 
 pygame.init()
@@ -284,6 +285,3 @@ new_game.start_game()
 
 pygame.quit()
 quit()
-
-
-
