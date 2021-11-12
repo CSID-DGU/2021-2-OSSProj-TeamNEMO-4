@@ -188,7 +188,9 @@ class Game:
 
             # 전체 타이머
             left_time = self.game_over_timer.time_checker()
-
+            if left_time < 0:
+                self.lose_game()
+                return
             # 캐릭터 방향전환.
             dir_x, dir_y = self.get_PC_dir()
             # Redraw screen
@@ -271,6 +273,7 @@ class Game:
                         did_win = False
                         self.mugunghwa_timer = False  # 재시작을 위한 mugunghwa_timer 원상복귀.
                         DOLL.sprite_image(get_abs_path(DOLL_BACK_LOCATION))
+                        self.lose_game()
                         break
 
             if collision == DEAD_MESSAGE:
