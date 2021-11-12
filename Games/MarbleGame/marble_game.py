@@ -1,21 +1,22 @@
 import random
 
-from Games.game_settings import *
+from Games.MarbleGame.marble_game_object import *
 
-# 이미지 좌표
+# 이미지 경로
 BG_BG_LOCATION = 'MarbleGame/bg/bg.png'
 BG_BGBASE_LOCATION = 'MarbleGame/bg/bgbase.png'
-IMGS_TRUE_LOCATION = 'MarbleGame/imgs/True.png'
-IMGS_FALSE_LOCATION = 'MarbleGame/imgs/False.png'
-IMGS_START_LOCATION = 'MarbleGame/imgs/gamestart.png'
+# IMGS_TRUE_LOCATION = 'MarbleGame/imgs/True.png'
+# IMGS_FALSE_LOCATION = 'MarbleGame/imgs/False.png'
+# IMGS_START_LOCATION = 'MarbleGame/imgs/gamestart.png'
 IMGS_HAND1_LOCATION = 'MarbleGame/imgs/hand1.png'
 IMGS_HAND2_LOCATION = 'MarbleGame/imgs/hand2.png'
 IMGS_HAND3_LOCATION = 'MarbleGame/imgs/hand3.png'
 IMGS_HAND4_LOCATION = 'MarbleGame/imgs/hand4.png'
 IMGS_HAND5_LOCATION = 'MarbleGame/imgs/hand5.png'
 IMGS_NPC_LOCATION = 'MarbleGame/imgs/NPC.png'
-
-# 사운드 좌표
+RED_BUTTON_LOCATION = 'MarbleGame/imgs/red_button.png'
+GREEN_BUTTON_LOCATION = 'MarbleGame/imgs/green_button.png'
+# 사운드 경로
 SOUND_BGM_LOCATION = 'MarbleGame/sound/bgm.mp3'
 SOUND_MARBLE_LOCATION = 'MarbleGame/sound/marblesound.mp3'
 SOUND_MARBLE2_LOCATION = 'MarbleGame/sound/marblesound2.mp3'
@@ -56,17 +57,18 @@ class MarbleGame:
     # 이미지 로딩
     imgBG = pygame.image.load(get_abs_path(BG_BG_LOCATION))  # 배경 이미지
     imgBGbase = pygame.image.load(get_abs_path(BG_BGBASE_LOCATION))
-    imgTrue = pygame.image.load(get_abs_path(IMGS_TRUE_LOCATION))  # 배팅 성공 이미지
-    imgFalse = pygame.image.load(get_abs_path(IMGS_FALSE_LOCATION))  # 배팅 실패 이미지
-    imgStart = pygame.image.load(get_abs_path(IMGS_START_LOCATION))
+    # imgTrue = pygame.image.load(get_abs_path(IMGS_TRUE_LOCATION))  # 배팅 성공 이미지
+    # imgFalse = pygame.image.load(get_abs_path(IMGS_FALSE_LOCATION))  # 배팅 실패 이미지
+    # imgStart = pygame.image.load(get_abs_path(IMGS_START_LOCATION))
     imgHand1 = pygame.image.load(get_abs_path(IMGS_HAND1_LOCATION))
     imgHand2 = pygame.image.load(get_abs_path(IMGS_HAND2_LOCATION))
     imgHand3 = pygame.image.load(get_abs_path(IMGS_HAND3_LOCATION))
     imgHand4 = pygame.image.load(get_abs_path(IMGS_HAND4_LOCATION))
     imgHand5 = pygame.image.load(get_abs_path(IMGS_HAND5_LOCATION))
     imgNPC = pygame.image.load(get_abs_path(IMGS_NPC_LOCATION))
+    imgRedButton = pygame.image.load(get_abs_path(RED_BUTTON_LOCATION))
+    imgGreenButton = pygame.image.load(get_abs_path(GREEN_BUTTON_LOCATION))
     gganbuplay = False
-    BGM_VOLUME = 0.2
 
     def __init__(self, width, height):
         pygame.display.set_caption(SCREEN_TITLE)
@@ -157,18 +159,18 @@ class MarbleGame:
         self.imgHand4 = pygame.transform.scale(self.imgHand4,
                                                (self.game_screen.get_width(), self.game_screen.get_height()))
         self.game_screen.blit(self.imgHand4, STARTING_POINT)
-        if self.screen_buffer <= self.marble_game_timer - 3:
+        if self.screen_buffer <= self.marble_game_timer - 5:
             self.imgHand3 = pygame.transform.scale(self.imgHand3,
                                                    (self.game_screen.get_width(), self.game_screen.get_height()))
             self.game_screen.blit(self.imgHand3, STARTING_POINT)
-            if self.screen_buffer <= self.marble_game_timer - 10:
+            if self.screen_buffer <= self.marble_game_timer - 15:
                 self.game_screen.blit(self.imgBGbase, STARTING_POINT)
                 self.imgHand1 = pygame.transform.scale(self.imgHand1,
                                                        (
                                                            self.game_screen.get_width(),
                                                            self.game_screen.get_height()))
                 self.game_screen.blit(self.imgHand1, [self.fail_eff_x, 0])
-                if self.screen_buffer <= self.marble_game_timer - 9:
+                if self.screen_buffer <= self.marble_game_timer - 20:
                     self.game_screen.blit(self.imgBGbase, STARTING_POINT)
                     self.game_screen.blit(self.imgHand1, STARTING_POINT)
                 if self.betting_success:
@@ -317,9 +319,16 @@ class MarbleGame:
                 self.game_screen.blit(self.imgBG, STARTING_POINT)
                 self.imgHand5 = pygame.transform.scale(self.imgHand5,
                                                        (self.game_screen.get_width(), self.game_screen.get_height()))
+
+                # 홀짝 버튼
+                x, y = self.imgRedButton.get_size()
+                red_button = Button(self.game_screen, 450, 450, x, y, self.imgRedButton,
+                                    button_clicked)
+                green_button = Button(self.game_screen, -10, 450, x, y, self.imgGreenButton,
+                                      button_clicked)
                 if pygame.mixer.music.get_busy() == False:  # bgm 재생 정지 상태라면
                     try:
-                        pygame.mixer.music.set_volume(self.BGM_VOLUME)
+                        pygame.mixer.music.set_volume(BGM_VOLUME)
                         pygame.mixer.music.play(-1)  # bgm 재생
                     except:
                         pass
@@ -457,7 +466,7 @@ class MarbleGame:
             if self.idx == GGANBU:
                 self.draw_gganbu()
             pygame.display.update()
-            clock.tick(10)
+            clock.tick(15)
 
 
 # if __name__ == '__main__':
