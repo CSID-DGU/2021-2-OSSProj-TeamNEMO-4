@@ -9,7 +9,7 @@ BGM_LOCATION = "Dalgona/Media/bgm.mp3"
 PIN_LOCATION = "Dalgona/Media/pin.png"
 NPC_RANDRANGE = random.randrange(20, 300)
 KIND_OF_NPC = 1
-NPC_SPEED = 10
+NPC_SPEED = 3
 NPC_SIZE_RATIO = 8
 GAME_TIME = 50
 NUMBER_OF_POINTS = 100
@@ -18,7 +18,8 @@ CIRCLE = 1
 RECTANGLE = 2
 TRIANGLE = 3
 STAR = 4
-FPS_RATE = 20
+FPS_RATE = 120
+SCREEN_STARTING_POINT = (0, 0)
 
 
 class Game:
@@ -35,8 +36,7 @@ class Game:
         # Screen set-up
         self.game_screen = pygame.display.set_mode((width, height))
         self.game_screen.fill(PINK)
-        # self.shape = random.randrange(1,4)
-        self.shape = RECTANGLE
+        self.shape = random.randrange(CIRCLE, STAR + 1)
         self.rectangle_size = width / RECTANGLE_SHAPE_SIZE_RATIO
         self.half_rectangle = self.rectangle_size / 2
         # bgm 실행
@@ -49,7 +49,7 @@ class Game:
         self.pin_image = pygame.image.load(get_abs_path(PIN_LOCATION))
         self.npc_size = width / NPC_SIZE_RATIO
 
-    def start_game(self):
+    def start_game(self, level, score):
         # walking around NPC
         npc = NPC(self.npc_size, self.npc_size, KIND_OF_NPC)  # 화면을 돌아다닐 npc 생성.
         # bgm
@@ -69,9 +69,14 @@ class Game:
 
             self.game_screen.fill(PINK)
 
-            message_to_screen_left(self.game_screen, 'GAME OVER: ' + str(left_time), WHITE, level_font, self.width / 5,
-                                   self.height / 20,
-                                   self.ref_w, self.ref_h)
+            message_to_screen_left(
+                self.game_screen, 'Level:' + str(level), WHITE, level_font, 70, 30, self.ref_w,
+                self.ref_h)
+            message_to_screen_left(
+                self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w, self.ref_h)
+            message_to_screen_left(
+                self.game_screen, "SCORE : " + str(score), BLACK, level_font, self.width - 130, 40, self.ref_w,
+                self.ref_h)
 
             pygame.draw.circle(self.game_screen, YELLOW_BROWN, self.center,
                                int(self.width * DALGONA_SIZE_RATIO), int(self.width * DALGONA_SIZE_RATIO))
@@ -128,30 +133,34 @@ class Game:
                 NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
 
             if dalgona.check_win()["is_success"] is True:
-                self.game_screen.fill(PINK)
                 message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
                                          self.width / 3,
                                          self.ref_w,
                                          self.ref_h)
-                message_to_screen_center(self.game_screen, '다음 게임은 구슬치기 게임입니다. ', WHITE, korean_font,
+                message_to_screen_center(self.game_screen, '다음 게임은 구슬홀짝입니다. ', WHITE, korean_font,
                                          self.half_width,
                                          self.ref_w,
                                          self.ref_h)
-                return left_time
+                pygame.display.update()
+                clock.tick(0.5)
+                return round(left_time)
             if left_time <= 0 or dalgona.check_win()["wrong_point_clicked"]:
-                self.game_screen.fill(PINK)
-                message_to_screen_center(self.game_screen, "패 배", WHITE, korean_font, self.width / 2, self.ref_w,
+                game_over_image = pygame.image.load(get_abs_path(GAME_OVER_LOCATION))
+                game_over_image = pygame.transform.scale(game_over_image, (self.width, self.height))
+                self.game_screen.blit(game_over_image, SCREEN_STARTING_POINT)
+                message_to_screen_center(self.game_screen, "탈 락", RED, korean_font, self.width / 2, self.ref_w,
                                          self.ref_h)
+                pygame.display.update()
                 clock.tick(0.5)
                 return
             pygame.display.update()
             clock.tick(FPS_RATE)
 
 
-def start_game():
+def start_game(level, score):
     pygame.init()
     new_game = Game(SCREEN_WIDTH, SCREEN_HEIGHT)
-    return new_game.start_game()
+    return new_game.start_game(level, score)
 
     # pygame.quit()
     # quit()
