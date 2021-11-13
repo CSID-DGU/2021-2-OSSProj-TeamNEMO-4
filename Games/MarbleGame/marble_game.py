@@ -154,10 +154,12 @@ class MarbleGame:
     def draw_true_false(self):
         # if self.screen_buffer <= self.marble_game_timer - 20:
         self.game_screen.blit(self.imgBGbase, STARTING_POINT)
+
         self.imgHand4 = pygame.transform.scale(self.imgHand4,
                                                (self.game_screen.get_width(), self.game_screen.get_height()))
         self.game_screen.blit(self.imgHand4, STARTING_POINT)
         if self.screen_buffer <= self.marble_game_timer - 3:
+            self.game_screen.blit(self.imgBGbase, STARTING_POINT)
             self.imgHand3 = pygame.transform.scale(self.imgHand3,
                                                    (self.game_screen.get_width(), self.game_screen.get_height()))
             self.game_screen.blit(self.imgHand3, STARTING_POINT)
@@ -405,7 +407,7 @@ class MarbleGame:
                     self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w,
                     self.ref_h)
                 message_to_screen_left(
-                    self.game_screen, "SCORE : " + str(score), BLACK, level_font, self.width - 130, 40, self.ref_w,
+                    self.game_screen, "SCORE : " + str(self.score), BLACK, level_font, self.width - 130, 40, self.ref_w,
                     self.ref_h)
 
                 message_to_screen_left(self.game_screen, "내 구슬", WHITE,
