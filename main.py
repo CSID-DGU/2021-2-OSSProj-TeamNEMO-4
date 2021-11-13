@@ -46,6 +46,6 @@
 #                                  ref_w,
 #                                  ref_h)
 #         pygame.display.update()
-# 수정
+
 
 import Games.TugOfWar.TugOfWar
