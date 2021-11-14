@@ -3,7 +3,7 @@ from Games.game_settings import *
 from Games.Mugunghwa.Mugunghwa_Game import start_game as start_mugunghwa_game
 from Games.Dalgona.dalgona_game import start_game as start_dalgona_game
 from Games.MarbleGame.marble_game import start_game as start_marble_game
-
+from Games.TugOfWar.TugOfWar import start_game as start_tug_game
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
 
@@ -22,11 +22,17 @@ if __name__ == "__main__":
         #     SCORE += dalgona_score
         # else:
         #     break
-        marble_score = start_marble_game(LEVEL, SCORE)
-        if marble_score:
-            SCORE += marble_score
+        # marble_score = start_marble_game(LEVEL, SCORE)
+        # if marble_score:
+        #     SCORE += marble_score
+        # else:
+        #     break
+        tug_score = start_tug_game(LEVEL, SCORE)
+        if tug_score:
+            SCORE += tug_score
         else:
             break
+
         LEVEL += 1
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -46,4 +52,5 @@ if __name__ == "__main__":
                                  ref_w,
                                  ref_h)
         pygame.display.update()
+
 

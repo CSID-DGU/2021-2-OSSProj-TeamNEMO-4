@@ -111,7 +111,7 @@ class Aim(NPC):
 
 
 class PC(GameObject):  # 플레이어 캐릭터
-    BASE_SPEED = 4
+    BASE_SPEED = 2.5
     object_image = pygame.image.load(get_abs_path(PC_FRONT_LOCATION))
     player_character = pygame.transform.scale(object_image, (50, 70))
 

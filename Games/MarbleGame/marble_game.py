@@ -3,8 +3,10 @@ import random
 from Games.MarbleGame.marble_game_object import *
 
 # 이미지 경로
-BG_BG_LOCATION = 'MarbleGame/bg/bg.png'
+# BG_BG_LOCATION = 'MarbleGame/bg/bg.png'
+
 BG_BGBASE_LOCATION = 'MarbleGame/bg/bgbase.png'
+BG_BG_LOCATION = BG_BGBASE_LOCATION
 # IMGS_TRUE_LOCATION = 'MarbleGame/imgs/True.png'
 # IMGS_FALSE_LOCATION = 'MarbleGame/imgs/False.png'
 # IMGS_START_LOCATION = 'MarbleGame/imgs/gamestart.png'
