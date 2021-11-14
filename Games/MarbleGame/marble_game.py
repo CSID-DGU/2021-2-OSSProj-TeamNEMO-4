@@ -48,11 +48,11 @@ class MarbleGame:
     betting_button_pressed = False
     screen_buffer = 0  # 화면 대기 구현 변수
     marble_game_timer = 0  # 게임 루프문을 통해 이후 계속 1이 더해진다. 화면 대기 변수와 비교문을 통해 이미지 효과를 사용할 때 이용
-    fail_eff = 0  # 게임 이펙트 화면에서 게임 루프문을 통해 계속 -1이 되는데 이때 양수 값을 주면 0이 될때까지 이펙트 효과를 사용할 때 이용
-    fail_eff_x = 0  # random.randint(-20, 20)
-    fail_eff_y = 0  # random.randint(-10, 10)
+    effect = 0  # 게임 이펙트 화면에서 게임 루프문을 통해 계속 -1이 되는데 이때 양수 값을 주면 0이 될때까지 이펙트 효과를 사용할 때 이용
+    effect_x = 0  # random.randint(-20, 20)
+    effect_y = 0  # random.randint(-10, 10)
     score = 0  # 게임의 점수를 저장하는 변수
-    hint = 5  # hint 사용 가능 수
+    hint = 1  # hint 사용 가능 수
     # 이미지 로딩
     imgBG = pygame.image.load(get_abs_path(BG_BG_LOCATION))  # 배경 이미지
     imgBGbase = pygame.image.load(get_abs_path(BG_BGBASE_LOCATION))
@@ -86,7 +86,7 @@ class MarbleGame:
         self.marble_game_level = 0
         self.marble_game_timer = 0
         self.idx = TITLE  # 초기 화면으로
-        self.hint = 5  # 힌트 5개로 초기화
+        self.hint = 1  # 힌트 5개로 초기화
 
     def draw_title(self):
         self.game_screen.fill(PINK)
@@ -154,10 +154,12 @@ class MarbleGame:
     def draw_true_false(self):
         # if self.screen_buffer <= self.marble_game_timer - 20:
         self.game_screen.blit(self.imgBGbase, STARTING_POINT)
+
         self.imgHand4 = pygame.transform.scale(self.imgHand4,
                                                (self.game_screen.get_width(), self.game_screen.get_height()))
         self.game_screen.blit(self.imgHand4, STARTING_POINT)
         if self.screen_buffer <= self.marble_game_timer - 3:
+            self.game_screen.blit(self.imgBGbase, STARTING_POINT)
             self.imgHand3 = pygame.transform.scale(self.imgHand3,
                                                    (self.game_screen.get_width(), self.game_screen.get_height()))
             self.game_screen.blit(self.imgHand3, STARTING_POINT)
@@ -167,7 +169,7 @@ class MarbleGame:
                                                        (
                                                            self.game_screen.get_width(),
                                                            self.game_screen.get_height()))
-                self.game_screen.blit(self.imgHand1, [self.fail_eff_x, 0])
+                self.game_screen.blit(self.imgHand1, [self.effect_x, 0])
                 if self.screen_buffer <= self.marble_game_timer - 9:
                     self.game_screen.blit(self.imgBGbase, STARTING_POINT)
                     self.game_screen.blit(self.imgHand1, STARTING_POINT)
@@ -251,10 +253,10 @@ class MarbleGame:
                 self.game_screen.blit(self.imgBGbase, STARTING_POINT)
                 self.imgHand4 = pygame.transform.scale(self.imgHand4,
                                                        (self.game_screen.get_width(), self.game_screen.get_height()))
-                if self.fail_eff > 0:
-                    self.fail_eff_x = random.randint(-10, 10)
-                    self.fail_eff = self.fail_eff - 1
-                self.game_screen.blit(self.imgHand4, [self.fail_eff_x, 0])
+                if self.effect > 0:
+                    self.effect_x = random.randint(-10, 10)
+                    self.effect = self.effect - 1
+                self.game_screen.blit(self.imgHand4, [self.effect_x, 0])
                 if self.screen_buffer <= self.marble_game_timer - 35:
                     self.game_screen.blit(self.imgBGbase, STARTING_POINT)
                     self.game_screen.blit(self.imgHand4, STARTING_POINT)
@@ -264,7 +266,7 @@ class MarbleGame:
                         self.game_screen.blit(self.imgStart, STARTING_POINT)
                         if self.screen_buffer <= self.marble_game_timer - 50:
                             game_over_timer = GameOverTimer(60)
-                            self.fail_eff = 0
+                            self.effect = 0
                             self.idx = MARBLE_GAME
 
     def start_marble_game(self, level, score):
@@ -305,7 +307,7 @@ class MarbleGame:
                     self.idx = MARBLE_GAME_INTRO  # 스페이스키 입력시 1번 화면으로 이동
 
             if self.idx == MARBLE_GAME_INTRO:
-                self.fail_eff = 10
+                self.effect = 10
                 self.draw_hand()
                 game_over_timer = GameOverTimer(60)
 
@@ -328,7 +330,7 @@ class MarbleGame:
                     self.screen_buffer = self.marble_game_timer
                     self.idx = GAME_OVER
                 if key[
-                    pygame.K_UP] and self.player_betting < self.player_marbles and self.player_betting < self.computer_marbles: self.player_betting += 1
+                    pygame.K_UP] and self.player_betting < self.player_marbles and self.player_betting < self.computer_marbles and self.player_betting<6: self.player_betting += 1
                 if key[pygame.K_DOWN] and self.player_betting > 1: self.player_betting -= 1
                 if self.betting_button_pressed == True and self.computer_marbles > 1:
                     if self.computer_marbles > 6:
@@ -353,7 +355,7 @@ class MarbleGame:
                         self.score += self.player_betting
                     self.screen_buffer = self.marble_game_timer
                     self.idx = TRUE_FALSE
-                    self.fail_eff = 5
+                    self.effect = 5
                     self.betting_button_pressed = True
                     if self.player_marbles == 1:
                         if random.randint(0, 99) < 40 - self.marble_game_level * 5:  # 40%확률로 깐부 발동
@@ -372,14 +374,14 @@ class MarbleGame:
                         self.score += self.player_betting
                     self.screen_buffer = self.marble_game_timer
                     self.idx = TRUE_FALSE
-                    self.fail_eff = 5
+                    self.effect = 5
                     self.betting_button_pressed = True
                     if self.player_marbles == 1:
                         if random.randint(0, 99) < 50 - self.marble_game_level * 5:  # 50%확률로 깐부 발동
                             self.score += 51  # 깐부로 승리시 51점 추가 점수를 받고 클리어
                             self.idx = GGANBU
                 if key[pygame.K_RETURN]:
-                    self.fail_eff = 5
+                    self.effect = 5
                     if self.hint > 0:
                         if self.computer_betting == 2:  # 구슬이 2개일 때 1번 부딪치는 소리 재생
                             marblesound.play()
@@ -392,10 +394,10 @@ class MarbleGame:
                         elif self.computer_betting == 6:
                             marblesound5.play()
                         self.hint -= 1
-                if self.fail_eff > 0:
-                    self.fail_eff_x = random.randint(-10, 10)
-                    self.fail_eff = self.fail_eff - 1
-                self.game_screen.blit(self.imgHand5, [self.fail_eff_x, 0])
+                if self.effect > 0:
+                    self.effect_x = random.randint(-10, 10)
+                    self.effect = self.effect - 1
+                self.game_screen.blit(self.imgHand5, [self.effect_x, 0])
 
                 # 게임 정보 렌더
                 message_to_screen_left(
@@ -405,7 +407,7 @@ class MarbleGame:
                     self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w,
                     self.ref_h)
                 message_to_screen_left(
-                    self.game_screen, "SCORE : " + str(score), BLACK, level_font, self.width - 130, 40, self.ref_w,
+                    self.game_screen, "SCORE : " + str(self.score), BLACK, level_font, self.width - 130, 40, self.ref_w,
                     self.ref_h)
 
                 message_to_screen_left(self.game_screen, "내 구슬", WHITE,
