@@ -163,9 +163,9 @@ class Game:
         npc_1 = self.create_npc(NPC_1_CODE)
         npc_2 = self.create_npc(NPC_2_CODE)
         npc_3 = self.create_npc(NPC_3_CODE)
-        npc_1.BASE_SPEED = (level * 4) + self.NPC_1_SPEED
-        npc_2.BASE_SPEED = (level * 4) + self.NPC_2_SPEED
-        npc_3.BASE_SPEED = (level * 4) + self.NPC_3_SPEED
+        npc_1.BASE_SPEED = (level * 2) + self.NPC_1_SPEED
+        npc_2.BASE_SPEED = (level * 2) + self.NPC_2_SPEED
+        npc_3.BASE_SPEED = (level * 2) + self.NPC_3_SPEED
         npcs = [npc_1, npc_2, npc_3]
 
         # AIM
