@@ -6,16 +6,15 @@ import pygame.time
 from Games.game_settings import *
 
 # 이미지 좌표
-imgChar_location = 'TugOfWar/Images/TOW_Char.png'
-imgBG_location = 'TugOfWar/Images/TugOfWarBack.png'
+CHARACTER_LOCATION = 'TugOfWar/Images/TOW_Char.png'
+BACKGROUND_LOCATION = 'TugOfWar/Images/TugOfWarBack.png'
 
 
 class TugOfWar:
     # 클래스 변수
+    NUMBER_OF_CLICKS_TO_CLEAR = 15  # 승리 조건
     WIN_LEVEL = 5  # LEVEL 5 통과하면 게임 끝
-    numClick = 15  # level 마다 눌러야하는 키 수
-    TotalTime = 100
-    wrong_click_lim = 3
+    TOTAL_TIME = 40
 
     def __init__(self, title, width, height):
         self.title = title
@@ -27,8 +26,8 @@ class TugOfWar:
         self.screen.fill(WHITE)
         pygame.display.set_caption(title)
         # 이미지 불러오기
-        self.char = pygame.image.load(get_abs_path(imgChar_location))
-        self.imgBG = pygame.image.load(get_abs_path(imgBG_location))
+        self.char = pygame.image.load(get_abs_path(CHARACTER_LOCATION))
+        self.imgBG = pygame.image.load(get_abs_path(BACKGROUND_LOCATION))
         # 타이머 설정
         self.game_over_timer = None
         self.a_TIMER = False
@@ -42,7 +41,8 @@ class TugOfWar:
         #             if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
         #                 return
         #             elif event.key == pygame.K_e:
-        self.run_game_loop(level, score)
+        score = self.run_game_loop(level, score)
+        return score
         # 배경 설정
         # self.screen.fill(WHITE)
         # imgBG = pygame.transform.scale(self.imgBG, (self.screen.get_width(), self.screen.get_height()))
@@ -128,7 +128,7 @@ class TugOfWar:
         click_wrong = False
         aTime_init = True
         click = 0
-        nClick = level * self.numClick  # level마다 클릭해야 하는 횟수
+        nClick = level * self.NUMBER_OF_CLICKS_TO_CLEAR
         game_over_click = 2 * nClick  # 클릭해야하는 횟수 이 값 넘기면 게임 오버
         wrong_click_num = 0  # 잘못 클릭한 횟수
         A_TIME = random.randint(3, 6)  # A 누를 수 있는 시간
@@ -136,7 +136,7 @@ class TugOfWar:
         all_left_time = None
 
         # 게임 오버(전체 시간) 타이머 설정
-        self.game_over_timer = GameOverTimer(self.TotalTime)
+        self.game_over_timer = GameOverTimer(self.TOTAL_TIME)
 
         start_ticks = pygame.time.get_ticks()
         a_ticks = pygame.time.get_ticks()
@@ -170,7 +170,6 @@ class TugOfWar:
                 self.ref_h)
             # 남은 클릭에러 허용 횟수 화면에 표시
             # message_to_screen_left(
-            #     self.screen, 'Left Time : {}'.format(self.wrong_click_lim - wrong_click_num), WHITE, level_font,
             #     self.screen.get_width() / 8, self.screen.get_height() / 8, self.ref_w, self.ref_h)
             # 남은 클릭 수 화면에 표시
             message_to_screen_center(
@@ -224,25 +223,11 @@ class TugOfWar:
             if d_timer > 0:
                 if key[pygame.K_d] is False:
                     click -= 0.1
-                # elif key[pygame.K_a]:
-                #     click -= 0.2
             elif d_timer < 0:
                 if key[pygame.K_a]:
                     click += 0.15
 
-            # 클릭 잘못한 횟수 초과 시
-            # if wrong_click_num == self.wrong_click_lim:
-            #     click_wrong = True
-
-            # 키 잘 입력 or 전체 시간 끝남 or 남은 클릭 수 지정해둔 클릭 수 넘어가면 게임 종료
-            # if click_wrong:
-            #     message_to_screen_center(
-            #         self.screen, '오타 횟수 초과', RED, korean_font_small_size,
-            #         self.screen.get_height() / 1.7, self.ref_w, self.ref_h)
-            #     self.lose_game()
-            #     did_win = False
-            #     time.sleep(1.5)
-            #     break
+            # GAME OVER CONDITIONS
             if all_left_time <= 0:
                 message_to_screen_center(
                     self.screen, '시간 초과', RED, korean_font_small_size,
@@ -265,7 +250,7 @@ class TugOfWar:
                 did_win = True
                 break
             pygame.display.update()
-
+            clock.tick(120)
         if did_win:
             # if level >= self.WIN_LEVEL:
             #     self.win_game()
@@ -280,6 +265,7 @@ class TugOfWar:
                                      self.ref_h)
             pygame.display.update()
             clock.tick(0.5)
+            print(all_left_time)
             return all_left_time
 
         # elif self.game_restart():
@@ -293,10 +279,10 @@ class TugOfWar:
             pygame.display.update()
             clock.tick(0.5)
             return
-        clock.tick(60)
 
 
 def start_game(level, score):
     pygame.init()
     new_game = TugOfWar(SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
-    new_game.start_game(level, score)
+    score = new_game.start_game(level, score)
+    return score
