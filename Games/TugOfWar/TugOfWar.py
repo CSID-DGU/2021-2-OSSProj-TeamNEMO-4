@@ -210,6 +210,7 @@ class TugOfWar:
                 if event.type == pygame.QUIT:
                     exit()
 
+            # 줄 당겨지고 당기기
             key = pygame.key.get_pressed()
             if hold_timer > 0:
                 if key[pygame.K_SPACE] is False:
@@ -219,7 +220,7 @@ class TugOfWar:
                     num_of_pressed -= power_of_enemy
 
                 elif key[pygame.K_RIGHT] is True or key[pygame.K_LEFT] is True:
-                    num_of_pressed += power_of_enemy
+                    num_of_pressed += self.MY_POWER
 
             # GAME OVER CONDITIONS
             if left_time <= 0:
