@@ -126,11 +126,10 @@ class TugOfWar:
     def run_game_loop(self, level, score):
         game_over = False
         did_win = False
-        click_wrong = False
         a_time_init = True
         click = 0
         number_of_clicks_to_clear = level * self.NUMBER_OF_CLICKS_TO_CLEAR
-        game_over_click = 2 * number_of_clicks_to_clear  # 클릭해야하는 횟수 이 값 넘기면 게임 오버
+        condition_for_game_over = 2 * number_of_clicks_to_clear
         wrong_click_num = 0  # 잘못 클릭한 횟수
         a_time = RANDOM_NUMBER_FOR_TIMER  # A 누를 수 있는 시간
         d_time = RANDOM_NUMBER_FOR_TIMER
@@ -169,10 +168,6 @@ class TugOfWar:
             message_to_screen_left(
                 self.screen, "SCORE : " + str(score), WHITE, level_font, self.width - 130, 40, self.ref_w,
                 self.ref_h)
-            # 남은 클릭에러 허용 횟수 화면에 표시
-            # message_to_screen_left(
-            #     self.screen.get_width() / 8, self.screen.get_height() / 8, self.ref_w, self.ref_h)
-            # 남은 클릭 수 화면에 표시
             message_to_screen_center(
                 self.screen, 'Left Click : {}'.format(int(number_of_clicks_to_clear - click)), WHITE, level_font,
                 self.screen.get_height() / 40,
@@ -180,7 +175,7 @@ class TugOfWar:
             # 메세지 표시 when d 누르는 시간일 때
             if d_timer > 0:
                 message_to_screen_center(
-                    self.screen, "Press D", WHITE, large_font, self.height / 2, self.ref_w, self.ref_h)
+                    self.screen, "HOLD D", WHITE, large_font, self.height / 2, self.ref_w, self.ref_h)
                 message_to_screen_center(
                     self.screen, f'{d_timer}', WHITE, large_font, self.height / 3, self.ref_w, self.ref_h)
 
@@ -192,7 +187,7 @@ class TugOfWar:
                     a_time_init = False
                 a_time_checker = round(a_time - (d_timer) * (-1), 1)
                 message_to_screen_center(
-                    self.screen, "Click A", WHITE, large_font, self.height / 2, self.ref_w, self.ref_h)
+                    self.screen, "HIT A", WHITE, large_font, self.height / 2, self.ref_w, self.ref_h)
                 message_to_screen_center(
                     self.screen, f'{a_time_checker}', WHITE, large_font, self.height / 3, self.ref_w, self.ref_h)
                 if a_time_checker <= 0:  # a 누르는 시간 끝나면 d 누르는 타이머 초기화
@@ -212,13 +207,6 @@ class TugOfWar:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
-                elif event.type == pygame.KEYDOWN:
-                    if d_timer > 0:  # d 누르는 타이머 돌아갈 때
-                        if event.key == pygame.K_a:
-                            wrong_click_num += 1
-                    if d_timer < 0:  # a 누르는 타이머 돌아갈 때
-                        if event.key == pygame.K_d:
-                            wrong_click_num += 1
 
             key = pygame.key.get_pressed()
             if d_timer > 0:
@@ -237,14 +225,14 @@ class TugOfWar:
                 did_win = False
                 time.sleep(1.5)
                 break
-            elif (number_of_clicks_to_clear - click) > game_over_click:
+            elif (number_of_clicks_to_clear - click) > condition_for_game_over:
                 message_to_screen_center(
                     self.screen, '클릭 수 초과', RED, korean_font_small_size,
                     self.screen.get_height() / 1.7, self.ref_w, self.ref_h)
                 self.lose_game()
                 break
 
-            # 클릭 수 채운 경우 ~> did_win이 True인 상태로 반복문 탈출
+            # 승리조건 만족 -> did_win = True 로 반복문 탈출.
             if click >= number_of_clicks_to_clear:
                 # self.level_clear()
                 # time.sleep(1.5)
@@ -252,6 +240,7 @@ class TugOfWar:
                 break
             pygame.display.update()
             clock.tick(120)
+
         if did_win:
             # if level >= self.WIN_LEVEL:
             #     self.win_game()
@@ -265,8 +254,7 @@ class TugOfWar:
                                      self.ref_w,
                                      self.ref_h)
             pygame.display.update()
-            clock.tick(0.5)
-            print(all_left_time)
+            clock.tick(1)
             return all_left_time
 
         # elif self.game_restart():
