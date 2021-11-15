@@ -14,8 +14,11 @@ FPS_RATE = 100
 class TugOfWar:
     # 클래스 변수
     NUMBER_OF_PRESS_KEY_TO_CLEAR = 50  # 승리 조건
+    CONDITION_OF_GAME_OVER = 80
     WIN_LEVEL = 5  # LEVEL 5 통과하면 게임 끝
     TOTAL_TIME = 40
+    POWER_OF_ENEMY = 0.1  # 난이도. 상대가 줄을 당기는 힘. 레벨이 곱해져 상승한다.
+    MY_POWER = 0.2
 
     def __init__(self, title, width, height):
         self.title = title
@@ -127,11 +130,12 @@ class TugOfWar:
         did_win = False
         hit_time_init = True
         num_of_pressed = 0
-        num_of_press_key_to_clear = level * self.NUMBER_OF_PRESS_KEY_TO_CLEAR
-        condition_of_game_over = 2 * num_of_press_key_to_clear
+        num_of_press_key_to_clear = self.NUMBER_OF_PRESS_KEY_TO_CLEAR
+        condition_of_game_over = self.CONDITION_OF_GAME_OVER
         hit_time = RANDOM_NUMBER_FOR_TIMER  # A 누를 수 있는 시간
         hold_time = RANDOM_NUMBER_FOR_TIMER
         left_time = None
+        power_of_enemy = level * self.POWER_OF_ENEMY
 
         # 게임 오버(전체 시간) 타이머 설정
         self.game_over_timer = GameOverTimer(self.TOTAL_TIME)
@@ -209,13 +213,13 @@ class TugOfWar:
             key = pygame.key.get_pressed()
             if hold_timer > 0:
                 if key[pygame.K_SPACE] is False:
-                    num_of_pressed -= 0.2
+                    num_of_pressed -= power_of_enemy
             elif hold_timer < 0:
                 if key[pygame.K_RIGHT] is False and key[pygame.K_LEFT] is False:
-                    num_of_pressed -= 0.2
+                    num_of_pressed -= power_of_enemy
 
                 elif key[pygame.K_RIGHT] is True or key[pygame.K_LEFT] is True:
-                    num_of_pressed += 0.2
+                    num_of_pressed += power_of_enemy
 
             # GAME OVER CONDITIONS
             if left_time <= 0:
@@ -227,8 +231,10 @@ class TugOfWar:
                 break
             elif (num_of_press_key_to_clear - num_of_pressed) > condition_of_game_over:
                 message_to_screen_center(
-                    self.screen, '클릭 수 초과', RED, korean_font_small_size,
-                    self.screen.get_height() / 1.7, self.ref_w, self.ref_h)
+                    self.screen, '상대편 승리', RED, korean_large_font,
+                    self.height / 2, self.ref_w, self.ref_h)
+                pygame.display.update()
+                clock.tick(1)
                 self.lose_game()
                 break
             # 승리조건 만족 -> did_win = True 로 반복문 탈출.
