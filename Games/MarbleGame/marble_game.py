@@ -56,12 +56,10 @@ class MarbleGame:
     effect_y = 0  # random.randint(-10, 10)
     score = 0  # 게임의 점수를 저장하는 변수
     hint = 1  # hint 사용 가능 수
+
     # 이미지 로딩
     imgBG = pygame.image.load(get_abs_path(BG_BG_LOCATION))  # 배경 이미지
     imgBGbase = pygame.image.load(get_abs_path(BG_BGBASE_LOCATION))
-    # imgTrue = pygame.image.load(get_abs_path(IMGS_TRUE_LOCATION))  # 배팅 성공 이미지
-    # imgFalse = pygame.image.load(get_abs_path(IMGS_FALSE_LOCATION))  # 배팅 실패 이미지
-    # imgStart = pygame.image.load(get_abs_path(IMGS_START_LOCATION))
     imgHand1 = pygame.image.load(get_abs_path(IMGS_HAND1_LOCATION))
     imgHand2 = pygame.image.load(get_abs_path(IMGS_HAND2_LOCATION))
     imgHand3 = pygame.image.load(get_abs_path(IMGS_HAND3_LOCATION))
@@ -135,7 +133,7 @@ class MarbleGame:
                                  self.width / 3,
                                  self.ref_w,
                                  self.ref_h)
-        message_to_screen_center(self.game_screen, '다음 게임은 구슬 홀짝입니다. ', WHITE, korean_font,
+        message_to_screen_center(self.game_screen, '다음 게임은 줄다리기입니다. ', WHITE, korean_font,
                                  self.width / 2,
                                  self.ref_w,
                                  self.ref_h)

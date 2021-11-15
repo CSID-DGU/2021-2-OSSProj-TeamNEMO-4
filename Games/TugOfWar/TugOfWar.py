@@ -259,7 +259,7 @@ class TugOfWar:
                                      self.ref_w,
                                      self.ref_h)
             pygame.display.update()
-            clock.tick(1)
+            clock.tick(0.5)
             return left_time
 
         # elif self.game_restart():
@@ -271,7 +271,7 @@ class TugOfWar:
             message_to_screen_center(
                 self.screen, '탈 락', RED, korean_font, self.width / 2, self.ref_w, self.ref_h)
             pygame.display.update()
-            clock.tick(1)
+            clock.tick(0.5)
             return
 
 
