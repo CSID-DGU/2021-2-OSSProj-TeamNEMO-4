@@ -1,5 +1,4 @@
 import random
-import time
 
 import pygame.time
 
@@ -9,11 +8,12 @@ from Games.game_settings import *
 CHARACTER_LOCATION = 'TugOfWar/Images/TOW_Char.png'
 BACKGROUND_LOCATION = 'TugOfWar/Images/TugOfWarBack.png'
 RANDOM_NUMBER_FOR_TIMER = random.randint(3, 6)
+FPS_RATE = 100
 
 
 class TugOfWar:
     # 클래스 변수
-    NUMBER_OF_CLICKS_TO_CLEAR = 15  # 승리 조건
+    NUMBER_OF_PRESS_KEY_TO_CLEAR = 15  # 승리 조건
     WIN_LEVEL = 5  # LEVEL 5 통과하면 게임 끝
     TOTAL_TIME = 40
 
@@ -27,11 +27,10 @@ class TugOfWar:
         self.screen.fill(WHITE)
         pygame.display.set_caption(title)
         # 이미지 불러오기
-        self.char = pygame.image.load(get_abs_path(CHARACTER_LOCATION))
-        self.imgBG = pygame.image.load(get_abs_path(BACKGROUND_LOCATION))
+        self.character = pygame.image.load(get_abs_path(CHARACTER_LOCATION))
+        self.background = pygame.image.load(get_abs_path(BACKGROUND_LOCATION))
         # 타이머 설정
         self.game_over_timer = None
-        self.a_TIMER = False
 
     def start_game(self, level, score):
         # while True:
@@ -46,7 +45,7 @@ class TugOfWar:
         return score
         # 배경 설정
         # self.screen.fill(WHITE)
-        # imgBG = pygame.transform.scale(self.imgBG, (self.screen.get_width(), self.screen.get_height()))
+        # imgBG = pygame.transform.scale(self.background, (self.screen.get_width(), self.screen.get_height()))
         # self.screen.blit(imgBG, (0, 0))
         # # 문구 놓기
         # message_to_screen_center(
@@ -127,13 +126,12 @@ class TugOfWar:
         game_over = False
         did_win = False
         a_time_init = True
-        click = 0
-        number_of_clicks_to_clear = level * self.NUMBER_OF_CLICKS_TO_CLEAR
-        condition_for_game_over = 2 * number_of_clicks_to_clear
-        wrong_click_num = 0  # 잘못 클릭한 횟수
+        num_of_pressed = 0
+        num_of_press_key_to_clear = level * self.NUMBER_OF_PRESS_KEY_TO_CLEAR
+        condition_of_game_over = 2 * num_of_press_key_to_clear
         a_time = RANDOM_NUMBER_FOR_TIMER  # A 누를 수 있는 시간
         d_time = RANDOM_NUMBER_FOR_TIMER
-        all_left_time = None
+        left_time = None
 
         # 게임 오버(전체 시간) 타이머 설정
         self.game_over_timer = GameOverTimer(self.TOTAL_TIME)
@@ -143,55 +141,56 @@ class TugOfWar:
 
         while not game_over:
             # 게임 오버 타이머 남은 시간
-            all_left_time = self.game_over_timer.time_checker()
+            left_time = self.game_over_timer.time_checker()
 
             # 배경 다시 설정
             self.screen.fill(WHITE)
-            imgBG = pygame.transform.scale(self.imgBG, (self.screen.get_width(), self.screen.get_height()))
-            self.screen.blit(imgBG, (0, 0))
+            image_background = pygame.transform.scale(self.background,
+                                                      (self.screen.get_width(), self.screen.get_height()))
+            self.screen.blit(image_background, (0, 0))
 
             # 캐릭터 배치
-            imgChar = pygame.transform.scale(self.char, (self.screen.get_width(), self.screen.get_height()))
+            image_character = pygame.transform.scale(self.character,
+                                                     (self.screen.get_width(), self.screen.get_height()))
             # 캐릭터 움직이도록 설정
-            self.screen.blit(imgChar, ((number_of_clicks_to_clear - click), 0))
+            self.screen.blit(image_character, ((num_of_press_key_to_clear - num_of_pressed), 0))
 
             # d 누르는 타이머 설정
             elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
             d_timer = round(float(d_time - elapsed_time), 1)
             # 현재 레벨, 게임 오버 타이머 화면 좌측 상단에 render
             message_to_screen_left(
-                self.screen, 'Level:' + str(level), WHITE, level_font, 70, 30, self.ref_w,
+                self.screen, 'Level : ' + str(level), WHITE, level_font, 70, 30, self.ref_w,
                 self.ref_h)
             message_to_screen_left(
-                self.screen, "GAME OVER : " + str(all_left_time), WHITE, level_font, 165, 65, self.ref_w,
+                self.screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w,
                 self.ref_h)
             message_to_screen_left(
                 self.screen, "SCORE : " + str(score), WHITE, level_font, self.width - 130, 40, self.ref_w,
                 self.ref_h)
             message_to_screen_center(
-                self.screen, 'Left Click : {}'.format(int(number_of_clicks_to_clear - click)), WHITE, level_font,
-                self.screen.get_height() / 40,
+                self.screen, '승리까지 {} M'.format(int(num_of_press_key_to_clear - num_of_pressed)), WHITE,
+                korean_font_small_size,
+                self.screen.get_height() / 4,
                 self.ref_w, self.ref_h)
             # 메세지 표시 when d 누르는 시간일 때
             if d_timer > 0:
                 message_to_screen_center(
-                    self.screen, "HOLD D", WHITE, large_font, self.height / 2, self.ref_w, self.ref_h)
-                message_to_screen_center(
-                    self.screen, f'{d_timer}', WHITE, large_font, self.height / 3, self.ref_w, self.ref_h)
+                    self.screen, "Space 누르고 버티기", WHITE, korean_font, self.height * (2 / 3), self.ref_w, self.ref_h)
+                # message_to_screen_center(
+                #     self.screen, f'{d_timer}', WHITE, large_font, self.height / 3, self.ref_w, self.ref_h)
 
             # a 누르는 시간 (d 누르는 시간 끝남)
             if d_timer <= 0:
-                self.a_TIMER = True
                 if a_time_init:
                     a_time = RANDOM_NUMBER_FOR_TIMER
                     a_time_init = False
                 a_time_checker = round(a_time - (d_timer) * (-1), 1)
                 message_to_screen_center(
-                    self.screen, "HIT A", WHITE, large_font, self.height / 2, self.ref_w, self.ref_h)
-                message_to_screen_center(
-                    self.screen, f'{a_time_checker}', WHITE, large_font, self.height / 3, self.ref_w, self.ref_h)
+                    self.screen, "← → 연타 !", WHITE, korean_large_font, self.height * (2 / 3), self.ref_w, self.ref_h)
+                # message_to_screen_center(
+                #     self.screen, f'{a_time_checker}', WHITE, large_font, self.height / 3, self.ref_w, self.ref_h)
                 if a_time_checker <= 0:  # a 누르는 시간 끝나면 d 누르는 타이머 초기화
-                    self.a_TIMER = False
                     a_time_init = True
                     start_ticks = pygame.time.get_ticks()
                     elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
@@ -210,36 +209,33 @@ class TugOfWar:
 
             key = pygame.key.get_pressed()
             if d_timer > 0:
-                if key[pygame.K_d] is False:
-                    click -= 0.1
+                if key[pygame.K_SPACE] is False:
+                    num_of_pressed -= 0.1
             elif d_timer < 0:
                 if key[pygame.K_a]:  # 수정필요
-                    click += 0.15
+                    num_of_pressed += 0.15
 
             # GAME OVER CONDITIONS
-            if all_left_time <= 0:
+            if left_time <= 0:
                 message_to_screen_center(
                     self.screen, '시간 초과', RED, korean_font_small_size,
                     self.screen.get_height() / 1.7, self.ref_w, self.ref_h)
                 self.lose_game()
                 did_win = False
-                time.sleep(1.5)
                 break
-            elif (number_of_clicks_to_clear - click) > condition_for_game_over:
+            elif (num_of_press_key_to_clear - num_of_pressed) > condition_of_game_over:
                 message_to_screen_center(
                     self.screen, '클릭 수 초과', RED, korean_font_small_size,
                     self.screen.get_height() / 1.7, self.ref_w, self.ref_h)
                 self.lose_game()
                 break
-
             # 승리조건 만족 -> did_win = True 로 반복문 탈출.
-            if click >= number_of_clicks_to_clear:
+            elif num_of_pressed >= num_of_press_key_to_clear:
                 # self.level_clear()
-                # time.sleep(1.5)
                 did_win = True
                 break
             pygame.display.update()
-            clock.tick(120)
+            clock.tick(FPS_RATE)
 
         if did_win:
             # if level >= self.WIN_LEVEL:
@@ -255,7 +251,7 @@ class TugOfWar:
                                      self.ref_h)
             pygame.display.update()
             clock.tick(1)
-            return all_left_time
+            return left_time
 
         # elif self.game_restart():
         #     self.run_game_loop(1)
@@ -266,7 +262,7 @@ class TugOfWar:
             message_to_screen_center(
                 self.screen, '탈 락', RED, korean_font, self.width / 2, self.ref_w, self.ref_h)
             pygame.display.update()
-            clock.tick(0.5)
+            clock.tick(1)
             return
 
 
