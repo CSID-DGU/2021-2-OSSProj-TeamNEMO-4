@@ -12,7 +12,8 @@ IMGS_HAND3_LOCATION = 'MarbleGame/imgs/hand3.png'
 IMGS_HAND4_LOCATION = 'MarbleGame/imgs/hand4.png'
 IMGS_HAND5_LOCATION = 'MarbleGame/imgs/hand5.png'
 IMGS_NPC_LOCATION = 'MarbleGame/imgs/NPC.png'
-RED_BUTTON_LOCATION = 'MarbleGame/imgs/red_button.png'
+ODD_BUTTON_LOCATION = 'MarbleGame/imgs/odd_button.png'
+EVEN_BUTTON_LOCATION = 'MarbleGame/imgs/even_button.png'
 GREEN_BUTTON_LOCATION = 'MarbleGame/imgs/green_button.png'
 # 사운드 경로
 SOUND_BGM_LOCATION = 'MarbleGame/sound/bgm.mp3'
@@ -62,8 +63,9 @@ class MarbleGame:
     imgHand4 = pygame.image.load(get_abs_path(IMGS_HAND4_LOCATION))
     imgHand5 = pygame.image.load(get_abs_path(IMGS_HAND5_LOCATION))
     imgNPC = pygame.image.load(get_abs_path(IMGS_NPC_LOCATION))
-    imgRedButton = pygame.image.load(get_abs_path(RED_BUTTON_LOCATION))
-    imgGreenButton = pygame.image.load(get_abs_path(GREEN_BUTTON_LOCATION))
+    img_odd_button = pygame.image.load(get_abs_path(ODD_BUTTON_LOCATION))
+    img_even_button = pygame.image.load(get_abs_path(EVEN_BUTTON_LOCATION))
+    img_green_button = pygame.image.load(get_abs_path(GREEN_BUTTON_LOCATION))
     gganbuplay = False
 
     def __init__(self, width, height):
@@ -319,11 +321,18 @@ class MarbleGame:
                                                        (self.game_screen.get_width(), self.game_screen.get_height()))
 
                 # 홀짝 버튼
-                x, y = self.imgRedButton.get_size()
-                red_button = Button(self.game_screen, 450, 450, x, y, self.imgRedButton, self.imgGreenButton,
-                                    button_1_clicked)
-                green_button = Button(self.game_screen, -10, 450, x, y, self.imgRedButton, self.imgGreenButton,
+                x, y = self.img_odd_button.get_size()
+
+                red_button = Button(self.game_screen, BUTTON_INTERVAL, 500, x, y, self.img_odd_button,
+                                    self.img_green_button, button_1_clicked)
+
+                green_button = Button(self.game_screen, self.width - x - BUTTON_INTERVAL, 500, x, y,
+                                      self.img_even_button,
+                                      self.img_green_button,
                                       button_2_clicked)
+
+                # BGM
+
                 if pygame.mixer.music.get_busy() == False:  # bgm 재생 정지 상태라면
                     try:
                         pygame.mixer.music.set_volume(BGM_VOLUME)

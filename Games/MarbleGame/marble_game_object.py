@@ -21,3 +21,6 @@ def button_1_clicked():
 
 def button_2_clicked():
     print(456)
+
+
+BUTTON_INTERVAL = 25
