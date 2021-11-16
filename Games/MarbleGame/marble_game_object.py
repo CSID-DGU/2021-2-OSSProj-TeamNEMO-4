@@ -16,12 +16,4 @@ class Button:
             game_display.blit(image, (x, y))
 
 
-def button_1_clicked():
-    print(123)
-
-
-def button_2_clicked():
-    print(456)
-
-
 BUTTON_INTERVAL = 25

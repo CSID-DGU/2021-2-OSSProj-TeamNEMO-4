@@ -15,6 +15,9 @@ IMGS_NPC_LOCATION = 'MarbleGame/imgs/NPC.png'
 ODD_BUTTON_LOCATION = 'MarbleGame/imgs/odd_button.png'
 EVEN_BUTTON_LOCATION = 'MarbleGame/imgs/even_button.png'
 GREEN_BUTTON_LOCATION = 'MarbleGame/imgs/green_button.png'
+PLUS_LOCATION = 'MarbleGame/imgs/plus.png'
+MINUS_LOCATION = 'MarbleGame/imgs/minus.png'
+
 # 사운드 경로
 SOUND_BGM_LOCATION = 'MarbleGame/sound/bgm.mp3'
 SOUND_MARBLE_LOCATION = 'MarbleGame/sound/marblesound.mp3'
@@ -66,6 +69,8 @@ class MarbleGame:
     img_odd_button = pygame.image.load(get_abs_path(ODD_BUTTON_LOCATION))
     img_even_button = pygame.image.load(get_abs_path(EVEN_BUTTON_LOCATION))
     img_green_button = pygame.image.load(get_abs_path(GREEN_BUTTON_LOCATION))
+    img_plus = pygame.image.load(get_abs_path(PLUS_LOCATION))
+    img_minus = pygame.image.load(get_abs_path(MINUS_LOCATION))
     gganbuplay = False
 
     def __init__(self, width, height):
@@ -328,6 +333,17 @@ class MarbleGame:
                                      self.img_even_button,
                                      self.img_green_button)
 
+                # 베팅 업다운 버튼
+                x, y = self.img_plus.get_size()
+
+                plus_button = Button(self.game_screen, self.width / 2 - 15 - x, self.width * (6 / 7), x, y,
+                                     self.img_plus,
+                                     self.img_plus)
+
+                minus_button = Button(self.game_screen, self.width / 2 + 15, self.width * (6 / 7), x, y,
+                                      self.img_minus,
+                                      self.img_minus)
+
                 key = pygame.key.get_pressed()  # 모든 키 입력 감지
 
                 # BGM
@@ -343,17 +359,16 @@ class MarbleGame:
                     self.marble_game_timer = 0
                     self.screen_buffer = self.marble_game_timer
                     self.idx = GAME_OVER
-                if key[
-                    pygame.K_UP] and self.player_betting < self.player_marbles and self.player_betting < self.computer_marbles and self.player_betting < 6: self.player_betting += 1
-                if key[pygame.K_DOWN] and self.player_betting > 1: self.player_betting -= 1
-                if self.betting_button_pressed == True and self.computer_marbles > 1:
+                if plus_button.is_clicked and self.player_betting < self.player_marbles and self.player_betting < self.computer_marbles and self.player_betting < 6: self.player_betting += 1
+                if minus_button.is_clicked and self.player_betting > 1: self.player_betting -= 1
+                if self.betting_button_pressed is True and self.computer_marbles > 1:
                     if self.computer_marbles > 6:
                         self.computer_betting = random.randint(1, 2 + self.marble_game_level)
                     else:
                         self.computer_betting = random.randint(1, self.computer_marbles)
                     self.player_betting = 1
                     self.betting_button_pressed = False
-                elif self.betting_button_pressed == True and self.computer_marbles == 1:
+                elif self.betting_button_pressed is True and self.computer_marbles == 1:
                     self.computer_betting = 1
                     self.player_betting = 1
                     self.betting_button_pressed = False
