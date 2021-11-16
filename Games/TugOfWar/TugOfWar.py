@@ -5,7 +5,8 @@ import pygame.time
 from Games.game_settings import *
 
 # 이미지 좌표
-CHARACTER_LOCATION = 'TugOfWar/Images/TOW_Char.png'
+PULLING_IMG = 'TugOfWar/Images/pulling.png'
+HOLDING_IMG = 'TugOfWar/Images/holding.png'
 BACKGROUND_LOCATION = 'TugOfWar/Images/TugOfWarBack.png'
 RANDOM_NUMBER_FOR_TIMER = random.randint(3, 6)
 FPS_RATE = 100
@@ -30,7 +31,8 @@ class TugOfWar:
         self.screen.fill(WHITE)
         pygame.display.set_caption(title)
         # 이미지 불러오기
-        self.character = pygame.image.load(get_abs_path(CHARACTER_LOCATION))
+        self.character_pull = pygame.image.load(get_abs_path(PULLING_IMG))
+        self.character_hold = pygame.image.load(get_abs_path(HOLDING_IMG))
         self.background = pygame.image.load(get_abs_path(BACKGROUND_LOCATION))
         # 타이머 설정
         self.game_over_timer = None
@@ -153,11 +155,11 @@ class TugOfWar:
                                                       (self.screen.get_width(), self.screen.get_height()))
             self.screen.blit(image_background, (0, 0))
 
-            # 캐릭터 배치
-            image_character = pygame.transform.scale(self.character,
-                                                     (self.screen.get_width(), self.screen.get_height()))
-            # 캐릭터 움직이도록 설정
-            self.screen.blit(image_character, ((num_of_press_key_to_clear - num_of_pressed), 0))
+            # 이미지 화면에 맞게 scaling
+            pulling_characters = pygame.transform.scale(self.character_pull,
+                                                        (self.screen.get_width(), self.screen.get_height()))
+            holding_characters = pygame.transform.scale(self.character_hold,
+                                                        (self.screen.get_width(), self.screen.get_height()))
 
             # 버티기 타이머
             elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
@@ -181,11 +183,13 @@ class TugOfWar:
 
             # hold time 렌더링
             if hold_timer > 0:
+                self.screen.blit(holding_characters, ((num_of_press_key_to_clear - num_of_pressed), 0))
                 message_to_screen_center(
                     self.screen, "Space 누르고 버티기", WHITE, korean_font, self.height * (2 / 3), self.ref_w, self.ref_h)
 
             # hit time
             if hold_timer <= 0:
+                self.screen.blit(pulling_characters, ((num_of_press_key_to_clear - num_of_pressed), 0))
                 if hit_time_init:
                     hit_time = RANDOM_NUMBER_FOR_TIMER
                     hit_time_init = False
