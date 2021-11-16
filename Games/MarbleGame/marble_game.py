@@ -3,13 +3,9 @@ import random
 from Games.MarbleGame.marble_game_object import *
 
 # 이미지 경로
-# BG_BG_LOCATION = 'MarbleGame/bg/bg.png'
 
 BG_BGBASE_LOCATION = 'MarbleGame/bg/bgbase.png'
 BG_BG_LOCATION = BG_BGBASE_LOCATION
-# IMGS_TRUE_LOCATION = 'MarbleGame/imgs/True.png'
-# IMGS_FALSE_LOCATION = 'MarbleGame/imgs/False.png'
-# IMGS_START_LOCATION = 'MarbleGame/imgs/gamestart.png'
 IMGS_HAND1_LOCATION = 'MarbleGame/imgs/hand1.png'
 IMGS_HAND2_LOCATION = 'MarbleGame/imgs/hand2.png'
 IMGS_HAND3_LOCATION = 'MarbleGame/imgs/hand3.png'
@@ -324,10 +320,10 @@ class MarbleGame:
 
                 # 홀짝 버튼
                 x, y = self.imgRedButton.get_size()
-                red_button = Button(self.game_screen, 450, 450, x, y, self.imgRedButton,
-                                    button_clicked)
-                green_button = Button(self.game_screen, -10, 450, x, y, self.imgGreenButton,
-                                      button_clicked)
+                red_button = Button(self.game_screen, 450, 450, x, y, self.imgRedButton, self.imgGreenButton,
+                                    button_1_clicked)
+                green_button = Button(self.game_screen, -10, 450, x, y, self.imgRedButton, self.imgGreenButton,
+                                      button_2_clicked)
                 if pygame.mixer.music.get_busy() == False:  # bgm 재생 정지 상태라면
                     try:
                         pygame.mixer.music.set_volume(BGM_VOLUME)
