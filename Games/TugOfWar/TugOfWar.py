@@ -8,6 +8,8 @@ from Games.game_settings import *
 PULLING_IMG = 'TugOfWar/Images/pulling.png'
 HOLDING_IMG = 'TugOfWar/Images/holding.png'
 BACKGROUND_LOCATION = 'TugOfWar/Images/TugOfWarBack.png'
+# BGM 좌표
+BGM_LOCATION = 'TugOfWar/Sound/bgm.mp3'
 RANDOM_NUMBER_FOR_TIMER = random.randint(3, 6)
 FPS_RATE = 100
 
@@ -36,6 +38,12 @@ class TugOfWar:
         self.background = pygame.image.load(get_abs_path(BACKGROUND_LOCATION))
         # 타이머 설정
         self.game_over_timer = None
+        # BGM 넣기
+        try:
+            pygame.mixer.music.load(get_abs_path(BGM_LOCATION))
+        except Exception as e:
+            print(e)
+            print("사운드 로드 오류")
 
     def start_game(self, level, score):
         # while True:
