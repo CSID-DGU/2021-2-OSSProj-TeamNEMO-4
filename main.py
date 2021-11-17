@@ -1,15 +1,15 @@
-# import pygame
-# from Games.game_settings import *
-# from Games.Mugunghwa.Mugunghwa_Game import start_game as start_mugunghwa_game
-# from Games.Dalgona.dalgona_game import start_game as start_dalgona_game
-# from Games.MarbleGame.marble_game import start_game as start_marble_game
+import pygame
+from Games.game_settings import *
+from Games.Mugunghwa.Mugunghwa_Game import start_game as start_mugunghwa_game
+from Games.Dalgona.dalgona_game import start_game as start_dalgona_game
+from Games.MarbleGame.marble_game import start_game as start_marble_game
 #
-# SCREEN_WIDTH = 800
-# SCREEN_HEIGHT = 800
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 800
 #
-# if __name__ == "__main__":
-#     SCORE = 0
-#     LEVEL = 1
+if __name__ == "__main__":
+    SCORE = 0
+    LEVEL = 1
 #
 #     while True:
 #         mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
