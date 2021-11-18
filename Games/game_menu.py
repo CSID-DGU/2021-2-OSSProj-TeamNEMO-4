@@ -54,10 +54,10 @@ def main_menu():
 
         if button_mode.collidepoint((mx, my)):
             if click:
-                select_mode_menu()
+                return select_mode_menu()
         if button_rank.collidepoint((mx, my)):
             if click:
-                show_rank_menu()
+                return show_rank_menu()
         if button_exit.collidepoint((mx, my)):
             if click:
                 print("종료")
@@ -98,16 +98,18 @@ def select_mode_menu():
 
         if button_ifinite.collidepoint((mx, my)):
             if click:
-                print("무한 모드")
+                return "infinite_mode"
         if button_best.collidepoint((mx, my)):
             if click:
-                print("최고 기록 모드")
+                return "the_best_record_mode"
         if button_select_game.collidepoint((mx, my)):
             if click:
                 select_game_menu()
         if button_back.collidepoint((mx, my)):
             if click:
                 running = False
+                return main_menu()
+
         click = False
 
         for event in pygame.event.get():
@@ -153,6 +155,7 @@ def show_rank_menu():
         if button_back.collidepoint((mx, my)):
             if click:
                 running = False
+                return main_menu()
 
         click = False
 
@@ -261,6 +264,3 @@ def select_game_rank_menu():
 
         pygame.display.update()
         mainClock.tick(60)
-
-
-main_menu()
