@@ -18,7 +18,7 @@ img_mugungwha_button = pygame.image.load(get_abs_path("menu_imgs/button_mugunghw
 img_dalgona_button = pygame.image.load(get_abs_path("menu_imgs/button_dalgona.png"))
 img_tug_of_war_button = pygame.image.load(get_abs_path("menu_imgs/button_tug_of_war.png"))
 img_marble_game_button = pygame.image.load(get_abs_path("menu_imgs/button_marble_game.png"))
-img_exit_button = pygame.image.load(get_abs_path("menu_imgs/exit_btn.png"))
+img_exit_button = pygame.image.load(get_abs_path("menu_imgs/button_exit.png"))
 img_back_button = pygame.image.load(get_abs_path("menu_imgs/button_back.png"))
 
 #버튼 생성 함수
@@ -41,10 +41,10 @@ def main_menu():
         mx,my=pygame.mouse.get_pos() #마우스 좌표 변수
 
         #메인 화면 버튼 생성(모드 선택, 랭킹 보기, exit)
-        message_to_screen_center(screen, '오징어 게임', WHITE, korean_large_font, screen.get_height() / 5, ref_w, ref_h)
+        message_to_screen_center(screen, '오징어 게임', WHITE, korean_large_font, screen.get_height() / 5, ref_w, ref_h) #리사이징을 위해 전체 화면 비율로 위치 지정
         button_mode=button(screen.get_width() / 3, screen.get_height() / 2.8,img_mode_button)
         button_rank=button(screen.get_width() / 3, screen.get_height() / 1.8, img_rank_button)
-        button_exit = button(screen.get_width() / 2.8, screen.get_height() / 1.33, img_exit_button)
+        button_exit = button(screen.get_width() / 3, screen.get_height() / 1.33, img_exit_button)
 
         if button_mode.collidepoint((mx,my)):
             if click:
