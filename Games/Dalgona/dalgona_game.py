@@ -25,7 +25,6 @@ SCREEN_STARTING_POINT = (0, 0)
 class Game:
     NPC_CHANGE_DIRECTION_TIME = 3
     NPC_SIZE = 150
-    BGM_VOLUME = 0.2
 
     def __init__(self, width, height):
         self.width = width
@@ -54,7 +53,7 @@ class Game:
         npc = NPC(self.npc_size, self.npc_size, KIND_OF_NPC)  # 화면을 돌아다닐 npc 생성.
         # bgm
         if pygame.mixer.music.get_busy() == False:
-            pygame.mixer.music.set_volume(self.BGM_VOLUME)
+            pygame.mixer.music.set_volume(BGM_VOLUME)
             pygame.mixer.music.play(-1)
         # 달고나 생성
         dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, NUMBER_OF_POINTS, self.shape)

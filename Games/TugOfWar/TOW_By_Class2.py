@@ -27,7 +27,7 @@ class TugOfWar:
         self.screen.fill(WHITE)
         pygame.display.set_caption(title)
         # 이미지 불러오기
-        self.char = pygame.image.load("Images/TOW_Char.png.")
+        self.char = pygame.image.load("Images/pulling.png.")
         self.imgBG = pygame.image.load("Images/TugOfWarBack.png")
         # 타이머 설정
         self.game_over_timer = None
@@ -123,8 +123,8 @@ class TugOfWar:
         did_win = True
         click_wrong = False
         click = 0
-        nClick = level * self.numClick # level마다 클릭해야 하는 횟수
-        game_over_click = 1.5 * nClick # 클릭해야하는 횟수 이 값 넘기면 게임 오버
+        nClick = level * self.numClick  # level마다 클릭해야 하는 횟수
+        game_over_click = 1.5 * nClick  # 클릭해야하는 횟수 이 값 넘기면 게임 오버
         life = 3
         n_click_wrong = 0
 
@@ -163,10 +163,12 @@ class TugOfWar:
             message_to_screen_left(
                 self.screen, 'Left Time : {}'.format(all_left_time), WHITE, level_font, self.screen.get_width() / 6.5,
 
-                self.screen.get_height() / 11, self.ref_w, self.ref_h)
+                                                                                        self.screen.get_height() / 11,
+                self.ref_w, self.ref_h)
             # 남은 클릭 수 화면에 표시
             message_to_screen_center(
-                self.screen, 'Left Click : {}'.format(int(nClick - click)), WHITE, level_font, self.screen.get_height()/40,
+                self.screen, 'Left Click : {}'.format(int(nClick - click)), WHITE, level_font,
+                self.screen.get_height() / 40,
                 self.ref_w, self.ref_h)
             # 메세지 표시 when d 누르는 시간일 때
             if d_timer > 0:
@@ -195,7 +197,6 @@ class TugOfWar:
                         a_ticks = pygame.time.get_ticks()
                         a_elapsed_time = (pygame.time.get_ticks() - a_ticks) / 1000
 
-
             # for event in pygame.event.get():
             #     if event.type == pygame.QUIT:
             #         exit()
@@ -220,12 +221,12 @@ class TugOfWar:
             if d_timer > 0:
                 if key == pygame.K_d:
                     click += 1
-                elif key[pygame.K_q] == 0: # 키 입력이 없을 때
+                elif key[pygame.K_q] == 0:  # 키 입력이 없을 때
                     click -= 0.03
             elif d_timer < 0:
                 if key == pygame.K_a:
                     click += 1
-                elif key != pygame.K_a: # 다른 키 입력 받을 때
+                elif key != pygame.K_a:  # 다른 키 입력 받을 때
                     click += 0
 
                 elif event.type == pygame.KEYDOWN:
