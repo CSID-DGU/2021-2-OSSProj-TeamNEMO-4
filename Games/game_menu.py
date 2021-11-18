@@ -251,4 +251,4 @@ def select_game_rank_menu():
 
         pygame.display.update()
         mainClock.tick(60)
-main_menu() #충돌 수정
+main_menu()
