@@ -91,3 +91,6 @@ def get_abs_path(path):
 
 # 게임 오버 이미지 경로
 GAME_OVER_LOCATION = 'common_images/game_over.png'
+
+# BGM VOLUME
+BGM_VOLUME = 0.2

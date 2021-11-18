@@ -1,21 +1,24 @@
 import random
 
-from Games.game_settings import *
+from Games.MarbleGame.marble_game_object import *
 
-# 이미지 좌표
-BG_BG_LOCATION = 'MarbleGame/bg/bg.png'
+# 이미지 경로
+
 BG_BGBASE_LOCATION = 'MarbleGame/bg/bgbase.png'
-IMGS_TRUE_LOCATION = 'MarbleGame/imgs/True.png'
-IMGS_FALSE_LOCATION = 'MarbleGame/imgs/False.png'
-IMGS_START_LOCATION = 'MarbleGame/imgs/gamestart.png'
+BG_BG_LOCATION = BG_BGBASE_LOCATION
 IMGS_HAND1_LOCATION = 'MarbleGame/imgs/hand1.png'
 IMGS_HAND2_LOCATION = 'MarbleGame/imgs/hand2.png'
 IMGS_HAND3_LOCATION = 'MarbleGame/imgs/hand3.png'
 IMGS_HAND4_LOCATION = 'MarbleGame/imgs/hand4.png'
 IMGS_HAND5_LOCATION = 'MarbleGame/imgs/hand5.png'
 IMGS_NPC_LOCATION = 'MarbleGame/imgs/NPC.png'
+ODD_BUTTON_LOCATION = 'MarbleGame/imgs/odd_button.png'
+EVEN_BUTTON_LOCATION = 'MarbleGame/imgs/even_button.png'
+GREEN_BUTTON_LOCATION = 'MarbleGame/imgs/green_button.png'
+PLUS_LOCATION = 'MarbleGame/imgs/plus.png'
+MINUS_LOCATION = 'MarbleGame/imgs/minus.png'
 
-# 사운드 좌표
+# 사운드 경로
 SOUND_BGM_LOCATION = 'MarbleGame/sound/bgm.mp3'
 SOUND_MARBLE_LOCATION = 'MarbleGame/sound/marblesound.mp3'
 SOUND_MARBLE2_LOCATION = 'MarbleGame/sound/marblesound2.mp3'
@@ -53,20 +56,22 @@ class MarbleGame:
     effect_y = 0  # random.randint(-10, 10)
     score = 0  # 게임의 점수를 저장하는 변수
     hint = 1  # hint 사용 가능 수
+
     # 이미지 로딩
     imgBG = pygame.image.load(get_abs_path(BG_BG_LOCATION))  # 배경 이미지
     imgBGbase = pygame.image.load(get_abs_path(BG_BGBASE_LOCATION))
-    imgTrue = pygame.image.load(get_abs_path(IMGS_TRUE_LOCATION))  # 배팅 성공 이미지
-    imgFalse = pygame.image.load(get_abs_path(IMGS_FALSE_LOCATION))  # 배팅 실패 이미지
-    imgStart = pygame.image.load(get_abs_path(IMGS_START_LOCATION))
     imgHand1 = pygame.image.load(get_abs_path(IMGS_HAND1_LOCATION))
     imgHand2 = pygame.image.load(get_abs_path(IMGS_HAND2_LOCATION))
     imgHand3 = pygame.image.load(get_abs_path(IMGS_HAND3_LOCATION))
     imgHand4 = pygame.image.load(get_abs_path(IMGS_HAND4_LOCATION))
     imgHand5 = pygame.image.load(get_abs_path(IMGS_HAND5_LOCATION))
     imgNPC = pygame.image.load(get_abs_path(IMGS_NPC_LOCATION))
+    img_odd_button = pygame.image.load(get_abs_path(ODD_BUTTON_LOCATION))
+    img_even_button = pygame.image.load(get_abs_path(EVEN_BUTTON_LOCATION))
+    img_green_button = pygame.image.load(get_abs_path(GREEN_BUTTON_LOCATION))
+    img_plus = pygame.image.load(get_abs_path(PLUS_LOCATION))
+    img_minus = pygame.image.load(get_abs_path(MINUS_LOCATION))
     gganbuplay = False
-    BGM_VOLUME = 0.2
 
     def __init__(self, width, height):
         pygame.display.set_caption(SCREEN_TITLE)
@@ -131,7 +136,7 @@ class MarbleGame:
                                  self.width / 3,
                                  self.ref_w,
                                  self.ref_h)
-        message_to_screen_center(self.game_screen, '다음 게임은 무궁화 게임입니다. ', WHITE, korean_font,
+        message_to_screen_center(self.game_screen, '다음 게임은 줄다리기입니다. ', WHITE, korean_font,
                                  self.width / 2,
                                  self.ref_w,
                                  self.ref_h)
@@ -163,7 +168,7 @@ class MarbleGame:
             self.imgHand3 = pygame.transform.scale(self.imgHand3,
                                                    (self.game_screen.get_width(), self.game_screen.get_height()))
             self.game_screen.blit(self.imgHand3, STARTING_POINT)
-            if self.screen_buffer <= self.marble_game_timer - 10:
+            if self.screen_buffer <= self.marble_game_timer - 15:
                 self.game_screen.blit(self.imgBGbase, STARTING_POINT)
                 self.imgHand1 = pygame.transform.scale(self.imgHand1,
                                                        (
@@ -298,7 +303,6 @@ class MarbleGame:
                 if event.type == pygame.VIDEORESIZE:
                     self.game_screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
 
-            key = pygame.key.get_pressed()  # 모든 키 입력 감지
             if self.idx == TITLE:  # 0은 타이틀 화면
                 self.draw_title()
                 if key[pygame.K_SPACE] == 1:
@@ -319,31 +323,57 @@ class MarbleGame:
                 self.game_screen.blit(self.imgBG, STARTING_POINT)
                 self.imgHand5 = pygame.transform.scale(self.imgHand5,
                                                        (self.game_screen.get_width(), self.game_screen.get_height()))
+                # 홀짝 버튼
+                x, y = self.img_odd_button.get_size()
+
+                odd_button = Button(self.game_screen, BUTTON_INTERVAL, 500, x, y, self.img_odd_button,
+                                    self.img_green_button)
+
+                even_button = Button(self.game_screen, self.width - x - BUTTON_INTERVAL, 500, x, y,
+                                     self.img_even_button,
+                                     self.img_green_button)
+
+                # 베팅 업다운 버튼
+                x, y = self.img_plus.get_size()
+
+                plus_button = Button(self.game_screen, self.width / 2 - 15 - x, self.width * (6 / 7), x, y,
+                                     self.img_plus,
+                                     self.img_plus)
+
+                minus_button = Button(self.game_screen, self.width / 2 + 15, self.width * (6 / 7), x, y,
+                                      self.img_minus,
+                                      self.img_minus)
+
+                key = pygame.key.get_pressed()  # 모든 키 입력 감지
+
+                # BGM
                 if pygame.mixer.music.get_busy() == False:  # bgm 재생 정지 상태라면
                     try:
-                        pygame.mixer.music.set_volume(self.BGM_VOLUME)
+                        pygame.mixer.music.set_volume(BGM_VOLUME)
                         pygame.mixer.music.play(-1)  # bgm 재생
                     except:
                         pass
+
+                # Game logic
                 if left_time <= 0:
                     self.marble_game_timer = 0
                     self.screen_buffer = self.marble_game_timer
                     self.idx = GAME_OVER
-                if key[
-                    pygame.K_UP] and self.player_betting < self.player_marbles and self.player_betting < self.computer_marbles and self.player_betting<6: self.player_betting += 1
-                if key[pygame.K_DOWN] and self.player_betting > 1: self.player_betting -= 1
-                if self.betting_button_pressed == True and self.computer_marbles > 1:
+                if plus_button.is_clicked and self.player_betting < self.player_marbles and self.player_betting < self.computer_marbles and self.player_betting < 6: self.player_betting += 1
+                if minus_button.is_clicked and self.player_betting > 1: self.player_betting -= 1
+                if self.betting_button_pressed is True and self.computer_marbles > 1:
                     if self.computer_marbles > 6:
                         self.computer_betting = random.randint(1, 2 + self.marble_game_level)
                     else:
                         self.computer_betting = random.randint(1, self.computer_marbles)
                     self.player_betting = 1
                     self.betting_button_pressed = False
-                elif self.betting_button_pressed == True and self.computer_marbles == 1:
+                elif self.betting_button_pressed is True and self.computer_marbles == 1:
                     self.computer_betting = 1
                     self.player_betting = 1
                     self.betting_button_pressed = False
-                if key[pygame.K_LEFT]:  # 홀 버튼 누름&배팅r
+
+                if odd_button.is_clicked:  # 홀 버튼
                     if self.computer_betting % 2 == 0:  # 컴퓨터 배팅이 짝이면
                         self.betting_success = False
                         self.player_marbles -= self.player_betting
@@ -362,7 +392,7 @@ class MarbleGame:
                             self.score += 10
                             self.idx = GGANBU  # 6
 
-                if key[pygame.K_RIGHT]:
+                if even_button.is_clicked:
                     if self.computer_betting % 2 == 1:
                         self.betting_success = False
                         self.player_marbles -= self.player_betting
@@ -459,7 +489,7 @@ class MarbleGame:
             if self.idx == GGANBU:
                 self.draw_gganbu()
             pygame.display.update()
-            clock.tick(10)
+            clock.tick(15)
 
 
 # if __name__ == '__main__':
