@@ -153,6 +153,11 @@ class TugOfWar:
         start_ticks = pygame.time.get_ticks()
         hit_ticks = pygame.time.get_ticks()
 
+        # bgm
+        if pygame.mixer.music.get_busy() == False:
+            pygame.mixer.music.set_volume(BGM_VOLUME)
+            pygame.mixer.music.play(-1)
+
         while not game_over:
             # 게임 오버 타이머 남은 시간
             left_time = self.game_over_timer.time_checker()

@@ -23,6 +23,27 @@ img_marble_game_button = pygame.image.load(get_abs_path("menu_imgs/button_marble
 img_exit_button = pygame.image.load(get_abs_path("menu_imgs/button_exit.png"))
 img_back_button = pygame.image.load(get_abs_path("menu_imgs/button_back.png"))
 
+MENU_TICK_RATE = 60  # 메뉴 화면 초당 프레임.
+
+
+# fade-in fade-out fade-out
+def fade_out(fade):
+    fade.fill(PINK)
+    for alpha in range(0, MENU_TICK_RATE):
+        fade.set_alpha(alpha)
+        screen.blit(fade, (0, 0))
+        pygame.display.update()
+
+
+def fade_in(fade):
+    fade.fill(PINK)
+    screen.blit(fade, (0, 0))
+    pygame.display.update()
+    for alpha in range(0, MENU_TICK_RATE):
+        fade.set_alpha(MENU_TICK_RATE - alpha)
+        screen.blit(fade, (0, 0))
+        pygame.display.update()
+
 
 # 버튼 생성 함수
 def button(x, y, image):
@@ -39,6 +60,7 @@ def button(x, y, image):
 def main_menu():
     click = False  # 클릭 판단 변수
     ref_w, ref_h = screen.get_size()
+    fade = pygame.Surface((screen.get_width(), screen.get_height()))
     while True:
         screen.fill(PINK)
         pygame.display.set_caption("오징어 게임 - 메인 화면")
@@ -54,13 +76,15 @@ def main_menu():
 
         if button_mode.collidepoint((mx, my)):
             if click:
+                fade_out(fade)
                 return select_mode_menu()
         if button_rank.collidepoint((mx, my)):
             if click:
+                fade_out(fade)
                 return show_rank_menu()
         if button_exit.collidepoint((mx, my)):
             if click:
-                print("종료")
+                fade_out(fade)
                 sys.exit()
 
         click = False
@@ -77,13 +101,33 @@ def main_menu():
                     click = True
 
         pygame.display.update()
-        mainClock.tick(60)
+        mainClock.tick(MENU_TICK_RATE)
 
 
 def select_mode_menu():
     click = False  # 클릭 판단 변수
     running = True
-    print("모드 선택")
+    fade = pygame.Surface((screen.get_width(), screen.get_height()))
+
+    fade.fill(PINK)
+    screen.blit(fade, (0, 0))
+    pygame.display.update()
+    # screen.fill(PINK)
+
+    for alpha in range(0, MENU_TICK_RATE):
+        pygame.display.set_caption("오징어 게임 - 모드 선택")
+
+        # 모드 선택 화면 버튼 생성(무한 모드, 최고 기록 모드, 게임 선택 모드)
+        button_ifinite = button(screen.get_width() / 3, screen.get_height() / 10, img_select_infinite_button)
+        button_best = button(screen.get_width() / 3, screen.get_height() / 3.1, img_select_best_button)
+        button_select_game = button(screen.get_width() / 3, screen.get_height() / 1.85, img_select_game_button)
+        button_back = button(screen.get_width() / 3, screen.get_height() / 1.32, img_back_button)
+
+        fade.set_alpha(255 - alpha * 4)
+        print(fade.get_alpha())
+        screen.blit(fade, (0, 0))
+        pygame.display.update()
+
     while running:
         screen.fill(PINK)
         pygame.display.set_caption("오징어 게임 - 모드 선택")
@@ -98,6 +142,7 @@ def select_mode_menu():
 
         if button_ifinite.collidepoint((mx, my)):
             if click:
+                fade_out(fade)
                 return "infinite_mode"
         if button_best.collidepoint((mx, my)):
             if click:
@@ -124,7 +169,7 @@ def select_mode_menu():
                     click = True
 
         pygame.display.update()
-        mainClock.tick(60)
+        mainClock.tick(MENU_TICK_RATE)
 
 
 def show_rank_menu():
@@ -171,7 +216,7 @@ def show_rank_menu():
                     click = True
 
         pygame.display.update()
-        mainClock.tick(60)
+        mainClock.tick(MENU_TICK_RATE)
 
 
 def select_game_menu():
@@ -222,7 +267,7 @@ def select_game_menu():
                     click = True
 
         pygame.display.update()
-        mainClock.tick(60)
+        mainClock.tick(MENU_TICK_RATE)
 
 
 def select_game_rank_menu():
@@ -273,4 +318,4 @@ def select_game_rank_menu():
                     click = True
 
         pygame.display.update()
-        mainClock.tick(60)
+        mainClock.tick(MENU_TICK_RATE)
