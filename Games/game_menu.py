@@ -104,7 +104,7 @@ def select_mode_menu():
                 return "the_best_record_mode"
         if button_select_game.collidepoint((mx, my)):
             if click:
-                select_game_menu()
+                return select_game_menu()
         if button_back.collidepoint((mx, my)):
             if click:
                 running = False
@@ -193,16 +193,24 @@ def select_game_menu():
 
         if button_mugunghwa.collidepoint((mx, my)):
             if click:
+                running = True
                 print("무궁화 게임")
+                return "select_mode_mugunghwa"
         if button_dalgona.collidepoint((mx, my)):
             if click:
+                running = True
                 print("달고나 게임")
+                return "select_mode_dalgona"
         if button_tug_of_war.collidepoint((mx, my)):
             if click:
+                running = True
                 print("줄다리기 게임")
+                return "select_mode_tugOfWar"
         if button_marble_game.collidepoint((mx, my)):
             if click:
+                running = True
                 print("구슬 홀짝 게임")
+                return "select_mode_Marble"
         if button_back.collidepoint((mx, my)):
             if click:
                 running = False
@@ -274,3 +282,4 @@ def select_game_rank_menu():
 
         pygame.display.update()
         mainClock.tick(60)
+
