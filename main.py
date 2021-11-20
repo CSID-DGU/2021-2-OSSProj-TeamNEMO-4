@@ -53,4 +53,3 @@ if __name__ == "__main__":
                                  ref_w,
                                  ref_h)
         pygame.display.update()
-
