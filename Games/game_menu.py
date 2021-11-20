@@ -185,10 +185,11 @@ def select_game_menu():
         mx, my = pygame.mouse.get_pos()  # 마우스 좌표 변수
 
         # 게임 선택 화면 버튼 생성(각 게임)
-        button_mugunghwa = button(screen.get_width() / 20, screen.get_height() / 25, img_mugungwha_button)
+        button_mugunghwa = button(screen.get_width() / 8, screen.get_height() / 25, img_mugungwha_button)
         button_dalgona = button(screen.get_width() / 1.9, screen.get_height() / 25, img_dalgona_button)
-        button_tug_of_war = button(screen.get_width() / 20, screen.get_height() / 2, img_tug_of_war_button)
-        button_marble_game = button(screen.get_width() / 1.9, screen.get_height() / 2, img_marble_game_button)
+        button_tug_of_war = button(screen.get_width() / 8, screen.get_height() / 2.3, img_tug_of_war_button)
+        button_marble_game = button(screen.get_width() / 1.9, screen.get_height() / 2.3, img_marble_game_button)
+        button_back = button(screen.get_width() / 3, screen.get_height() / 1.25, img_back_button)
 
         if button_mugunghwa.collidepoint((mx, my)):
             if click:
@@ -202,6 +203,10 @@ def select_game_menu():
         if button_marble_game.collidepoint((mx, my)):
             if click:
                 print("구슬 홀짝 게임")
+        if button_back.collidepoint((mx, my)):
+            if click:
+                running = False
+                return main_menu()
 
         click = False
 
@@ -231,10 +236,11 @@ def select_game_rank_menu():
         mx, my = pygame.mouse.get_pos()  # 마우스 좌표 변수
 
         # 게임 선택 선택 화면 랭크 버튼 생성(각 게임)
-        button_mugunghwa = button(screen.get_width() / 20, screen.get_height() / 25, img_mugungwha_button)
+        button_mugunghwa = button(screen.get_width() / 8, screen.get_height() / 25, img_mugungwha_button)
         button_dalgona = button(screen.get_width() / 1.9, screen.get_height() / 25, img_dalgona_button)
-        button_tug_of_war = button(screen.get_width() / 20, screen.get_height() / 2, img_tug_of_war_button)
-        button_marble_game = button(screen.get_width() / 1.9, screen.get_height() / 2, img_marble_game_button)
+        button_tug_of_war = button(screen.get_width() / 8, screen.get_height() / 2.3, img_tug_of_war_button)
+        button_marble_game = button(screen.get_width() / 1.9, screen.get_height() / 2.3, img_marble_game_button)
+        button_back = button(screen.get_width() / 3, screen.get_height() / 1.25, img_back_button)
 
         if button_mugunghwa.collidepoint((mx, my)):
             if click:
@@ -248,6 +254,10 @@ def select_game_rank_menu():
         if button_marble_game.collidepoint((mx, my)):
             if click:
                 print("구슬 홀짝 게임 랭킹")
+        if button_back.collidepoint((mx, my)):
+            if click:
+                running = False
+                return main_menu()
 
         click = False
 
