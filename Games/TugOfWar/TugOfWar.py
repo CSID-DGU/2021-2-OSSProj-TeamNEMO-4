@@ -45,7 +45,7 @@ class TugOfWar:
             print(e)
             print("사운드 로드 오류")
 
-    def start_game(self, level, score):
+    def start_game(self, level, score, best_record_mode):
         # while True:
         #     for event in pygame.event.get():
         #         if event.type == pygame.QUIT:
@@ -54,7 +54,7 @@ class TugOfWar:
         #             if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
         #                 return
         #             elif event.key == pygame.K_e:
-        score = self.run_game_loop(level, score)
+        score = self.run_game_loop(level, score, best_record_mode)
         return score
         # 배경 설정
         # self.screen.fill(WHITE)
@@ -135,7 +135,7 @@ class TugOfWar:
                 self.screen, '시작화면으로 이동 : Q', RED, korean_font, self.height / 2, self.ref_w, self.ref_h)
             pygame.display.update()
 
-    def run_game_loop(self, level, score):
+    def run_game_loop(self, level, score, best_record_mode):
         game_over = False
         did_win = False
         hit_time_init = True
@@ -259,20 +259,26 @@ class TugOfWar:
             clock.tick(FPS_RATE)
 
         if did_win:
-            # if level >= self.WIN_LEVEL:
-            #     self.win_game()
-            # else:
-            message_to_screen_center(self.screen, '통과!', WHITE, korean_font,
-                                     self.height / 3,
-                                     self.ref_w,
-                                     self.ref_h)
-            message_to_screen_center(self.screen, '다음 게임은 무궁화 게임입니다. ', WHITE, korean_font,
-                                     self.width / 2,
-                                     self.ref_w,
-                                     self.ref_h)
-            pygame.display.update()
-            clock.tick(0.5)
-            return left_time
+            if best_record_mode:
+                message_to_screen_center(self.screen, '축하합니다 통과했습니다! ', WHITE, korean_font,
+                                         self.width / 2,
+                                         self.ref_w,
+                                         self.ref_h)
+                pygame.display.update()
+                clock.tick(0.5)
+                return left_time
+            else:
+                message_to_screen_center(self.screen, '통과!', WHITE, korean_font,
+                                         self.height / 3,
+                                         self.ref_w,
+                                         self.ref_h)
+                message_to_screen_center(self.screen, '다음 게임은 무궁화 게임입니다. ', WHITE, korean_font,
+                                         self.width / 2,
+                                         self.ref_w,
+                                         self.ref_h)
+                pygame.display.update()
+                clock.tick(0.5)
+                return left_time
 
         # elif self.game_restart():
         #     self.run_game_loop(1)
@@ -287,8 +293,8 @@ class TugOfWar:
             return
 
 
-def start_game(level, score):
+def start_game(level, score, best_record_mode=False):
     pygame.init()
     new_game = TugOfWar(SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
-    score = new_game.start_game(level, score)
+    score = new_game.start_game(level, score, best_record_mode)
     return score
