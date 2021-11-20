@@ -310,6 +310,7 @@ def select_game_menu():
                 running = True
                 print("구슬 홀짝 게임")
                 return "select_mode_Marble"
+
         if button_back.collidepoint((mx, my)):
             if click:
                 running = False
