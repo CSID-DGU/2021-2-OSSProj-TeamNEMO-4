@@ -40,7 +40,6 @@ if __name__ == "__main__":
                 break
 
             LEVEL += 1
-
     elif selected == "the_best_record_mode":
         while True:
             mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
@@ -64,7 +63,6 @@ if __name__ == "__main__":
             else:
                 break
             break
-
     elif selected == "select_mode_mugunghwa":
         while True:
             mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
