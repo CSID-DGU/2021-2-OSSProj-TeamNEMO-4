@@ -115,6 +115,7 @@ class Game:
             dalgona.draw()
 
             # 바늘 아트워크
+            pygame.mouse.get_pressed()
             if pygame.mouse.get_pressed()[0]:
                 x_pos = pygame.mouse.get_pos()[0]
                 y_pos = pygame.mouse.get_pos()[1]
@@ -136,7 +137,7 @@ class Game:
                                          self.width / 3,
                                          self.ref_w,
                                          self.ref_h)
-                message_to_screen_center(self.game_screen, '다음 게임은 구슬홀짝입니다. ', WHITE, korean_font,
+                message_to_screen_center(self.game_screen, '다음 게임은 줄다리기입니다. ', WHITE, korean_font,
                                          self.half_width,
                                          self.ref_w,
                                          self.ref_h)

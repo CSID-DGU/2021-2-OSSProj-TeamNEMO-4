@@ -25,7 +25,7 @@ KEY_INPUT = 768
 
 
 class Game:
-    TICK_RATE = 120  # FPS
+    TICK_RATE = 60  # FPS
     TIMER_TIME = 5  # 술래 뒤도는 카운터.
     NPC_CHANGE_DIRECTION_TIME = 2
     AIM_CHANGE_DIRECTION_TIME = 1.5
