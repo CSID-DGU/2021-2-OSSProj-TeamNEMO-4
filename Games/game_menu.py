@@ -280,7 +280,7 @@ def select_game_menu():
     running = True
     print("게임 선택 모드")
     fade = pygame.Surface((screen.get_width(), screen.get_height()))
-    fade_in(fade, draw_select_mode_menu)
+    fade_in(fade, draw_select_game_menu)
     while running:
         screen.fill(PINK)
         pygame.display.set_caption("오징어 게임 - 게임 선택 모드")
@@ -348,7 +348,7 @@ def select_game_rank_menu():
     running = True
     print("게임 선택 모드 랭킹")
     fade = pygame.Surface((screen.get_width(), screen.get_height()))
-    fade_in(fade, draw_select_mode_menu)
+    fade_in(fade, draw_select_game_rank_menu)
     while running:
         screen.fill(PINK)
         pygame.display.set_caption("오징어 게임 - 게임 선택 모드 랭킹")
@@ -391,4 +391,3 @@ def select_game_rank_menu():
         pygame.display.update()
 
         mainClock.tick(MENU_TICK_RATE)
-
