@@ -206,7 +206,7 @@ def select_game_menu():
         if button_back.collidepoint((mx, my)):
             if click:
                 running = False
-                return main_menu()
+                return select_mode_menu()
 
         click = False
 
