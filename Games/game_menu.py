@@ -287,11 +287,7 @@ def select_game_menu():
         mx, my = pygame.mouse.get_pos()  # 마우스 좌표 변수
 
         # 게임 선택 화면 버튼 생성(각 게임)
-        button_mugunghwa = button(screen.get_width() / 8, screen.get_height() / 25, img_mugungwha_button)
-        button_dalgona = button(screen.get_width() / 1.9, screen.get_height() / 25, img_dalgona_button)
-        button_tug_of_war = button(screen.get_width() / 8, screen.get_height() / 2.3, img_tug_of_war_button)
-        button_marble_game = button(screen.get_width() / 1.9, screen.get_height() / 2.3, img_marble_game_button)
-        button_back = button(screen.get_width() / 3, screen.get_height() / 1.25, img_back_button)
+        button_mugunghwa, button_dalgona, button_tug_of_war, button_marble_game, button_back = draw_select_game_menu()
 
         if button_mugunghwa.collidepoint((mx, my)):
             if click:
@@ -327,10 +323,23 @@ def select_game_menu():
         mainClock.tick(MENU_TICK_RATE)
 
 
+def draw_select_game_rank_menu():
+    screen.fill(PINK)
+    return (
+        button(screen.get_width() / 8, screen.get_height() / 25, img_mugungwha_button)
+        , button(screen.get_width() / 1.9, screen.get_height() / 25, img_dalgona_button)
+        , button(screen.get_width() / 8, screen.get_height() / 2.3, img_tug_of_war_button)
+        , button(screen.get_width() / 1.9, screen.get_height() / 2.3, img_marble_game_button)
+        , button(screen.get_width() / 3, screen.get_height() / 1.25, img_back_button)
+    )
+
+
 def select_game_rank_menu():
     click = False  # 클릭 판단 변수
     running = True
     print("게임 선택 모드 랭킹")
+    fade = pygame.Surface((screen.get_width(), screen.get_height()))
+    fade_in(fade, draw_select_mode_menu)
     while running:
         screen.fill(PINK)
         pygame.display.set_caption("오징어 게임 - 게임 선택 모드 랭킹")
@@ -338,11 +347,7 @@ def select_game_rank_menu():
         mx, my = pygame.mouse.get_pos()  # 마우스 좌표 변수
 
         # 게임 선택 선택 화면 랭크 버튼 생성(각 게임)
-        button_mugunghwa = button(screen.get_width() / 8, screen.get_height() / 25, img_mugungwha_button)
-        button_dalgona = button(screen.get_width() / 1.9, screen.get_height() / 25, img_dalgona_button)
-        button_tug_of_war = button(screen.get_width() / 8, screen.get_height() / 2.3, img_tug_of_war_button)
-        button_marble_game = button(screen.get_width() / 1.9, screen.get_height() / 2.3, img_marble_game_button)
-        button_back = button(screen.get_width() / 3, screen.get_height() / 1.25, img_back_button)
+        button_mugunghwa, button_dalgona, button_tug_of_war, button_marble_game, button_back = draw_select_game_rank_menu()
 
         if button_mugunghwa.collidepoint((mx, my)):
             if click:
