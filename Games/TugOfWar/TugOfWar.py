@@ -277,7 +277,7 @@ class TugOfWar:
                                          self.height / 3,
                                          self.ref_w,
                                          self.ref_h)
-                message_to_screen_center(self.screen, '다음 게임은 무궁화 게임입니다. ', WHITE, korean_font,
+                message_to_screen_center(self.screen, '다음 게임은 구슬홀짝입니다. ', WHITE, korean_font,
                                          self.width / 2,
                                          self.ref_w,
                                          self.ref_h)

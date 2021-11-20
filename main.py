@@ -28,14 +28,14 @@ if __name__ == "__main__":
                 SCORE += dalgona_score
             else:
                 break
-            marble_score = start_marble_game(LEVEL, SCORE)
-            if marble_score:
-                SCORE += marble_score
-            else:
-                break
             tug_score = start_tug_game(LEVEL, SCORE)
             if tug_score:
                 SCORE += tug_score
+            else:
+                break
+            marble_score = start_marble_game(LEVEL, SCORE)
+            if marble_score:
+                SCORE += marble_score
             else:
                 break
 
@@ -52,14 +52,14 @@ if __name__ == "__main__":
                 SCORE += dalgona_score
             else:
                 break
-            marble_score = start_marble_game(LEVEL, SCORE)
-            if marble_score:
-                SCORE += marble_score
-            else:
-                break
-            tug_score = start_tug_game(LEVEL, SCORE, best_record_mode=True)
+            tug_score = start_tug_game(LEVEL, SCORE)
             if tug_score:
                 SCORE += tug_score
+            else:
+                break
+            marble_score = start_marble_game(LEVEL, SCORE, best_record_mode=True)
+            if marble_score:
+                SCORE += marble_score
             else:
                 break
             break
