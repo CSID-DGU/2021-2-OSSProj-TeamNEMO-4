@@ -63,6 +63,40 @@ if __name__ == "__main__":
             else:
                 break
             break
+    elif selected == "select_mode_mugunghwa":
+        while True:
+            mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
+            if mugunghwa_score:
+                SCORE += mugunghwa_score
+            else:
+                break
+            LEVEL += 1
+    elif selected == "select_mode_dalgona":
+        while True:
+            dalgona_score = start_dalgona_game(LEVEL, SCORE)
+            if dalgona_score:
+                SCORE += dalgona_score
+            else:
+                break
+            LEVEL += 1
+    elif selected == "select_mode_tugOfWar":
+        while True:
+            tug_score = start_tug_game(LEVEL, SCORE)
+            if tug_score:
+                SCORE += tug_score
+            else:
+                break
+            LEVEL += 1
+    elif selected == "select_mode_Marble":
+        while True:
+            marble_score = start_marble_game(LEVEL, SCORE)
+            if marble_score:
+                SCORE += marble_score
+            else:
+                break
+            LEVEL += 1
+
+
 
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
