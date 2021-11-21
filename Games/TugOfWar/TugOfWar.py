@@ -151,7 +151,7 @@ class TugOfWar:
                 self.screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w,
                 self.ref_h)
             message_to_screen_left(
-                self.screen, "SCORE : " + str(score), WHITE, level_font, self.width - 130, 40, self.ref_w,
+                self.screen, "SCORE : " + str(round(score)), WHITE, level_font, self.width - 130, 40, self.ref_w,
                 self.ref_h)
             message_to_screen_center(
                 self.screen, '승리까지 {} M'.format(int(num_of_press_key_to_clear - num_of_pressed)), WHITE,

@@ -423,7 +423,8 @@ class MarbleGame:
                     self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w,
                     self.ref_h)
                 message_to_screen_left(
-                    self.game_screen, "SCORE : " + str(self.score), BLACK, level_font, self.width - 130, 40, self.ref_w,
+                    self.game_screen, "SCORE : " + str(round(score)), BLACK, level_font, self.width - 130, 40,
+                    self.ref_w,
                     self.ref_h)
 
                 message_to_screen_left(self.game_screen, "내 구슬", WHITE,
