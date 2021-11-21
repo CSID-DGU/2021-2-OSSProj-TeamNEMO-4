@@ -13,9 +13,6 @@ SCREEN_HEIGHT = 800
 if __name__ == "__main__":
     SCORE = 0
     LEVEL = 1
-    dalgona_score = start_dalgona_game(LEVEL, SCORE)
-    if dalgona_score:
-        SCORE += dalgona_score
     selected = main_menu()
 
     if selected == "infinite_mode":
