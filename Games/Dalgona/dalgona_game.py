@@ -35,8 +35,7 @@ class Game:
         # Screen set-up
         self.game_screen = pygame.display.set_mode((width, height))
         self.game_screen.fill(PINK)
-        # self.shape = random.randrange(CIRCLE, STAR + 1)
-        self.shape = TRIANGLE
+        self.shape = random.randrange(CIRCLE, STAR + 1)
         self.rectangle_size = width / RECTANGLE_SHAPE_SIZE_RATIO
         self.half_rectangle = self.rectangle_size / 2
         # bgm 실행
