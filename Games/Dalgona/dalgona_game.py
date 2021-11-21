@@ -76,7 +76,7 @@ class Game:
             message_to_screen_left(
                 self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w, self.ref_h)
             message_to_screen_left(
-                self.game_screen, "SCORE : " + str(score), BLACK, level_font, self.width - 130, 40, self.ref_w,
+                self.game_screen, "SCORE : " + str(round(score)), BLACK, level_font, self.width - 130, 40, self.ref_w,
                 self.ref_h)
 
             pygame.draw.circle(self.game_screen, YELLOW_BROWN, self.center,
