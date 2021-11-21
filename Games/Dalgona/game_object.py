@@ -1,5 +1,5 @@
-from Games.game_settings import *
 from Games.Dalgona.constants import *
+from Games.game_settings import *
 
 CIRCLE = 1
 RECTANGLE = 2
@@ -58,7 +58,6 @@ class Dalgona:
         elif shape == TRIANGLE:
             pos_x = self.half_width
             pos_y = height / 4 + 10
-            # self.points.append(Point(game_screen, pos_x, pos_y, 5))
             for i in range(int(points_num / 3)):
                 move = ((5 / 12) * height) / (points_num / 3)
                 if i % 10 != 0:
@@ -77,7 +76,7 @@ class Dalgona:
 
             pos_y = height * (2 / 3)
             self.points.append(Point(game_screen, pos_x, pos_y, 5))
-            for i in range(int(points_num / 6)):
+            for i in range(int(points_num / 6.5)):
                 self.points.append(
                     Point(game_screen, pos_x + (i + 1) * (width / 4 / (points_num / 6)), pos_y, POINT_SIZE))
                 self.points.append(
