@@ -119,19 +119,8 @@ class MarbleGame:
         clock.tick(0.5)
         if self.screen_buffer <= self.marble_game_timer - 20:
             return
-        #     self.game_screen.fill(BLACK)
-        #     if self.screen_buffer <= self.marble_game_timer - 30:
-        #         pygame.mixer.music.stop()
-        #         message_to_screen_center(self.game_screen, "GAME OVER", WHITE, korean_font,
-        #                                  self.game_screen.get_height() / 4, self.ref_w, self.ref_h)
-        #         message_to_screen_center(self.game_screen, 'Press Enter or Return Key', WHITE, korean_font_small_size,
-        #                                  self.game_screen.get_height() / 1.25, self.ref_w, self.ref_h)
-        #         message_to_screen_left(self.game_screen, "SCORE : " + str(self.score), WHITE, korean_font,
-        #                                self.game_screen.get_width() / 2, self.game_screen.get_height() / 2, self.ref_w,
-        #                                self.ref_h)
 
     def win(self, score, best_record_mode):
-
         self.game_screen.fill(PINK)
         if best_record_mode:
             message_to_screen_center(self.game_screen, '축하합니다 통과했습니다! ', WHITE, korean_font,
@@ -185,10 +174,7 @@ class MarbleGame:
                     message_to_screen_center(
                         self.game_screen, '틀렸습니다 !', RED, korean_large_font, self.width / 2, self.ref_w,
                         self.ref_h)
-                # if self.screen_buffer <= self.marble_game_timer - 40:
-                #     self.imgStart = pygame.transform.scale(self.imgStart, (
-                #         self.game_screen.get_width(), self.game_screen.get_height()))
-                #     self.game_screen.blit(self.imgStart, STARTING_POINT)
+
         if self.betting_success:
 
             if self.screen_buffer <= self.marble_game_timer - 20:
@@ -325,7 +311,7 @@ class MarbleGame:
                                                        (self.game_screen.get_width(), self.game_screen.get_height()))
                 # 홀짝 버튼
                 x, y = self.img_odd_button.get_size()
-
+                pygame.event.get()
                 odd_button = Button(self.game_screen, BUTTON_INTERVAL, 500, x, y, self.img_odd_button,
                                     self.img_green_button)
 
