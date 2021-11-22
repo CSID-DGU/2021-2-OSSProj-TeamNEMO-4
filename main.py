@@ -80,7 +80,7 @@ if __name__ == "__main__":
             LEVEL += LEVEL_UP_STEP
     elif selected == "select_mode_tugOfWar":
         while True:
-            tug_score = start_tug_game(LEVEL, SCORE)
+            tug_score = start_tug_game(LEVEL, SCORE, best_record_mode=False, select_mode=True)
             if tug_score:
                 SCORE += tug_score
             else:

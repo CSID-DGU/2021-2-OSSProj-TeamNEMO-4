@@ -45,8 +45,12 @@ class TugOfWar:
             print(e)
             print("사운드 로드 오류")
 
-    def start_game(self, level, score, best_record_mode):
-        score = self.run_game_loop(level, score, best_record_mode)
+    def start_game(self, level, score, best_record_mode, select_mode=False):
+        score = self.run_game_loop(level, score, best_record_mode, select_mode)
+        return score
+
+    def start_game(self, level, score, best_record_mode, select_mode):
+        score = self.run_game_loop(level, score, best_record_mode, select_mode)
         return score
 
     # 통과 화면
@@ -100,7 +104,7 @@ class TugOfWar:
                 self.screen, '시작화면으로 이동 : Q', RED, korean_font, self.height / 2, self.ref_w, self.ref_h)
             pygame.display.update()
 
-    def run_game_loop(self, level, score, best_record_mode):
+    def run_game_loop(self, level, score, best_record_mode, select_mode):
         game_over = False
         did_win = False
         hit_time_init = True
@@ -237,6 +241,18 @@ class TugOfWar:
                 pygame.display.update()
                 clock.tick(0.5)
                 return left_time
+            elif select_mode:
+                message_to_screen_center(self.screen, '통과!', WHITE, korean_font,
+                                         self.height / 3,
+                                         self.ref_w,
+                                         self.ref_h)
+                message_to_screen_center(self.screen, '다음 레벨로 이동합니다. ', WHITE, korean_font,
+                                         self.width / 2,
+                                         self.ref_w,
+                                         self.ref_h)
+                pygame.display.update()
+                clock.tick(0.5)
+                return left_time
             else:
                 message_to_screen_center(self.screen, '통과!', WHITE, korean_font,
                                          self.height / 3,
@@ -263,8 +279,8 @@ class TugOfWar:
             return
 
 
-def start_game(level, score, best_record_mode=False):
+def start_game(level, score, best_record_mode=False, select_mode=False):
     pygame.init()
     new_game = TugOfWar(SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
-    score = new_game.start_game(level, score, best_record_mode)
+    score = new_game.start_game(level, score, best_record_mode, select_mode)
     return score
