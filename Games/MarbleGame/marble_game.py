@@ -120,10 +120,23 @@ class MarbleGame:
         if self.screen_buffer <= self.marble_game_timer - 20:
             return
 
-    def win(self, score, best_record_mode):
+    def win(self, score, best_record_mode, select_mode):
         self.game_screen.fill(PINK)
         if best_record_mode:
             message_to_screen_center(self.game_screen, '축하합니다 통과했습니다! ', WHITE, korean_font,
+                                     self.width / 2,
+                                     self.ref_w,
+                                     self.ref_h)
+            pygame.display.update()
+            clock.tick(0.5)
+            return self.score
+
+        elif select_mode:
+            message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
+                                     self.width / 3,
+                                     self.ref_w,
+                                     self.ref_h)
+            message_to_screen_center(self.game_screen, '다음 레벨로 이동합니다.  ', WHITE, korean_font,
                                      self.width / 2,
                                      self.ref_w,
                                      self.ref_h)
@@ -259,7 +272,7 @@ class MarbleGame:
                             self.effect = 0
                             self.idx = MARBLE_GAME
 
-    def start_marble_game(self, level, score, best_record_mode):
+    def start_marble_game(self, level, score, best_record_mode, select_mode):
         # 배경 음악 로딩
         try:
             pygame.mixer.music.load(get_abs_path(SOUND_BGM_LOCATION))
@@ -456,7 +469,7 @@ class MarbleGame:
                 #                        self.game_screen.get_width() / 1.2, self.game_screen.get_height() / 17,
                 #                        self.ref_w, self.ref_h)
             if self.idx == WIN:
-                self.win(left_time, best_record_mode)
+                self.win(left_time, best_record_mode, select_mode)
                 return self.score
                 # game_over_timer.__init__(60)
             # if self.idx == CLEAR:  # 클리어 화면
@@ -478,12 +491,20 @@ class MarbleGame:
             pygame.display.update()
             clock.tick(15)
 
+    def start_game(self, level, score, best_record_mode, select_mode=False):
+        score = self.start_marble_game(level, score, best_record_mode, select_mode)
+        return score
+
+    def start_game(self, level, score, best_record_mode, select_mode):
+        score = self.start_marble_game(level, score, best_record_mode, select_mode)
+        return score
+
 
 # if __name__ == '__main__':
-def start_game(level, score, best_record_mode=False):
+def start_game(level, score, best_record_mode=False, select_mode=False):
     pygame.init()
     new_game = MarbleGame(SCREEN_WIDTH, SCREEN_HEIGHT)
-    score = new_game.start_marble_game(level, score, best_record_mode)
+    score = new_game.start_marble_game(level, score, best_record_mode, select_mode)
     return score
 
     # pygame.quit()
