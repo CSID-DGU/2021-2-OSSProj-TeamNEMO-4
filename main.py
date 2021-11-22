@@ -8,7 +8,7 @@ from Games.game_menu import main_menu
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
-
+LEVEL_UP_STEP = 1
 
 if __name__ == "__main__":
     SCORE = 0
@@ -38,7 +38,7 @@ if __name__ == "__main__":
             else:
                 break
 
-            LEVEL += 1
+            LEVEL += LEVEL_UP_STEP
     elif selected == "the_best_record_mode":
         while True:
             mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
@@ -69,7 +69,7 @@ if __name__ == "__main__":
                 SCORE += mugunghwa_score
             else:
                 break
-            LEVEL += 1
+            LEVEL += LEVEL_UP_STEP
     elif selected == "select_mode_dalgona":
         while True:
             dalgona_score = start_dalgona_game(LEVEL, SCORE)
@@ -77,7 +77,7 @@ if __name__ == "__main__":
                 SCORE += dalgona_score
             else:
                 break
-            LEVEL += 1
+            LEVEL += LEVEL_UP_STEP
     elif selected == "select_mode_tugOfWar":
         while True:
             tug_score = start_tug_game(LEVEL, SCORE)
@@ -85,7 +85,7 @@ if __name__ == "__main__":
                 SCORE += tug_score
             else:
                 break
-            LEVEL += 1
+            LEVEL += LEVEL_UP_STEP
     elif selected == "select_mode_Marble":
         while True:
             marble_score = start_marble_game(LEVEL, SCORE)
@@ -93,7 +93,7 @@ if __name__ == "__main__":
                 SCORE += marble_score
             else:
                 break
-            LEVEL += 1
+            LEVEL += LEVEL_UP_STEP
 
 
 
