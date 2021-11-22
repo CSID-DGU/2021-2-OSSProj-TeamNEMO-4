@@ -54,10 +54,12 @@ class Game:
         npc = NPC(self.npc_size, self.npc_size, KIND_OF_NPC)  # 화면을 돌아다닐 npc 생성.
 
         # bgm
-        if pygame.mixer.music.get_busy() == False:
-            pygame.mixer.music.set_volume(BGM_VOLUME)
-            pygame.mixer.music.play(-1)
-
+        try:
+            if pygame.mixer.music.get_busy() == False:
+                pygame.mixer.music.set_volume(BGM_VOLUME)
+                pygame.mixer.music.play(-1)
+        except Exception as e:
+            print(e)
         # 달고나 생성
         dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, NUMBER_OF_POINTS, self.shape)
         game_over_timer = GameOverTimer(GAME_TIME)

@@ -17,7 +17,7 @@ FPS_RATE = 100
 class TugOfWar:
     # 클래스 변수
     NUMBER_OF_PRESS_KEY_TO_CLEAR = 50  # 승리 조건
-    CONDITION_OF_GAME_OVER = 80
+    CONDITION_OF_GAME_OVER = 70
     WIN_LEVEL = 5  # LEVEL 5 통과하면 게임 끝
     TOTAL_TIME = 40
     POWER_OF_ENEMY = 0.1  # 난이도. 상대가 줄을 당기는 힘. 레벨이 곱해져 상승한다.
@@ -123,9 +123,12 @@ class TugOfWar:
         hit_ticks = pygame.time.get_ticks()
 
         # bgm
-        if pygame.mixer.music.get_busy() == False:
-            pygame.mixer.music.set_volume(BGM_VOLUME)
-            pygame.mixer.music.play(-1)
+        try:
+            if pygame.mixer.music.get_busy() == False:
+                pygame.mixer.music.set_volume(BGM_VOLUME)
+                pygame.mixer.music.play(-1)
+        except Exception as e:
+            print(e)
 
         while not game_over:
             # 게임 오버 타이머 남은 시간

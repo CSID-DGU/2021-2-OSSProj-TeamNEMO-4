@@ -66,6 +66,9 @@ class Game:
         self.player_character_size = (width / 16, width / 11)
         self.restart_message_y_pos = (180, 280)
 
+        # "소리를 키워 주세요 자막"
+        self.volume_notice = True
+
         try:
             pygame.mixer.music.load(get_abs_path(BGM_LOCATION))
         except Exception as e:
@@ -101,9 +104,7 @@ class Game:
         game_over = False
         did_win = True
         # 무궁화 SOUND EFFECTS
-        # pygame.mixer.music.play(-1)
-
-        # 전체 타이머 설정.
+        pygame.mixer.music.play(-1)  # 전체 타이머 설정.
         self.game_over_timer = GameOverTimer(self.GAME_OVER_TIMER)
 
         # 플레이어, 진행요원, 목표물 렌더링.
@@ -191,11 +192,19 @@ class Game:
 
             # 무궁화 SOUND EFFECTS
             # 게임 내내 반복된다.
-            # if pygame.mixer.music.get_busy() is False:
-            #     pygame.mixer.music.play(-1)
+            if pygame.mixer.music.get_busy() is False:
+                pygame.mixer.music.play(-1)
+
+            # "볼륨을 높여주세요" 알림
+            if self.volume_notice and level == STARTING_LEVEL:
+                message_to_screen_center(self.game_screen, '볼륨을 키워 주세요', WHITE, korean_font,
+                                         self.half_width,
+                                         self.ref_w,
+                                         self.ref_h)
 
             # 무궁화 발동
             if timer <= 0:
+                self.volume_notice = False
                 # 3초 타이머 걸고 지나면 해제. & 타이머 리셋.
                 DOLL.sprite_image(get_abs_path(DOLL_FRONT_LOCATION))
                 self.mugunghwa_timer = True

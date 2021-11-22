@@ -93,4 +93,4 @@ def get_abs_path(path):
 GAME_OVER_LOCATION = 'common_images/game_over.png'
 
 # BGM VOLUME
-BGM_VOLUME = 0.1
+BGM_VOLUME = 0.07
