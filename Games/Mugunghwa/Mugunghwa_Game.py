@@ -101,9 +101,7 @@ class Game:
         game_over = False
         did_win = True
         # 무궁화 SOUND EFFECTS
-        # pygame.mixer.music.play(-1)
-
-        # 전체 타이머 설정.
+        pygame.mixer.music.play(-1)  # 전체 타이머 설정.
         self.game_over_timer = GameOverTimer(self.GAME_OVER_TIMER)
 
         # 플레이어, 진행요원, 목표물 렌더링.
@@ -191,8 +189,8 @@ class Game:
 
             # 무궁화 SOUND EFFECTS
             # 게임 내내 반복된다.
-            # if pygame.mixer.music.get_busy() is False:
-            #     pygame.mixer.music.play(-1)
+            if pygame.mixer.music.get_busy() is False:
+                pygame.mixer.music.play(-1)
 
             # 무궁화 발동
             if timer <= 0:
