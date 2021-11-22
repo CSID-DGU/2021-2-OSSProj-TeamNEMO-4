@@ -88,7 +88,7 @@ if __name__ == "__main__":
             LEVEL += 1
     elif selected == "select_mode_Marble":
         while True:
-            marble_score = start_marble_game(LEVEL, SCORE)
+            marble_score = start_marble_game(LEVEL, SCORE, best_record_mode=False, select_mode=True)
             if marble_score:
                 SCORE += marble_score
             else:
