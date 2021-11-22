@@ -6,6 +6,8 @@ class Button:
         self.game_display = game_display
         self.is_clicked = False
         mouse_x_pos, mouse_y_pos = pygame.mouse.get_pos()
+
+        events = pygame.event.get()
         click = pygame.mouse.get_pressed()
         game_display.blit(image, (x, y))
         if x + width > mouse_x_pos > x and y + height > mouse_y_pos > y:

@@ -280,7 +280,7 @@ def select_game_menu():
     running = True
     print("게임 선택 모드")
     fade = pygame.Surface((screen.get_width(), screen.get_height()))
-    fade_in(fade, draw_select_mode_menu)
+    fade_in(fade, draw_select_game_menu)
     while running:
         screen.fill(PINK)
         pygame.display.set_caption("오징어 게임 - 게임 선택 모드")
@@ -292,23 +292,15 @@ def select_game_menu():
 
         if button_mugunghwa.collidepoint((mx, my)):
             if click:
-                running = True
-                print("무궁화 게임")
                 return "select_mode_mugunghwa"
         if button_dalgona.collidepoint((mx, my)):
             if click:
-                running = True
-                print("달고나 게임")
                 return "select_mode_dalgona"
         if button_tug_of_war.collidepoint((mx, my)):
             if click:
-                running = True
-                print("줄다리기 게임")
                 return "select_mode_tugOfWar"
         if button_marble_game.collidepoint((mx, my)):
             if click:
-                running = True
-                print("구슬 홀짝 게임")
                 return "select_mode_Marble"
         if button_back.collidepoint((mx, my)):
             if click:
@@ -348,7 +340,7 @@ def select_game_rank_menu():
     running = True
     print("게임 선택 모드 랭킹")
     fade = pygame.Surface((screen.get_width(), screen.get_height()))
-    fade_in(fade, draw_select_mode_menu)
+    fade_in(fade, draw_select_game_rank_menu)
     while running:
         screen.fill(PINK)
         pygame.display.set_caption("오징어 게임 - 게임 선택 모드 랭킹")
@@ -391,4 +383,3 @@ def select_game_rank_menu():
         pygame.display.update()
 
         mainClock.tick(MENU_TICK_RATE)
-

@@ -46,37 +46,8 @@ class TugOfWar:
             print("사운드 로드 오류")
 
     def start_game(self, level, score, best_record_mode):
-        # while True:
-        #     for event in pygame.event.get():
-        #         if event.type == pygame.QUIT:
-        #             return
-        #         elif event.type == pygame.KEYDOWN:
-        #             if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
-        #                 return
-        #             elif event.key == pygame.K_e:
         score = self.run_game_loop(level, score, best_record_mode)
         return score
-        # 배경 설정
-        # self.screen.fill(WHITE)
-        # imgBG = pygame.transform.scale(self.background, (self.screen.get_width(), self.screen.get_height()))
-        # self.screen.blit(imgBG, (0, 0))
-        # # 문구 놓기
-        # message_to_screen_center(
-        #     self.screen, '줄다리기 게임', WHITE, korean_font,
-        #     self.screen.get_height() / 4, self.ref_w, self.ref_h)
-        # message_to_screen_center(
-        #     self.screen, '[조작법]', WHITE, korean_font_small_size,
-        #     self.screen.get_height() / 2.1, self.ref_w, self.ref_h)
-        # message_to_screen_center(
-        #     self.screen, 'A 클릭하여 줄 당기기', WHITE, korean_font_small_size,
-        #     self.screen.get_height() / 1.83, self.ref_w, self.ref_h)
-        # message_to_screen_center(
-        #     self.screen, 'D 클릭하여 버티기', WHITE, korean_font_small_size,
-        #     self.screen.get_height() / 1.66, self.ref_w, self.ref_h)
-        # message_to_screen_center(
-        #     self.screen, 'E 로 시작, Q 또는 Esc로 종료', WHITE, korean_font_small_size,
-        #     self.screen.get_height() / 1.4, self.ref_w, self.ref_h)
-        # pygame.display.update()
 
     # 통과 화면
     def win_game(self):
@@ -109,12 +80,6 @@ class TugOfWar:
             self.screen, '탈 락', RED, korean_font, self.width / 2, self.ref_w, self.ref_h)
         pygame.display.update()
         clock.tick(0.5)
-
-    # LEVEL 통과 함수
-    # def level_clear(self):
-    #     message_to_screen_center(
-    #         self.screen, 'LEVEL CLEAR', BLUE, korean_large_font, self.width / 2, self.ref_w, self.ref_h)
-    #     pygame.display.update()
 
     def game_restart(self):
         while True:
@@ -186,7 +151,7 @@ class TugOfWar:
                 self.screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w,
                 self.ref_h)
             message_to_screen_left(
-                self.screen, "SCORE : " + str(score), WHITE, level_font, self.width - 130, 40, self.ref_w,
+                self.screen, "SCORE : " + str(round(score)), WHITE, level_font, self.width - 130, 40, self.ref_w,
                 self.ref_h)
             message_to_screen_center(
                 self.screen, '승리까지 {} M'.format(int(num_of_press_key_to_clear - num_of_pressed)), WHITE,
@@ -277,7 +242,7 @@ class TugOfWar:
                                          self.height / 3,
                                          self.ref_w,
                                          self.ref_h)
-                message_to_screen_center(self.screen, '다음 게임은 무궁화 게임입니다. ', WHITE, korean_font,
+                message_to_screen_center(self.screen, '다음 게임은 구슬홀짝입니다. ', WHITE, korean_font,
                                          self.width / 2,
                                          self.ref_w,
                                          self.ref_h)
