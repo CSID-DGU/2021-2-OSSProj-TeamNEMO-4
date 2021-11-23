@@ -35,8 +35,7 @@ class Game:
         # Screen set-up
         self.game_screen = pygame.display.set_mode((width, height))
         self.game_screen.fill(PINK)
-        # self.shape = random.randrange(CIRCLE, STAR + 1)
-        self.shape = STAR
+        self.shape = random.randrange(CIRCLE, STAR + 1)
         self.rectangle_size = width / RECTANGLE_SHAPE_SIZE_RATIO
         self.half_rectangle = self.rectangle_size / 2
         # bgm 실행
@@ -66,6 +65,7 @@ class Game:
         dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, NUMBER_OF_POINTS, self.shape)
         game_over_timer = GameOverTimer(GAME_TIME)
         NPC_ticks = pygame.time.get_ticks()
+
         while True:
             left_time = game_over_timer.time_checker()
             for event in pygame.event.get():
@@ -140,6 +140,7 @@ class Game:
                 npc.change_direction()
                 NPC_ticks = pygame.time.get_ticks()
                 NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
+                dalgona.change_wrong_points()
 
             if dalgona.check_win()["is_success"] is True:
                 message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,

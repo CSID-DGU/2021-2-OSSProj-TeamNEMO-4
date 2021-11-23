@@ -3,11 +3,6 @@
 from Games.Mugunghwa import game_object
 from Games.game_settings import *
 
-
-def level_printer(level):
-    return 'Level ' + str(int((level - 1) * 2 + 1))
-
-
 AIM_LOCATION = 'Mugunghwa/NPC/aim.png'
 BGM_LOCATION = 'Mugunghwa/Sound/mugunghwa.mp3'
 BACKGROUND_LOCATION = 'Mugunghwa/NPC/background.png'
@@ -246,14 +241,7 @@ class Game:
 
         # did_win 이용해 승패 판단 후 다음 프로세스 진행.
         if did_win:
-            # message_to_screen_left(
-            #     self.game_screen, level_printer(level), WHITE, level_font, 0, 0, self.ref_w,
-            #     self.ref_h)
-            # self.run_game_loop(level + self.LEVEL_UP_STEP)
-            # 다음 게임으로 넘어가기
             return left_time
-        # elif self.game_restart():
-        #     self.run_game_loop(STARTING_LEVEL)
         else:
             return
 
