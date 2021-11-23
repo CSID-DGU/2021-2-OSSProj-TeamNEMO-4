@@ -10,7 +10,7 @@ STAR = 4
 CLICKED_POINT_SIZE = 2
 UNCLICKED_POINT_SIZE = 6
 POINT_SIZE = 5
-WRONG_POINTS_NUM = 10
+WRONG_POINTS_NUM = 3
 
 
 class Dalgona:
@@ -151,6 +151,7 @@ class Dalgona:
                 point.wrong_point = True
                 index = self.points.index(point)
                 self.wrong_point_indexes.append(index)
+                # wrong_points.append(index)
 
 
 class Point:
