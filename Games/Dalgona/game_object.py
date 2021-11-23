@@ -8,11 +8,13 @@ STAR = 4
 CLICKED_POINT_SIZE = 2
 UNCLICKED_POINT_SIZE = 6
 POINT_SIZE = 5
+WRONG_POINTS_NUM = 10
 
 
 class Dalgona:
     def __init__(self, width, height, game_screen, points_num, shape):
         self.points = []
+        self.wrong_point_indexes = []
         self.half_width = width / 2
         self.half_height = height / 2
         self.rectangle_size = width / POINT_RECTANGLE_RATIO
@@ -24,11 +26,9 @@ class Dalgona:
                 theta = get_theta(points_num, i)
                 pos_x = self.half_width + (int(width * POINT_CIRCLE_RATIO) * math.cos(theta))
                 pos_y = self.half_height + (int(width * POINT_CIRCLE_RATIO) * math.sin(theta))
-                # wrong_point 찍기.
-                if i % WRONG_POINT_INTERVAL != 0:
-                    self.points.append(Point(game_screen, pos_x, pos_y, POINT_SIZE))
-                else:
-                    self.points.append(Point(game_screen, pos_x, pos_y, POINT_SIZE, wrong_point=True))
+
+                # points
+                self.points.append(Point(game_screen, pos_x, pos_y, POINT_SIZE))
 
         elif shape == RECTANGLE:
             pos_x = self.half_width - self.half_rectangle
@@ -163,6 +163,14 @@ class Dalgona:
                 result["wrong_point_clicked"] = True
         return result
 
+    # change wrong point randomly
+    def point_changing_event(self):
+        if self.wrong_point_indexes:
+            # 이미 wrong points 가 존재할 경우, 리스트에서 제거 후 일반 point 로 변환.
+            for i in self.wrong_point_indexes:
+                self.points[i].wrong_point = False
+            self.wrong_point_indexes.clear()
+        
 
 class Point:
     def __init__(self, game_display, x, y, radius, wrong_point=False):

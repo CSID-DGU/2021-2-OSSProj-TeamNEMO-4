@@ -13,6 +13,8 @@ LEVEL_UP_STEP = 1
 if __name__ == "__main__":
     SCORE = 0
     LEVEL = 1
+    dalgona_score = start_dalgona_game(LEVEL, SCORE)
+
     selected = main_menu()
 
     if selected == "infinite_mode":
