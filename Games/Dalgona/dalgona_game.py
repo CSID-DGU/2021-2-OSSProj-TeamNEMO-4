@@ -35,7 +35,8 @@ class Game:
         # Screen set-up
         self.game_screen = pygame.display.set_mode((width, height))
         self.game_screen.fill(PINK)
-        self.shape = random.randrange(CIRCLE, STAR + 1)
+        # self.shape = random.randrange(CIRCLE, STAR + 1)
+        self.shape = CIRCLE
         self.rectangle_size = width / RECTANGLE_SHAPE_SIZE_RATIO
         self.half_rectangle = self.rectangle_size / 2
         # bgm 실행
@@ -60,6 +61,7 @@ class Game:
                 pygame.mixer.music.play(-1)
         except Exception as e:
             print(e)
+
         # 달고나 생성
         dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, NUMBER_OF_POINTS, self.shape)
         game_over_timer = GameOverTimer(GAME_TIME)
