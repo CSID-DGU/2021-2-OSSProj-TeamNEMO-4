@@ -60,10 +60,12 @@ class Game:
                 pygame.mixer.music.play(-1)
         except Exception as e:
             print(e)
+
         # 달고나 생성
         dalgona = game_object.Dalgona(self.width, self.height, self.game_screen, NUMBER_OF_POINTS, self.shape)
         game_over_timer = GameOverTimer(GAME_TIME)
         NPC_ticks = pygame.time.get_ticks()
+
         while True:
             left_time = game_over_timer.time_checker()
             for event in pygame.event.get():
@@ -138,6 +140,7 @@ class Game:
                 npc.change_direction()
                 NPC_ticks = pygame.time.get_ticks()
                 NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
+                dalgona.change_wrong_points()
 
             if dalgona.check_win()["is_success"] is True:
                 message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
