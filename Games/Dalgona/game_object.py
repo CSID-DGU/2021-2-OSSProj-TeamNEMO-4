@@ -150,7 +150,7 @@ class Dalgona:
                 point.clicked = False
                 point.wrong_point = True
                 index = self.points.index(point)
-                wrong_points.append(index)
+                self.wrong_point_indexes.append(index)
 
 
 class Point:
