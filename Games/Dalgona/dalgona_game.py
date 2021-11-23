@@ -20,6 +20,7 @@ TRIANGLE = 3
 STAR = 4
 FPS_RATE = 120
 SCREEN_STARTING_POINT = (0, 0)
+STARTING_LEVEL = 1
 
 
 class Game:
@@ -38,6 +39,8 @@ class Game:
         self.shape = random.randrange(CIRCLE, STAR + 1)
         self.rectangle_size = width / RECTANGLE_SHAPE_SIZE_RATIO
         self.half_rectangle = self.rectangle_size / 2
+        self.notice_message = True
+
         # bgm 실행
         try:
             pygame.mixer.music.load(get_abs_path(BGM_LOCATION))
@@ -140,7 +143,17 @@ class Game:
                 npc.change_direction()
                 NPC_ticks = pygame.time.get_ticks()
                 NPC_elapsed_time = (pygame.time.get_ticks() - NPC_ticks) / 1000
+
+                # NPC 진행 경로 변경하는 타이머를 이용하여, 초기 알림 메세지를 off 하고 wrong point 위치를 변경.
                 dalgona.change_wrong_points()
+                self.notice_message = False
+
+            elif NPC_timer > 0 and level == STARTING_LEVEL and self.notice_message:
+                # 1 레벨, NPC 의 첫 진로변경 전까지 안내 메세지 렌더링.
+                message_to_screen_center(self.game_screen, '빨간 점을 피해 달고나를 뽑으세요. ', WHITE, korean_font_small_size,
+                                         self.half_width,
+                                         self.ref_w,
+                                         self.ref_h)
 
             if dalgona.check_win()["is_success"] is True:
                 message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
