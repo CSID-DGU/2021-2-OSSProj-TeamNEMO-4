@@ -1,3 +1,5 @@
+import random
+
 from Games.Dalgona.constants import *
 from Games.game_settings import *
 
@@ -26,9 +28,11 @@ class Dalgona:
                 theta = get_theta(points_num, i)
                 pos_x = self.half_width + (int(width * POINT_CIRCLE_RATIO) * math.cos(theta))
                 pos_y = self.half_height + (int(width * POINT_CIRCLE_RATIO) * math.sin(theta))
-
                 # points
                 self.points.append(Point(game_screen, pos_x, pos_y, POINT_SIZE))
+
+            self.change_wrong_points()
+
 
         elif shape == RECTANGLE:
             pos_x = self.half_width - self.half_rectangle
@@ -164,13 +168,20 @@ class Dalgona:
         return result
 
     # change wrong point randomly
-    def point_changing_event(self):
+    def change_wrong_points(self):
         if self.wrong_point_indexes:
             # 이미 wrong points 가 존재할 경우, 리스트에서 제거 후 일반 point 로 변환.
             for i in self.wrong_point_indexes:
                 self.points[i].wrong_point = False
             self.wrong_point_indexes.clear()
-        
+        wrong_points = random.sample(self.points, WRONG_POINTS_NUM)
+        print(wrong_points)
+        for point in wrong_points:
+            if type(point) is not int:
+                point.wrong_point = True
+                index = self.points.index(point)
+                wrong_points.append(index)
+
 
 class Point:
     def __init__(self, game_display, x, y, radius, wrong_point=False):
