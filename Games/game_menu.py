@@ -2,7 +2,7 @@ import sys
 
 from pygame.locals import *
 
-from Games.game_settings import *
+from db import *
 
 # 화면 구성
 mainClock = pygame.time.Clock()
@@ -101,7 +101,10 @@ def main_menu():
         if button_rank.collidepoint((mx, my)):
             if click:
                 fade_out(fade)
-                return show_rank_menu()
+                selected = show_rank_menu()
+                if selected:
+                    render_rank(selected)
+
         if button_exit.collidepoint((mx, my)):
             if click:
                 fade_out(fade)
@@ -151,11 +154,8 @@ def select_mode_menu():
     while running:
         screen.fill(PINK)
         pygame.display.set_caption("오징어 게임 - 모드 선택")
-
         mx, my = pygame.mouse.get_pos()  # 마우스 좌표 변수
-
         # 모드 선택 화면 버튼 생성(무한 모드, 최고 기록 모드, 게임 선택 모드)
-
         button_infinite, button_best, button_select_game, button_back = draw_select_mode_menu()
 
         if button_infinite.collidepoint((mx, my)):
@@ -165,7 +165,7 @@ def select_mode_menu():
         if button_best.collidepoint((mx, my)):
             if click:
                 fade_out(fade)
-                return "the_best_record_mode"
+                return "best_record_mode"
         if button_select_game.collidepoint((mx, my)):
             if click:
                 fade_out(fade)
@@ -212,10 +212,55 @@ def draw_show_rank_menu():
     )
 
 
+def render_rank(mode, *game):
+    score = get_score(mode)
+    running = True
+    if mode == INFINITE or mode == BEST_RECORD:
+        while running:
+            screen.fill(PINK)
+            # for 문 버그로 직접 작성 - 왜그런지 모르겠
+            message_to_screen_center(screen, '명예의 전당', WHITE,
+                                     korean_font, screen.get_height() * (1 / 12),
+                                     ref_w,
+                                     ref_h)
+            message_to_screen_center(screen, '뒤로 가려면 esc', BLUE,
+                                     korean_font_small_size, screen.get_height() * (11 / 12),
+                                     ref_w,
+                                     ref_h)
+            message_to_screen_center(screen, f'5 위  {score[4]["user"]} : {score[4]["score"]}', WHITE,
+                                     korean_font_small_size, screen.get_height() * (5 / 6),
+                                     ref_w,
+                                     ref_h)
+            message_to_screen_center(screen, f'4 위  {score[3]["user"]} : {score[3]["score"]}', WHITE,
+                                     korean_font_small_size, screen.get_height() * (4 / 6),
+                                     ref_w,
+                                     ref_h)
+            message_to_screen_center(screen, f'3 위  {score[2]["user"]} : {score[2]["score"]}', WHITE,
+                                     korean_font_small_size, screen.get_height() * (3 / 6),
+                                     ref_w,
+                                     ref_h)
+            message_to_screen_center(screen, f'2 위  {score[1]["user"]} : {score[1]["score"]}', WHITE,
+                                     korean_font_small_size, screen.get_height() * (2 / 6),
+                                     ref_w,
+                                     ref_h)
+            message_to_screen_center(screen, f'1 위  {score[0]["user"]} : {score[0]["score"]}', WHITE,
+                                     korean_font_small_size, screen.get_height() * (1 / 6),
+                                     ref_w,
+                                     ref_h)
+            pygame.display.update()
+            mainClock.tick(MENU_TICK_RATE)
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        running = False
+
+
 def show_rank_menu():
     click = False  # 클릭 판단 변수
     running = True
-    print("랭킹 보기")
     fade = pygame.Surface((screen.get_width(), screen.get_height()))
     fade_in(fade, draw_show_rank_menu)
     while running:
@@ -223,17 +268,15 @@ def show_rank_menu():
         pygame.display.set_caption("오징어 게임 - 랭킹 보기")
 
         mx, my = pygame.mouse.get_pos()  # 마우스 좌표 변수
-
         # 랭킹 보기 화면 버튼 생성(무한 모드 랭킹, 최고 기록 모드 랭킹, 게임 선택 모드 랭킹)
-
         button_infinite, button_best, button_select_game, button_back = draw_show_rank_menu()
-
         if button_infinite.collidepoint((mx, my)):
             if click:
-                print("무한 모드 랭킹")
+                return INFINITE
+
         if button_best.collidepoint((mx, my)):
             if click:
-                print("최고 기록 모드 랭킹")
+                return BEST_RECORD
         if button_select_game.collidepoint((mx, my)):
             if click:
                 select_game_rank_menu()
