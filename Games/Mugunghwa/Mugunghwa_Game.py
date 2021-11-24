@@ -3,11 +3,6 @@
 from Games.Mugunghwa import game_object
 from Games.game_settings import *
 
-
-def level_printer(level):
-    return 'Level ' + str(int((level - 1) * 2 + 1))
-
-
 AIM_LOCATION = 'Mugunghwa/NPC/aim.png'
 BGM_LOCATION = 'Mugunghwa/Sound/mugunghwa.mp3'
 BACKGROUND_LOCATION = 'Mugunghwa/NPC/background.png'
@@ -25,7 +20,7 @@ KEY_INPUT = 768
 
 
 class Game:
-    TICK_RATE = 120  # FPS
+    TICK_RATE = 60  # FPS
     TIMER_TIME = 5  # 술래 뒤도는 카운터.
     NPC_CHANGE_DIRECTION_TIME = 2
     AIM_CHANGE_DIRECTION_TIME = 1.5
@@ -66,6 +61,9 @@ class Game:
         self.player_character_size = (width / 16, width / 11)
         self.restart_message_y_pos = (180, 280)
 
+        # "소리를 키워 주세요 자막"
+        self.volume_notice = True
+
         try:
             pygame.mixer.music.load(get_abs_path(BGM_LOCATION))
         except Exception as e:
@@ -87,35 +85,6 @@ class Game:
         npc = self.create_npc(NPC_1_CODE)
         score = self.run_game_loop(level, score)
         return score
-        # while True:
-        #     for event in pygame.event.get():
-        #         if event.type == pygame.QUIT:
-        #             return
-        #         elif event.type == pygame.KEYDOWN:
-        #             if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
-        #                 return
-        #             elif event.key == pygame.K_x:
-        #                 score = self.run_game_loop(level, score)
-        #                 return score
-        # Render background
-        # self.game_screen.fill(WHITE)
-        # self.game_screen.blit(self.image, SCREEN_STARTING_POINT)
-        #
-        # # Display main menu text
-        # message_to_screen_center(
-        #     self.game_screen, '무궁화 꽃이 피었습니다', PINK, korean_font, self.height / 4, self.ref_w, self.ref_h)
-        # message_to_screen_center(
-        #     self.game_screen, '[ 조작법 ]', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[0], self.ref_w,
-        #     self.ref_h)
-        # message_to_screen_center(
-        #     self.game_screen, '방향키로 이동 ', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[1], self.ref_w,
-        #     self.ref_h)
-        # message_to_screen_center(
-        #     self.game_screen, 'X 로 시작', BLACK, korean_font_small_size, STARTING_MESSAGE_Y_POS[2],
-        #     self.ref_w, self.ref_h)
-        # npc.move(self.width)
-        # npc.draw(self.game_screen)
-        # pygame.display.update()
 
     def lose_game(self):
         game_over_image = pygame.image.load(get_abs_path(GAME_OVER_LOCATION))
@@ -126,40 +95,16 @@ class Game:
         pygame.display.update()
         clock.tick(0.5)
 
-    # def game_restart(self):
-    #     npc = self.create_npc(NPC_1_CODE)
-    #     while True:
-    #         for event in pygame.event.get():
-    #             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN
-    #                                              and (event.key == pygame.K_q or event.key == pygame.K_ESCAPE)):
-    #                 return False
-    #             elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
-    #                 return True
-    #         # Display text for losing
-    #         self.game_screen.fill(PINK)
-    #         message_to_screen_center(
-    #             self.game_screen, '재시작 하려면 R ', WHITE, korean_font, self.restart_message_y_pos[0], self.ref_w,
-    #             self.ref_h)
-    #         message_to_screen_center(
-    #             self.game_screen, '메뉴로 돌아가려면 Q', WHITE, korean_font, self.restart_message_y_pos[1], self.ref_w,
-    #             self.ref_h)
-    #         # Have the loser slime dance around lol
-    #         npc.move(self.width)
-    #         npc.draw(self.game_screen)
-    #         pygame.display.update()
-
     def run_game_loop(self, level, score):
         game_over = False
         did_win = True
         # 무궁화 SOUND EFFECTS
-        pygame.mixer.music.play(-1)
-
-        # 전체 타이머 설정.
+        pygame.mixer.music.play(-1)  # 전체 타이머 설정.
         self.game_over_timer = GameOverTimer(self.GAME_OVER_TIMER)
 
         # 플레이어, 진행요원, 목표물 렌더링.
         player = game_object.PC(self.half_width, self.height, *self.player_character_size)
-        # 진행요원 -> 사이즈 비율로 다 맞춰야함. 나중에
+        # 진행요원
         npc_1 = self.create_npc(NPC_1_CODE)
         npc_2 = self.create_npc(NPC_2_CODE)
         npc_3 = self.create_npc(NPC_3_CODE)
@@ -226,7 +171,7 @@ class Game:
             message_to_screen_left(
                 self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w, self.ref_h)
             message_to_screen_left(
-                self.game_screen, "SCORE : " + str(score), BLACK, level_font, self.width - 130, 40, self.ref_w,
+                self.game_screen, "SCORE : " + str(round(score)), BLACK, level_font, self.width - 130, 40, self.ref_w,
                 self.ref_h)
 
             try:
@@ -245,8 +190,16 @@ class Game:
             if pygame.mixer.music.get_busy() is False:
                 pygame.mixer.music.play(-1)
 
+            # "볼륨을 높여주세요" 알림
+            if self.volume_notice and level == STARTING_LEVEL:
+                message_to_screen_center(self.game_screen, '볼륨을 키워 주세요', WHITE, korean_font,
+                                         self.half_width,
+                                         self.ref_w,
+                                         self.ref_h)
+
             # 무궁화 발동
             if timer <= 0:
+                self.volume_notice = False
                 # 3초 타이머 걸고 지나면 해제. & 타이머 리셋.
                 DOLL.sprite_image(get_abs_path(DOLL_FRONT_LOCATION))
                 self.mugunghwa_timer = True
@@ -288,14 +241,7 @@ class Game:
 
         # did_win 이용해 승패 판단 후 다음 프로세스 진행.
         if did_win:
-            # message_to_screen_left(
-            #     self.game_screen, level_printer(level), WHITE, level_font, 0, 0, self.ref_w,
-            #     self.ref_h)
-            # self.run_game_loop(level + self.LEVEL_UP_STEP)
-            # 다음 게임으로 넘어가기
             return left_time
-        # elif self.game_restart():
-        #     self.run_game_loop(STARTING_LEVEL)
         else:
             return
 

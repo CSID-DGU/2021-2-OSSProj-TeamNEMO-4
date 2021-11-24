@@ -17,7 +17,7 @@ FPS_RATE = 100
 class TugOfWar:
     # 클래스 변수
     NUMBER_OF_PRESS_KEY_TO_CLEAR = 50  # 승리 조건
-    CONDITION_OF_GAME_OVER = 80
+    CONDITION_OF_GAME_OVER = 70
     WIN_LEVEL = 5  # LEVEL 5 통과하면 게임 끝
     TOTAL_TIME = 40
     POWER_OF_ENEMY = 0.1  # 난이도. 상대가 줄을 당기는 힘. 레벨이 곱해져 상승한다.
@@ -45,38 +45,13 @@ class TugOfWar:
             print(e)
             print("사운드 로드 오류")
 
-    def start_game(self, level, score, best_record_mode):
-        # while True:
-        #     for event in pygame.event.get():
-        #         if event.type == pygame.QUIT:
-        #             return
-        #         elif event.type == pygame.KEYDOWN:
-        #             if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
-        #                 return
-        #             elif event.key == pygame.K_e:
-        score = self.run_game_loop(level, score, best_record_mode)
+    def start_game(self, level, score, best_record_mode, select_mode=False):
+        score = self.run_game_loop(level, score, best_record_mode, select_mode)
         return score
-        # 배경 설정
-        # self.screen.fill(WHITE)
-        # imgBG = pygame.transform.scale(self.background, (self.screen.get_width(), self.screen.get_height()))
-        # self.screen.blit(imgBG, (0, 0))
-        # # 문구 놓기
-        # message_to_screen_center(
-        #     self.screen, '줄다리기 게임', WHITE, korean_font,
-        #     self.screen.get_height() / 4, self.ref_w, self.ref_h)
-        # message_to_screen_center(
-        #     self.screen, '[조작법]', WHITE, korean_font_small_size,
-        #     self.screen.get_height() / 2.1, self.ref_w, self.ref_h)
-        # message_to_screen_center(
-        #     self.screen, 'A 클릭하여 줄 당기기', WHITE, korean_font_small_size,
-        #     self.screen.get_height() / 1.83, self.ref_w, self.ref_h)
-        # message_to_screen_center(
-        #     self.screen, 'D 클릭하여 버티기', WHITE, korean_font_small_size,
-        #     self.screen.get_height() / 1.66, self.ref_w, self.ref_h)
-        # message_to_screen_center(
-        #     self.screen, 'E 로 시작, Q 또는 Esc로 종료', WHITE, korean_font_small_size,
-        #     self.screen.get_height() / 1.4, self.ref_w, self.ref_h)
-        # pygame.display.update()
+
+    def start_game(self, level, score, best_record_mode, select_mode):
+        score = self.run_game_loop(level, score, best_record_mode, select_mode)
+        return score
 
     # 통과 화면
     def win_game(self):
@@ -110,12 +85,6 @@ class TugOfWar:
         pygame.display.update()
         clock.tick(0.5)
 
-    # LEVEL 통과 함수
-    # def level_clear(self):
-    #     message_to_screen_center(
-    #         self.screen, 'LEVEL CLEAR', BLUE, korean_large_font, self.width / 2, self.ref_w, self.ref_h)
-    #     pygame.display.update()
-
     def game_restart(self):
         while True:
             for event in pygame.event.get():
@@ -135,7 +104,7 @@ class TugOfWar:
                 self.screen, '시작화면으로 이동 : Q', RED, korean_font, self.height / 2, self.ref_w, self.ref_h)
             pygame.display.update()
 
-    def run_game_loop(self, level, score, best_record_mode):
+    def run_game_loop(self, level, score, best_record_mode, select_mode):
         game_over = False
         did_win = False
         hit_time_init = True
@@ -152,6 +121,14 @@ class TugOfWar:
 
         start_ticks = pygame.time.get_ticks()
         hit_ticks = pygame.time.get_ticks()
+
+        # bgm
+        try:
+            if pygame.mixer.music.get_busy() == False:
+                pygame.mixer.music.set_volume(BGM_VOLUME)
+                pygame.mixer.music.play(-1)
+        except Exception as e:
+            print(e)
 
         while not game_over:
             # 게임 오버 타이머 남은 시간
@@ -181,7 +158,7 @@ class TugOfWar:
                 self.screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w,
                 self.ref_h)
             message_to_screen_left(
-                self.screen, "SCORE : " + str(score), WHITE, level_font, self.width - 130, 40, self.ref_w,
+                self.screen, "SCORE : " + str(round(score)), WHITE, level_font, self.width - 130, 40, self.ref_w,
                 self.ref_h)
             message_to_screen_center(
                 self.screen, '승리까지 {} M'.format(int(num_of_press_key_to_clear - num_of_pressed)), WHITE,
@@ -267,12 +244,24 @@ class TugOfWar:
                 pygame.display.update()
                 clock.tick(0.5)
                 return left_time
+            elif select_mode:
+                message_to_screen_center(self.screen, '통과!', WHITE, korean_font,
+                                         self.height / 3,
+                                         self.ref_w,
+                                         self.ref_h)
+                message_to_screen_center(self.screen, '다음 레벨로 이동합니다. ', WHITE, korean_font,
+                                         self.width / 2,
+                                         self.ref_w,
+                                         self.ref_h)
+                pygame.display.update()
+                clock.tick(0.5)
+                return left_time
             else:
                 message_to_screen_center(self.screen, '통과!', WHITE, korean_font,
                                          self.height / 3,
                                          self.ref_w,
                                          self.ref_h)
-                message_to_screen_center(self.screen, '다음 게임은 무궁화 게임입니다. ', WHITE, korean_font,
+                message_to_screen_center(self.screen, '다음 게임은 구슬홀짝입니다. ', WHITE, korean_font,
                                          self.width / 2,
                                          self.ref_w,
                                          self.ref_h)
@@ -293,8 +282,8 @@ class TugOfWar:
             return
 
 
-def start_game(level, score, best_record_mode=False):
+def start_game(level, score, best_record_mode=False, select_mode=False):
     pygame.init()
     new_game = TugOfWar(SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
-    score = new_game.start_game(level, score, best_record_mode)
+    score = new_game.start_game(level, score, best_record_mode, select_mode)
     return score

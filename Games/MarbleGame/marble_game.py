@@ -119,42 +119,43 @@ class MarbleGame:
         clock.tick(0.5)
         if self.screen_buffer <= self.marble_game_timer - 20:
             return
-        #     self.game_screen.fill(BLACK)
-        #     if self.screen_buffer <= self.marble_game_timer - 30:
-        #         pygame.mixer.music.stop()
-        #         message_to_screen_center(self.game_screen, "GAME OVER", WHITE, korean_font,
-        #                                  self.game_screen.get_height() / 4, self.ref_w, self.ref_h)
-        #         message_to_screen_center(self.game_screen, 'Press Enter or Return Key', WHITE, korean_font_small_size,
-        #                                  self.game_screen.get_height() / 1.25, self.ref_w, self.ref_h)
-        #         message_to_screen_left(self.game_screen, "SCORE : " + str(self.score), WHITE, korean_font,
-        #                                self.game_screen.get_width() / 2, self.game_screen.get_height() / 2, self.ref_w,
-        #                                self.ref_h)
 
-    def win(self, score=0):
+    def win(self, score, best_record_mode, select_mode):
         self.game_screen.fill(PINK)
-        message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
-                                 self.width / 3,
-                                 self.ref_w,
-                                 self.ref_h)
-        message_to_screen_center(self.game_screen, '다음 게임은 줄다리기입니다. ', WHITE, korean_font,
-                                 self.width / 2,
-                                 self.ref_w,
-                                 self.ref_h)
-        pygame.display.update()
-        clock.tick(0.5)
-        return self.score
-        # if self.screen_buffer <= self.marble_game_timer - 20:
-        #     self.marble_game_timer = 0
-        #     self.marble_game_level += 1
-        #     self.player_marbles = 10 - self.marble_game_level
-        #     self.player_betting = 1
-        #     self.computer_marbles = 10
-        #     self.computer_betting = random.randint(1, 2 + self.marble_game_level)
-        #     self.idx = MARBLE_GAME
-        #     self.score += int(score)
-        # if self.player_marbles <= 5:  # 플레이어 구슬이 5개 이하라면
-        #     self.score += int(score)
-        #     self.idx = CLEAR  # 12 클리어 화면으로
+        if best_record_mode:
+            message_to_screen_center(self.game_screen, '축하합니다 통과했습니다! ', WHITE, korean_font,
+                                     self.width / 2,
+                                     self.ref_w,
+                                     self.ref_h)
+            pygame.display.update()
+            clock.tick(0.5)
+            return self.score
+
+        elif select_mode:
+            message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
+                                     self.width / 3,
+                                     self.ref_w,
+                                     self.ref_h)
+            message_to_screen_center(self.game_screen, '다음 레벨로 이동합니다.  ', WHITE, korean_font,
+                                     self.width / 2,
+                                     self.ref_w,
+                                     self.ref_h)
+            pygame.display.update()
+            clock.tick(0.5)
+            return self.score
+
+        else:
+            message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
+                                     self.width / 3,
+                                     self.ref_w,
+                                     self.ref_h)
+            message_to_screen_center(self.game_screen, '다음 게임은 무궁화 게임입니다. ', WHITE, korean_font,
+                                     self.width / 2,
+                                     self.ref_w,
+                                     self.ref_h)
+            pygame.display.update()
+            clock.tick(0.5)
+            return self.score
 
     def draw_true_false(self):
         # if self.screen_buffer <= self.marble_game_timer - 20:
@@ -186,10 +187,7 @@ class MarbleGame:
                     message_to_screen_center(
                         self.game_screen, '틀렸습니다 !', RED, korean_large_font, self.width / 2, self.ref_w,
                         self.ref_h)
-                # if self.screen_buffer <= self.marble_game_timer - 40:
-                #     self.imgStart = pygame.transform.scale(self.imgStart, (
-                #         self.game_screen.get_width(), self.game_screen.get_height()))
-                #     self.game_screen.blit(self.imgStart, STARTING_POINT)
+
         if self.betting_success:
 
             if self.screen_buffer <= self.marble_game_timer - 20:
@@ -274,7 +272,7 @@ class MarbleGame:
                             self.effect = 0
                             self.idx = MARBLE_GAME
 
-    def start_marble_game(self, level, score):
+    def start_marble_game(self, level, score, best_record_mode, select_mode):
         # 배경 음악 로딩
         try:
             pygame.mixer.music.load(get_abs_path(SOUND_BGM_LOCATION))
@@ -291,6 +289,7 @@ class MarbleGame:
 
         # 게임 루프
         while True:
+
             self.marble_game_timer += 1
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -325,7 +324,7 @@ class MarbleGame:
                                                        (self.game_screen.get_width(), self.game_screen.get_height()))
                 # 홀짝 버튼
                 x, y = self.img_odd_button.get_size()
-
+                pygame.event.get()
                 odd_button = Button(self.game_screen, BUTTON_INTERVAL, 500, x, y, self.img_odd_button,
                                     self.img_green_button)
 
@@ -437,7 +436,8 @@ class MarbleGame:
                     self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w,
                     self.ref_h)
                 message_to_screen_left(
-                    self.game_screen, "SCORE : " + str(self.score), BLACK, level_font, self.width - 130, 40, self.ref_w,
+                    self.game_screen, "SCORE : " + str(round(score)), BLACK, level_font, self.width - 130, 40,
+                    self.ref_w,
                     self.ref_h)
 
                 message_to_screen_left(self.game_screen, "내 구슬", WHITE,
@@ -469,7 +469,7 @@ class MarbleGame:
                 #                        self.game_screen.get_width() / 1.2, self.game_screen.get_height() / 17,
                 #                        self.ref_w, self.ref_h)
             if self.idx == WIN:
-                self.win(left_time)
+                self.win(left_time, best_record_mode, select_mode)
                 return self.score
                 # game_over_timer.__init__(60)
             # if self.idx == CLEAR:  # 클리어 화면
@@ -491,12 +491,20 @@ class MarbleGame:
             pygame.display.update()
             clock.tick(15)
 
+    def start_game(self, level, score, best_record_mode, select_mode=False):
+        score = self.start_marble_game(level, score, best_record_mode, select_mode)
+        return score
+
+    def start_game(self, level, score, best_record_mode, select_mode):
+        score = self.start_marble_game(level, score, best_record_mode, select_mode)
+        return score
+
 
 # if __name__ == '__main__':
-def start_game(level, score):
+def start_game(level, score, best_record_mode=False, select_mode=False):
     pygame.init()
     new_game = MarbleGame(SCREEN_WIDTH, SCREEN_HEIGHT)
-    score = new_game.start_marble_game(level, score)
+    score = new_game.start_marble_game(level, score, best_record_mode, select_mode)
     return score
 
     # pygame.quit()
