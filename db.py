@@ -11,7 +11,6 @@ client = MongoClient(URI,
                      )
 print(123)
 db = client['OSSProj']
-collection = db['testing']
 
 
 def record_score(mode, object):
@@ -20,6 +19,21 @@ def record_score(mode, object):
         return
     elif mode == INFINITE:
         collection = db[INFINITE]
+        return
+    elif mode == BEST_RECORD:
+        collection = db[BEST_RECORD]
+        return
+
+
+def get_score(mode, *game):
+    if mode == SELECT:
+        collection = db[SELECT]
+        return
+    elif mode == INFINITE:
+        collection = db[INFINITE]
+        scores = collection.find()
+        for score in scores:
+            print(score)
         return
     elif mode == BEST_RECORD:
         collection = db[BEST_RECORD]

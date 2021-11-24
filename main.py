@@ -1,5 +1,5 @@
 import pygame
-from db import record_score
+from db import *
 from Games.game_settings import *
 from Games.Mugunghwa.Mugunghwa_Game import start_game as start_mugunghwa_game
 from Games.Dalgona.dalgona_game import start_game as start_dalgona_game
@@ -17,8 +17,9 @@ if __name__ == "__main__":
     LEVEL = 1
     selected = main_menu()
 
-    if selected == "infinite_mode":
+    if selected == INFINITE:
         while True:
+            get_score(INFINITE)
             mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
             if mugunghwa_score:
                 SCORE += mugunghwa_score
@@ -41,7 +42,7 @@ if __name__ == "__main__":
                 break
 
             LEVEL += LEVEL_UP_STEP
-    elif selected == "the_best_record_mode":
+    elif selected == BEST_RECORD:
         while True:
             mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
             if mugunghwa_score:
@@ -96,8 +97,6 @@ if __name__ == "__main__":
             else:
                 break
             LEVEL += LEVEL_UP_STEP
-
-
 
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
