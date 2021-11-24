@@ -40,7 +40,5 @@ def get_score(mode, *game):
     elif mode == INFINITE or mode == BEST_RECORD:
         print(mode)
         collection = db[mode]
-        for score in collection.find():
-            print(score)
         scores = collection.find().sort("score")
     return scores

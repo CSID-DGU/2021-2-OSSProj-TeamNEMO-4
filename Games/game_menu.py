@@ -103,7 +103,6 @@ def main_menu():
                 fade_out(fade)
                 selected = show_rank_menu()
                 if selected:
-                    print(selected)
                     render_rank(selected)
 
         if button_exit.collidepoint((mx, my)):
@@ -214,20 +213,41 @@ def draw_show_rank_menu():
 
 
 def render_rank(mode, *game):
+    score = get_score(INFINITE)
+    running = True
     if mode == INFINITE or mode == BEST_RECORD:
-        top_five = get_score(INFINITE)
-        while True:
+        while running:
             screen.fill(PINK)
+            # for 문 버그로 직접 작성 - 왜그런지 모르겠
+            message_to_screen_center(screen, f'5 위  {score[4]["user"]} : {score[0]["score"]}', WHITE,
+                                     korean_font_small_size, screen.get_height() * (5 / 6),
+                                     ref_w,
+                                     ref_h)
+            message_to_screen_center(screen, f'4 위  {score[3]["user"]} : {score[1]["score"]}', WHITE,
+                                     korean_font_small_size, screen.get_height() * (4 / 6),
+                                     ref_w,
+                                     ref_h)
+            message_to_screen_center(screen, f'3 위  {score[2]["user"]} : {score[2]["score"]}', WHITE,
+                                     korean_font_small_size, screen.get_height() * (3 / 6),
+                                     ref_w,
+                                     ref_h)
+            message_to_screen_center(screen, f'2 위  {score[1]["user"]} : {score[3]["score"]}', WHITE,
+                                     korean_font_small_size, screen.get_height() * (2 / 6),
+                                     ref_w,
+                                     ref_h)
+            message_to_screen_center(screen, f'1 위  {score[0]["user"]} : {score[4]["score"]}', WHITE,
+                                     korean_font_small_size, screen.get_height() * (1 / 6),
+                                     ref_w,
+                                     ref_h)
             pygame.display.update()
-            i = 1
-            for score in top_five:
-                message_to_screen_center(screen, f'{i} 위  {score["user"]} : {score["score"]}', WHITE,
-                                         korean_font_small_size, screen.get_height() / i,
-                                         ref_w,
-                                         ref_h)  # 리사이징을 위해 전체 화면 비율로 위치 지정
-                i += 1
-            pygame.display.update()
-            clock.tick(60)
+            mainClock.tick(MENU_TICK_RATE)
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        running = False
 
 
 def show_rank_menu():
