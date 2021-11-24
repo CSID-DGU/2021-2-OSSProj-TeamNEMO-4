@@ -17,13 +17,14 @@ except:
     print("DB 연결 오류")
 
 
-def record_score(mode, object, i):
+def record_score(mode, new_record, old_record):
     if mode == SELECT:
         collection = db[SELECT]
         return
     elif mode == INFINITE:
         collection = db[INFINITE]
-        
+        collection.delete_one({"name": old_record['user'], "score": old_record['score']})
+        collection.insert_one(new_record)
         return
     elif mode == BEST_RECORD:
         collection = db[BEST_RECORD]

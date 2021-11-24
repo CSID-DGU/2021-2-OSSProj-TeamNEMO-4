@@ -1,4 +1,5 @@
 import pygame
+import time
 from db import *
 from Games.game_settings import *
 from Games.Mugunghwa.Mugunghwa_Game import start_game as start_mugunghwa_game
@@ -102,6 +103,7 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     ref_w, ref_h = screen.get_size()
     RUNNING = True
+    ticks = pygame.time.get_ticks()
     while RUNNING:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -115,11 +117,16 @@ if __name__ == "__main__":
                                  SCREEN_WIDTH / 2,
                                  ref_w,
                                  ref_h)
-        if selected == INFINITE:
-            # 5 위 안에 들었는 지 계산.
-            for i, record in enumerate(top_five):
-                # top_five 는 db.py 에서 sort 되어 있음.
-                if record.score < SCORE:
-                    record_score(selected, {"hanum": SCORE}, i)
+        elapsed_time = (pygame.time.get_ticks() - ticks) / 1000
+        timer = 2 - elapsed_time
+        if timer <= 0:
+            break
+
+    if selected == INFINITE:
+        # 5 위 안에 들었는 지 계산.
+        for record in top_five:
+            # top_five 는 db.py 에서 sort 되어 있음.
+            if int(record['score']) < SCORE:
+                record_score(selected, {"user": "hanum", "score": SCORE}, record)
 
         pygame.display.update()
