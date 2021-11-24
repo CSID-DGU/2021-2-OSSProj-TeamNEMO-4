@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     if selected == INFINITE:
         while True:
-            get_score(INFINITE)
+            top_five = get_score(INFINITE)
             mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
             if mugunghwa_score:
                 SCORE += mugunghwa_score
@@ -115,4 +115,11 @@ if __name__ == "__main__":
                                  SCREEN_WIDTH / 2,
                                  ref_w,
                                  ref_h)
+        if selected == INFINITE:
+            # 5 위 안에 들었는 지 계산.
+            for i, record in enumerate(top_five):
+                # top_five 는 db.py 에서 sort 되어 있음.
+                if record.score < SCORE:
+                    record_score(selected, {"hanum": SCORE}, i)
+
         pygame.display.update()
