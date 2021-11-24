@@ -509,3 +509,4 @@ def start_game(level, score, best_record_mode=False, select_mode=False):
 
     # pygame.quit()
     # quit()
+#충돌
