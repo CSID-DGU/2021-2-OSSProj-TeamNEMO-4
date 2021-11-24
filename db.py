@@ -23,7 +23,7 @@ def record_score(mode, new_record, old_record):
         return
     elif mode == INFINITE:
         collection = db[INFINITE]
-        collection.delete_one({"name": old_record['user'], "score": old_record['score']})
+        collection.delete_one(old_record)
         collection.insert_one(new_record)
         return
     elif mode == BEST_RECORD:

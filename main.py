@@ -118,7 +118,9 @@ if __name__ == "__main__":
                                  ref_w,
                                  ref_h)
         elapsed_time = (pygame.time.get_ticks() - ticks) / 1000
-        timer = 2 - elapsed_time
+        pygame.display.update()
+        clock.tick(60)
+        timer = 4 - elapsed_time
         if timer <= 0:
             break
 
@@ -128,5 +130,3 @@ if __name__ == "__main__":
             # top_five 는 db.py 에서 sort 되어 있음.
             if int(record['score']) < SCORE:
                 record_score(selected, {"user": "hanum", "score": SCORE}, record)
-
-        pygame.display.update()
