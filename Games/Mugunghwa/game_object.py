@@ -19,18 +19,19 @@ def get_abs_path(path):
 
 class GameObject:
 
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height,game_screen=pygame.display.set_mode((800,800),pygame.RESIZABLE)):
         self.x_pos = x
         self.y_pos = y
         self.width = width
         self.height = height
-
+        self.game_screen = game_screen
     def sprite_image(self, image_path):
         object_image = pygame.image.load(image_path)
-        self.image = pygame.transform.scale(object_image, (self.width, self.height))
+        self.image = pygame.transform.scale(object_image, (self.width*(self.game_screen.get_width()/800), self.height*(self.game_screen.get_height()/800)))
 
     def draw(self, background):
-        background.blit(self.image, (self.x_pos, self.y_pos))
+        self.image = pygame.transform.scale(self.image, (self.width * (background.get_width() / 800), self.height * (background.get_height() / 800)))
+        background.blit(self.image, (background.get_width()/2.25, background.get_height()/40))
 
 
 class NPC(GameObject):
@@ -51,7 +52,7 @@ class NPC(GameObject):
             value = self.NPC_3_Y_POS
         y_pos = game_screen_size[1] * value  # 각 npc 의 y 좌표를 설정해준다.
 
-        super().__init__(x_pos, y_pos, width / 2, height)  # 게임 난이도 하향을 위한 판정 범위 보정
+        super().__init__(x_pos, y_pos, width, height)  # 게임 난이도 하향을 위한 판정 범위 보정
         self.kind_of_object = kind_of_object
         object_image = pygame.image.load(get_abs_path(f'NPC/NPC{kind_of_object}.png'))
         self.go_forward = False  # go_forward 에 따라 이미지를 좌우로 flip.
@@ -60,8 +61,12 @@ class NPC(GameObject):
 
     def draw(self, background):
         if self.go_forward:
+            self.image = pygame.transform.scale(self.image, (
+            self.width * (background.get_width() / 800)*(3/4), self.height * (background.get_height() / 800)))
             background.blit(self.image, (self.x_pos, self.y_pos))
         else:
+            self.image = pygame.transform.scale(self.image, (
+            self.width * (background.get_width() / 800)*(3/4), self.height * (background.get_height() / 800)))
             background.blit(pygame.transform.flip(
                 self.image, 1, 0), (self.x_pos, self.y_pos))
 
@@ -93,20 +98,22 @@ class NPC(GameObject):
 class Aim(NPC):
     BASE_SPEED = 3
 
-    def __init__(self, width, height):
-        super().__init__(width / 2, height)  # 범위 보정
+    def __init__(self, width, height, game_screen=pygame.display.set_mode((800,800),pygame.RESIZABLE)):
+        super().__init__(width, height)  # 범위 보정
         object_image = pygame.image.load(get_abs_path(AIM_LOCATION))
-        self.image = pygame.transform.scale(object_image, (width * (3 / 4), height))
+        self.image = pygame.transform.scale(object_image, (
+            self.width * (game_screen.get_width() / 800), self.height * (game_screen.get_height() / 800)))
+
 
     def move(self, max_width):
         super().move(max_width)
         if self.x_pos <= 0:
             self.direction = 1
-        elif self.x_pos >= max_width - self.width * 2:
+        elif self.x_pos >= max_width - self.width: # 조준경이 바뀌지 않는 버그로 수정
             self.direction = 2
         elif self.y_pos <= 0:
             self.direction = 4
-        elif self.y_pos >= max_width - self.width * 2:
+        elif self.y_pos >= max_width - self.width:
             self.direction = 3
 
 
@@ -129,20 +136,31 @@ class PC(GameObject):  # 플레이어 캐릭터
 
     # move() 를 통해 바뀐 direction 으로 캐릭터를 계속 그려낸다.
     def draw(self, background, dir_x, dir_y):
+        self.player_character=self.ba_image
+        self.ba_image = pygame.transform.scale(self.ba_image, (
+            self.width * (background.get_width() / 800), self.height * (background.get_height() / 800)))
         if dir_y > 0:
-            background.blit(self.fr_image, (self.x_pos, self.y_pos))
+            self.fr_image = pygame.transform.scale(self.fr_image, (
+                self.width * (background.get_width() / 800), self.height * (background.get_height() / 800)))
+            background.blit(self.fr_image, (self.x_pos* (background.get_width() / 800), self.y_pos* (background.get_height() / 800)))
             self.player_character = self.fr_image
         elif dir_y < 0:
-            background.blit(self.ba_image, (self.x_pos, self.y_pos))
+            self.ba_image = pygame.transform.scale(self.ba_image, (
+                self.width * (background.get_width() / 800), self.height * (background.get_height() / 800)))
+            background.blit(self.ba_image, (self.x_pos* (background.get_width() / 800), self.y_pos* (background.get_height() / 800)))
             self.player_character = self.ba_image
         elif dir_x > 0:
-            background.blit(self.ri_image, (self.x_pos, self.y_pos))
+            self.ri_image = pygame.transform.scale(self.ri_image, (
+                self.width * (background.get_width() / 800), self.height * (background.get_height() / 800)))
+            background.blit(self.ri_image, (self.x_pos* (background.get_width() / 800), self.y_pos* (background.get_height() / 800)))
             self.player_character = self.ri_image
         elif dir_x < 0:
-            background.blit(self.le_image, (self.x_pos, self.y_pos))
+            self.le_image = pygame.transform.scale(self.le_image, (
+                self.width * (background.get_width() / 800), self.height * (background.get_height() / 800)))
+            background.blit(self.le_image, (self.x_pos* (background.get_width() / 800), self.y_pos* (background.get_height() / 800)))
             self.player_character = self.le_image
         else:
-            background.blit(self.player_character, (self.x_pos, self.y_pos))
+            background.blit(self.player_character, (self.x_pos* (background.get_width() / 800), self.y_pos* (background.get_height() / 800)))
 
     # 키 입력에 따른 방향변경
     def move(self, dir_x, dir_y, max_width, max_height):
