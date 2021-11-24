@@ -8,12 +8,11 @@ from Games.game_menu import main_menu
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
-
+LEVEL_UP_STEP = 1
 
 if __name__ == "__main__":
     SCORE = 0
     LEVEL = 1
-
     selected = main_menu()
 
     if selected == "infinite_mode":
@@ -28,18 +27,18 @@ if __name__ == "__main__":
                 SCORE += dalgona_score
             else:
                 break
-            marble_score = start_marble_game(LEVEL, SCORE)
-            if marble_score:
-                SCORE += marble_score
-            else:
-                break
             tug_score = start_tug_game(LEVEL, SCORE)
             if tug_score:
                 SCORE += tug_score
             else:
                 break
+            marble_score = start_marble_game(LEVEL, SCORE)
+            if marble_score:
+                SCORE += marble_score
+            else:
+                break
 
-            LEVEL += 1
+            LEVEL += LEVEL_UP_STEP
     elif selected == "the_best_record_mode":
         while True:
             mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
@@ -52,17 +51,51 @@ if __name__ == "__main__":
                 SCORE += dalgona_score
             else:
                 break
-            marble_score = start_marble_game(LEVEL, SCORE)
-            if marble_score:
-                SCORE += marble_score
-            else:
-                break
-            tug_score = start_tug_game(LEVEL, SCORE, best_record_mode=True)
+            tug_score = start_tug_game(LEVEL, SCORE)
             if tug_score:
                 SCORE += tug_score
             else:
                 break
+            marble_score = start_marble_game(LEVEL, SCORE, best_record_mode=True)
+            if marble_score:
+                SCORE += marble_score
+            else:
+                break
             break
+    elif selected == "select_mode_mugunghwa":
+        while True:
+            mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
+            if mugunghwa_score:
+                SCORE += mugunghwa_score
+            else:
+                break
+            LEVEL += LEVEL_UP_STEP
+    elif selected == "select_mode_dalgona":
+        while True:
+            dalgona_score = start_dalgona_game(LEVEL, SCORE)
+            if dalgona_score:
+                SCORE += dalgona_score
+            else:
+                break
+            LEVEL += LEVEL_UP_STEP
+    elif selected == "select_mode_tugOfWar":
+        while True:
+            tug_score = start_tug_game(LEVEL, SCORE, best_record_mode=False, select_mode=True)
+            if tug_score:
+                SCORE += tug_score
+            else:
+                break
+            LEVEL += LEVEL_UP_STEP
+    elif selected == "select_mode_Marble":
+        while True:
+            marble_score = start_marble_game(LEVEL, SCORE, best_record_mode=False, select_mode=True)
+            if marble_score:
+                SCORE += marble_score
+            else:
+                break
+            LEVEL += LEVEL_UP_STEP
+
+
 
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
