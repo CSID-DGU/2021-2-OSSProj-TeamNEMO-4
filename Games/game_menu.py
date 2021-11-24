@@ -165,7 +165,7 @@ def select_mode_menu():
         if button_best.collidepoint((mx, my)):
             if click:
                 fade_out(fade)
-                return "the_best_record_mode"
+                return "best_record_mode"
         if button_select_game.collidepoint((mx, my)):
             if click:
                 fade_out(fade)

@@ -21,23 +21,26 @@ def record_score(mode, new_record, old_record):
     if mode == SELECT:
         collection = db[SELECT]
         return
-    elif mode == INFINITE:
-        collection = db[INFINITE]
+    elif mode == INFINITE or mode == BEST_RECORD:
+        collection = db[mode]
+        print(mode)
+        for score in collection.find():
+            print(score)
         collection.delete_one(old_record)
         collection.insert_one(new_record)
-        return
-    elif mode == BEST_RECORD:
-        collection = db[BEST_RECORD]
         return
 
 
 def get_score(mode, *game):
     scores = None
     if mode == SELECT:
-        collection = db[SELECT]
+        collection = db[mode]
         scores = collection.find()
         # game 에 따라 분류 한 번 해야함.
-    elif mode == (INFINITE or BEST_RECORD):
-        collection = db[INFINITE]
+    elif mode == INFINITE or mode == BEST_RECORD:
+        print(mode)
+        collection = db[mode]
+        for score in collection.find():
+            print(score)
         scores = collection.find().sort("score")
     return scores
