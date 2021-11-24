@@ -94,3 +94,9 @@ GAME_OVER_LOCATION = 'common_images/game_over.png'
 
 # BGM VOLUME
 BGM_VOLUME = 0.07
+
+# mode
+
+INFINITE = "infinite_mode"
+BEST_RECORD = "best_record_mode"
+SELECT = "select_mode"

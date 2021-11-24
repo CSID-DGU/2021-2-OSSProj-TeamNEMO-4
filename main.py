@@ -1,4 +1,5 @@
 import pygame
+from db import record_score
 from Games.game_settings import *
 from Games.Mugunghwa.Mugunghwa_Game import start_game as start_mugunghwa_game
 from Games.Dalgona.dalgona_game import start_game as start_dalgona_game
@@ -9,6 +10,7 @@ from Games.game_menu import main_menu
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
 LEVEL_UP_STEP = 1
+
 
 if __name__ == "__main__":
     SCORE = 0
