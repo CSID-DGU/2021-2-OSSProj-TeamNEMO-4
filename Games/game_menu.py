@@ -213,17 +213,25 @@ def draw_show_rank_menu():
 
 
 def render_rank(mode, *game):
-    score = get_score(INFINITE)
+    score = get_score(mode)
     running = True
     if mode == INFINITE or mode == BEST_RECORD:
         while running:
             screen.fill(PINK)
             # for 문 버그로 직접 작성 - 왜그런지 모르겠
-            message_to_screen_center(screen, f'5 위  {score[4]["user"]} : {score[0]["score"]}', WHITE,
+            message_to_screen_center(screen, '명예의 전당', WHITE,
+                                     korean_font, screen.get_height() * (1 / 12),
+                                     ref_w,
+                                     ref_h)
+            message_to_screen_center(screen, '뒤로 가려면 esc', BLUE,
+                                     korean_font_small_size, screen.get_height() * (11 / 12),
+                                     ref_w,
+                                     ref_h)
+            message_to_screen_center(screen, f'5 위  {score[4]["user"]} : {score[4]["score"]}', WHITE,
                                      korean_font_small_size, screen.get_height() * (5 / 6),
                                      ref_w,
                                      ref_h)
-            message_to_screen_center(screen, f'4 위  {score[3]["user"]} : {score[1]["score"]}', WHITE,
+            message_to_screen_center(screen, f'4 위  {score[3]["user"]} : {score[3]["score"]}', WHITE,
                                      korean_font_small_size, screen.get_height() * (4 / 6),
                                      ref_w,
                                      ref_h)
@@ -231,11 +239,11 @@ def render_rank(mode, *game):
                                      korean_font_small_size, screen.get_height() * (3 / 6),
                                      ref_w,
                                      ref_h)
-            message_to_screen_center(screen, f'2 위  {score[1]["user"]} : {score[3]["score"]}', WHITE,
+            message_to_screen_center(screen, f'2 위  {score[1]["user"]} : {score[1]["score"]}', WHITE,
                                      korean_font_small_size, screen.get_height() * (2 / 6),
                                      ref_w,
                                      ref_h)
-            message_to_screen_center(screen, f'1 위  {score[0]["user"]} : {score[4]["score"]}', WHITE,
+            message_to_screen_center(screen, f'1 위  {score[0]["user"]} : {score[0]["score"]}', WHITE,
                                      korean_font_small_size, screen.get_height() * (1 / 6),
                                      ref_w,
                                      ref_h)
@@ -268,7 +276,7 @@ def show_rank_menu():
 
         if button_best.collidepoint((mx, my)):
             if click:
-                print("최고 기록 모드 랭킹")
+                return BEST_RECORD
         if button_select_game.collidepoint((mx, my)):
             if click:
                 select_game_rank_menu()

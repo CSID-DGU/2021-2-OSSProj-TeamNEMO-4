@@ -23,9 +23,7 @@ def record_score(mode, new_record, old_record):
         return
     elif mode == INFINITE or mode == BEST_RECORD:
         collection = db[mode]
-        print(mode)
-        for score in collection.find():
-            print(score)
+        print(mode, "printed from db-record_score()")
         collection.delete_one(old_record)
         collection.insert_one(new_record)
         return
@@ -38,7 +36,8 @@ def get_score(mode, *game):
         scores = collection.find()
         # game 에 따라 분류 한 번 해야함.
     elif mode == INFINITE or mode == BEST_RECORD:
-        print(mode)
+        print(mode, "printed from db-get_score()")
         collection = db[mode]
-        scores = collection.find().sort("score")
+        scores = collection.find().sort("score", -1)  # 내림차순 정렬
+
     return scores
