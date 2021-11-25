@@ -1,5 +1,4 @@
 import pygame
-import time
 from db import *
 from Games.game_settings import *
 from Games.Mugunghwa.Mugunghwa_Game import start_game as start_mugunghwa_game
@@ -19,8 +18,8 @@ if __name__ == "__main__":
     selected = main_menu()
 
     if selected == INFINITE or selected == BEST_RECORD:
+        top_five = get_score(selected)
         while True:
-            top_five = get_score(selected)
             mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
             if mugunghwa_score:
                 SCORE += mugunghwa_score
@@ -44,7 +43,8 @@ if __name__ == "__main__":
             if selected == BEST_RECORD:
                 break
             LEVEL += LEVEL_UP_STEP
-    elif selected == "select_mode_mugunghwa":
+    elif selected == SELECT_MUGUNGHWA:
+        top_five = get_score(SELECT, selected)
         while True:
             mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
             if mugunghwa_score:
@@ -52,7 +52,8 @@ if __name__ == "__main__":
             else:
                 break
             LEVEL += LEVEL_UP_STEP
-    elif selected == "select_mode_dalgona":
+    elif selected == SELECT_DALGONA:
+        top_five = get_score(SELECT, selected)
         while True:
             dalgona_score = start_dalgona_game(LEVEL, SCORE)
             if dalgona_score:
@@ -60,7 +61,8 @@ if __name__ == "__main__":
             else:
                 break
             LEVEL += LEVEL_UP_STEP
-    elif selected == "select_mode_tugOfWar":
+    elif selected == SELECT_TUG:
+        top_five = get_score(SELECT, selected)
         while True:
             tug_score = start_tug_game(LEVEL, SCORE, best_record_mode=False, select_mode=True)
             if tug_score:
@@ -68,7 +70,8 @@ if __name__ == "__main__":
             else:
                 break
             LEVEL += LEVEL_UP_STEP
-    elif selected == "select_mode_Marble":
+    elif selected == SELECT_MARBLE:
+        top_five = get_score(SELECT, selected)
         while True:
             marble_score = start_marble_game(LEVEL, SCORE, best_record_mode=False, select_mode=True)
             if marble_score:
@@ -102,10 +105,16 @@ if __name__ == "__main__":
         if timer <= 0:
             break
 
-    if selected == INFINITE or selected == BEST_RECORD:
-        # 5 위 안에 들었는 지 계산.
-        for record in top_five:
-            # top_five 는 db.py 에서 sort 되어 있음.
-            if int(record['score']) < SCORE:
-                record_score(selected, {"user": "hanum", "score": SCORE}, record)
-                break
+    # 5 위 안에 들었는 지 계산.
+    ranks = False
+    for record in top_five:
+        # top_five 는 db.py 에서 sort 되어 있음.
+        if int(record['score']) < SCORE:
+            ranks = True
+        worst_record = record
+
+    if ranks:
+        if selected == INFINITE or selected == BEST_RECORD:
+            record_score(selected, {"user": "hanum", "score": round(SCORE)}, worst_record)
+        else: # select mode 일 떄
+            record_score(SELECT, {"user": "hanum", "score": round(SCORE), "game": selected}, worst_record)

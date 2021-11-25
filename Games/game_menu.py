@@ -212,50 +212,53 @@ def draw_show_rank_menu():
     )
 
 
-def render_rank(mode, *game):
-    score = get_score(mode)
+def render_rank(mode):
     running = True
     if mode == INFINITE or mode == BEST_RECORD:
-        while running:
-            screen.fill(PINK)
-            # for 문 버그로 직접 작성 - 왜그런지 모르겠
-            message_to_screen_center(screen, '명예의 전당', WHITE,
-                                     korean_font, screen.get_height() * (1 / 12),
-                                     ref_w,
-                                     ref_h)
-            message_to_screen_center(screen, '뒤로 가려면 esc', BLUE,
-                                     korean_font_small_size, screen.get_height() * (11 / 12),
-                                     ref_w,
-                                     ref_h)
-            message_to_screen_center(screen, f'5 위  {score[4]["user"]} : {score[4]["score"]}', WHITE,
-                                     korean_font_small_size, screen.get_height() * (5 / 6),
-                                     ref_w,
-                                     ref_h)
-            message_to_screen_center(screen, f'4 위  {score[3]["user"]} : {score[3]["score"]}', WHITE,
-                                     korean_font_small_size, screen.get_height() * (4 / 6),
-                                     ref_w,
-                                     ref_h)
-            message_to_screen_center(screen, f'3 위  {score[2]["user"]} : {score[2]["score"]}', WHITE,
-                                     korean_font_small_size, screen.get_height() * (3 / 6),
-                                     ref_w,
-                                     ref_h)
-            message_to_screen_center(screen, f'2 위  {score[1]["user"]} : {score[1]["score"]}', WHITE,
-                                     korean_font_small_size, screen.get_height() * (2 / 6),
-                                     ref_w,
-                                     ref_h)
-            message_to_screen_center(screen, f'1 위  {score[0]["user"]} : {score[0]["score"]}', WHITE,
-                                     korean_font_small_size, screen.get_height() * (1 / 6),
-                                     ref_w,
-                                     ref_h)
-            pygame.display.update()
-            mainClock.tick(MENU_TICK_RATE)
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == KEYDOWN:
-                    if event.key == K_ESCAPE:
-                        running = False
+        score = get_score(mode)
+    else:
+        score = get_score(SELECT, mode)
+
+    while running:
+        screen.fill(PINK)
+        # for 문 버그로 직접 작성 - 왜그런지 모르겠
+        message_to_screen_center(screen, '명예의 전당', WHITE,
+                                 korean_font, screen.get_height() * (1 / 12),
+                                 ref_w,
+                                 ref_h)
+        message_to_screen_center(screen, '뒤로 가려면 esc', BLUE,
+                                 korean_font_small_size, screen.get_height() * (11 / 12),
+                                 ref_w,
+                                 ref_h)
+        message_to_screen_center(screen, f'5 위  {score[4]["user"]} : {score[4]["score"]}', WHITE,
+                                 korean_font_small_size, screen.get_height() * (5 / 6),
+                                 ref_w,
+                                 ref_h)
+        message_to_screen_center(screen, f'4 위  {score[3]["user"]} : {score[3]["score"]}', WHITE,
+                                 korean_font_small_size, screen.get_height() * (4 / 6),
+                                 ref_w,
+                                 ref_h)
+        message_to_screen_center(screen, f'3 위  {score[2]["user"]} : {score[2]["score"]}', WHITE,
+                                 korean_font_small_size, screen.get_height() * (3 / 6),
+                                 ref_w,
+                                 ref_h)
+        message_to_screen_center(screen, f'2 위  {score[1]["user"]} : {score[1]["score"]}', WHITE,
+                                 korean_font_small_size, screen.get_height() * (2 / 6),
+                                 ref_w,
+                                 ref_h)
+        message_to_screen_center(screen, f'1 위  {score[0]["user"]} : {score[0]["score"]}', WHITE,
+                                 korean_font_small_size, screen.get_height() * (1 / 6),
+                                 ref_w,
+                                 ref_h)
+        pygame.display.update()
+        mainClock.tick(MENU_TICK_RATE)
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
 
 
 def show_rank_menu():
@@ -279,7 +282,7 @@ def show_rank_menu():
                 return BEST_RECORD
         if button_select_game.collidepoint((mx, my)):
             if click:
-                select_game_rank_menu()
+                return select_game_rank_menu()
         if button_back.collidepoint((mx, my)):
             if click:
                 running = False
@@ -335,16 +338,16 @@ def select_game_menu():
 
         if button_mugunghwa.collidepoint((mx, my)):
             if click:
-                return "select_mode_mugunghwa"
+                return SELECT_MUGUNGHWA
         if button_dalgona.collidepoint((mx, my)):
             if click:
-                return "select_mode_dalgona"
+                return SELECT_DALGONA
         if button_tug_of_war.collidepoint((mx, my)):
             if click:
-                return "select_mode_tugOfWar"
+                return SELECT_TUG
         if button_marble_game.collidepoint((mx, my)):
             if click:
-                return "select_mode_Marble"
+                return SELECT_MARBLE
         if button_back.collidepoint((mx, my)):
             if click:
                 running = False
@@ -381,7 +384,6 @@ def draw_select_game_rank_menu():
 def select_game_rank_menu():
     click = False  # 클릭 판단 변수
     running = True
-    print("게임 선택 모드 랭킹")
     fade = pygame.Surface((screen.get_width(), screen.get_height()))
     fade_in(fade, draw_select_game_rank_menu)
     while running:
@@ -395,16 +397,16 @@ def select_game_rank_menu():
 
         if button_mugunghwa.collidepoint((mx, my)):
             if click:
-                print("무궁화 게임 랭킹")
+                return SELECT_MUGUNGHWA
         if button_dalgona.collidepoint((mx, my)):
             if click:
-                print("달고나 게임 랭킹")
+                return SELECT_DALGONA
         if button_tug_of_war.collidepoint((mx, my)):
             if click:
-                print("줄다리기 게임 랭킹")
+                return SELECT_TUG
         if button_marble_game.collidepoint((mx, my)):
             if click:
-                print("구슬 홀짝 게임 랭킹")
+                return SELECT_MARBLE
         if button_back.collidepoint((mx, my)):
             if click:
                 running = False
