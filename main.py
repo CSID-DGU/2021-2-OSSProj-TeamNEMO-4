@@ -1,5 +1,4 @@
 import pygame
-import time
 from db import *
 from Games.game_settings import *
 from Games.Mugunghwa.Mugunghwa_Game import start_game as start_mugunghwa_game
@@ -44,7 +43,7 @@ if __name__ == "__main__":
             if selected == BEST_RECORD:
                 break
             LEVEL += LEVEL_UP_STEP
-    elif selected == "select_mode_mugunghwa":
+    elif selected == SELECT_MUGUNGHWA:
         while True:
             mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
             if mugunghwa_score:
@@ -52,7 +51,7 @@ if __name__ == "__main__":
             else:
                 break
             LEVEL += LEVEL_UP_STEP
-    elif selected == "select_mode_dalgona":
+    elif selected == SELECT_DALGONA:
         while True:
             dalgona_score = start_dalgona_game(LEVEL, SCORE)
             if dalgona_score:
@@ -60,7 +59,7 @@ if __name__ == "__main__":
             else:
                 break
             LEVEL += LEVEL_UP_STEP
-    elif selected == "select_mode_tugOfWar":
+    elif selected == SELECT_TUG:
         while True:
             tug_score = start_tug_game(LEVEL, SCORE, best_record_mode=False, select_mode=True)
             if tug_score:
@@ -68,7 +67,7 @@ if __name__ == "__main__":
             else:
                 break
             LEVEL += LEVEL_UP_STEP
-    elif selected == "select_mode_Marble":
+    elif selected == SELECT_MARBLE:
         while True:
             marble_score = start_marble_game(LEVEL, SCORE, best_record_mode=False, select_mode=True)
             if marble_score:

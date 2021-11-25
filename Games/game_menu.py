@@ -341,10 +341,10 @@ def select_game_menu():
                 return "select_mode_dalgona"
         if button_tug_of_war.collidepoint((mx, my)):
             if click:
-                return "select_mode_tugOfWar"
+                return "select_mode_tug"
         if button_marble_game.collidepoint((mx, my)):
             if click:
-                return "select_mode_Marble"
+                return "select_mode_marble"
         if button_back.collidepoint((mx, my)):
             if click:
                 running = False

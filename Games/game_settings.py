@@ -100,3 +100,7 @@ BGM_VOLUME = 0.07
 INFINITE = "infinite_mode"
 BEST_RECORD = "best_record_mode"
 SELECT = "select_mode"
+SELECT_MUGUNGHWA = "select_mode_mugunghwa"
+SELECT_DALGONA = "select_mode_dalgona"
+SELECT_TUG = "select_mode_tug"
+SELECT_MARBLE = "select_mode_marble"
