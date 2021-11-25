@@ -5,7 +5,8 @@ from Games.Mugunghwa.Mugunghwa_Game import start_game as start_mugunghwa_game
 from Games.Dalgona.dalgona_game import start_game as start_dalgona_game
 from Games.MarbleGame.marble_game import start_game as start_marble_game
 from Games.TugOfWar.TugOfWar import start_game as start_tug_game
-from Games.game_menu import main_menu
+from Games.game_menu import main_menu, draw_input_box
+
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
@@ -114,25 +115,9 @@ if __name__ == "__main__":
         worst_record = record
 
     if ranks:
-        while RUNNING:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    RUNNING = False
-            screen.fill(PINK)
-            message_to_screen_center(screen, '기록 갱신! 축하합니다!', WHITE, korean_font,
-                                     SCREEN_WIDTH / 3,
-                                     ref_w,
-                                     ref_h)
-            message_to_screen_center(screen, f'명예의 전당에 이름을 등록하세요. ', WHITE, korean_font,
-                                     SCREEN_WIDTH / 2,
-                                     ref_w,
-                                     ref_h)
-
-            pygame.display.update()
-            clock.tick(60)
-
+        user_name = draw_input_box()
         if selected == INFINITE or selected == BEST_RECORD:
-            record_score(selected, {"user": "hanum", "score": round(SCORE)}, worst_record)
+            record_score(selected, {"user": user_name, "score": round(SCORE)}, worst_record)
         else:  # select mode 일 떄
-            record_score(SELECT, {"user": "hanum", "score": round(SCORE), "game": selected}, worst_record)
+            record_score(SELECT, {"user": user_name, "score": round(SCORE), "game": selected}, worst_record)
 
