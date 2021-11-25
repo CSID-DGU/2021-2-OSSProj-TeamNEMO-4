@@ -106,12 +106,15 @@ if __name__ == "__main__":
             break
 
     # 5 위 안에 들었는 지 계산.
+    ranks = False
     for record in top_five:
         # top_five 는 db.py 에서 sort 되어 있음.
         if int(record['score']) < SCORE:
-            if selected == INFINITE or selected == BEST_RECORD:
-                record_score(selected, {"user": "hanum", "score": round(SCORE)}, record)
-                break
-            else: # select mode 일 떄
-                record_score(SELECT, {"user": "hanum", "score": round(SCORE), "game": selected}, record)
-                break
+            ranks = True
+        worst_record = record
+
+    if ranks:
+        if selected == INFINITE or selected == BEST_RECORD:
+            record_score(selected, {"user": "hanum", "score": round(SCORE)}, worst_record)
+        else: # select mode 일 떄
+            record_score(SELECT, {"user": "hanum", "score": round(SCORE), "game": selected}, worst_record)
