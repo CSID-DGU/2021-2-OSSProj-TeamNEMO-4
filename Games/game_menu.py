@@ -57,6 +57,43 @@ def button(x, y, image):
     return button
 
 
+# 유저명 받기
+
+def draw_input_box():
+    input_box = pygame.Rect(100, 100, 140, 32)
+    active = False
+    color_active = WHITE
+    color_inactive = GRAY
+    text = ''
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # box 를 클릭하면 active 를 토글. 허공을 클릭하면 active off
+                if input_box.collidepoint(event.pos):
+                    active = not active
+                else:
+                    active = False
+                color = color_active if active else color_inactive
+            if event.type == pygame.KEYDOWN:
+                if active:
+                    if event.key == pygame.K_RETURN:
+                        print(text)
+                        text = ''
+                    elif event.key == pygame.K_BACKSPACE:
+                        text = text[:-1]
+                    else:
+                        text += event.unicode
+        txt = korean_large_font.render(text, True, BLACK)
+        width = max(200, txt.get_width() + 10)
+        input_box.w = width
+        screen.blit(txt, (input_box.x + 5, input_box.y + 5))
+        pygame.draw.rect(screen, GRAY, input_box, 2)
+        pygame.display.update()
+        clock.tick(60)
+
+
 # 메인 화면 함수
 
 def draw_main_menu():
@@ -87,7 +124,7 @@ def main_menu():
         pygame.display.set_caption("오징어 게임 - 메인 화면")
 
         mx, my = pygame.mouse.get_pos()  # 마우스 좌표 변수
-
+        draw_input_box()
         # 메인 화면 버튼 생성(모드 선택, 랭킹 보기, exit)
         message_to_screen_center(screen, '오징어 게임', WHITE, korean_large_font, screen.get_height() / 5, ref_w,
                                  ref_h)  # 리사이징을 위해 전체 화면 비율로 위치 지정

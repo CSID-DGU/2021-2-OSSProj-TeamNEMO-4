@@ -11,7 +11,6 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
 LEVEL_UP_STEP = 1
 
-
 if __name__ == "__main__":
     SCORE = 0
     LEVEL = 1
@@ -101,7 +100,8 @@ if __name__ == "__main__":
         elapsed_time = (pygame.time.get_ticks() - ticks) / 1000
         pygame.display.update()
         clock.tick(60)
-        timer = 4 - elapsed_time
+        timer = 3 - elapsed_time
+        # 스코어 3초 동안 보여주고 다음 step 으로
         if timer <= 0:
             break
 
@@ -114,7 +114,25 @@ if __name__ == "__main__":
         worst_record = record
 
     if ranks:
+        while RUNNING:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    RUNNING = False
+            screen.fill(PINK)
+            message_to_screen_center(screen, '기록 갱신! 축하합니다!', WHITE, korean_font,
+                                     SCREEN_WIDTH / 3,
+                                     ref_w,
+                                     ref_h)
+            message_to_screen_center(screen, f'명예의 전당에 이름을 등록하세요. ', WHITE, korean_font,
+                                     SCREEN_WIDTH / 2,
+                                     ref_w,
+                                     ref_h)
+
+            pygame.display.update()
+            clock.tick(60)
+
         if selected == INFINITE or selected == BEST_RECORD:
             record_score(selected, {"user": "hanum", "score": round(SCORE)}, worst_record)
-        else: # select mode 일 떄
+        else:  # select mode 일 떄
             record_score(SELECT, {"user": "hanum", "score": round(SCORE), "game": selected}, worst_record)
+
