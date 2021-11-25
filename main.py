@@ -18,8 +18,8 @@ if __name__ == "__main__":
     selected = main_menu()
 
     if selected == INFINITE or selected == BEST_RECORD:
+        top_five = get_score(selected)
         while True:
-            top_five = get_score(selected)
             mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
             if mugunghwa_score:
                 SCORE += mugunghwa_score
@@ -44,6 +44,7 @@ if __name__ == "__main__":
                 break
             LEVEL += LEVEL_UP_STEP
     elif selected == SELECT_MUGUNGHWA:
+        top_five = get_score(SELECT, selected)
         while True:
             mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
             if mugunghwa_score:
@@ -52,6 +53,7 @@ if __name__ == "__main__":
                 break
             LEVEL += LEVEL_UP_STEP
     elif selected == SELECT_DALGONA:
+        top_five = get_score(SELECT, selected)
         while True:
             dalgona_score = start_dalgona_game(LEVEL, SCORE)
             if dalgona_score:
@@ -60,6 +62,7 @@ if __name__ == "__main__":
                 break
             LEVEL += LEVEL_UP_STEP
     elif selected == SELECT_TUG:
+        top_five = get_score(SELECT, selected)
         while True:
             tug_score = start_tug_game(LEVEL, SCORE, best_record_mode=False, select_mode=True)
             if tug_score:
@@ -68,6 +71,7 @@ if __name__ == "__main__":
                 break
             LEVEL += LEVEL_UP_STEP
     elif selected == SELECT_MARBLE:
+        top_five = get_score(SELECT, selected)
         while True:
             marble_score = start_marble_game(LEVEL, SCORE, best_record_mode=False, select_mode=True)
             if marble_score:
@@ -106,5 +110,6 @@ if __name__ == "__main__":
         for record in top_five:
             # top_five 는 db.py 에서 sort 되어 있음.
             if int(record['score']) < SCORE:
-                record_score(selected, {"user": "hanum", "score": SCORE}, record)
+                record_score(selected, {"user": "hanum", "score": round(SCORE)}, record)
                 break
+    # elif selected == SELECT_MUGUNGHWA:
