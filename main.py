@@ -105,11 +105,13 @@ if __name__ == "__main__":
         if timer <= 0:
             break
 
-    if selected == INFINITE or selected == BEST_RECORD:
-        # 5 위 안에 들었는 지 계산.
-        for record in top_five:
-            # top_five 는 db.py 에서 sort 되어 있음.
-            if int(record['score']) < SCORE:
+    # 5 위 안에 들었는 지 계산.
+    for record in top_five:
+        # top_five 는 db.py 에서 sort 되어 있음.
+        if int(record['score']) < SCORE:
+            if selected == INFINITE or selected == BEST_RECORD:
                 record_score(selected, {"user": "hanum", "score": round(SCORE)}, record)
                 break
-    # elif selected == SELECT_MUGUNGHWA:
+            else:
+                record_score(SELECT, {"user": "hanum", "score": round(SCORE), "game": selected}, record)
+                break
