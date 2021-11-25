@@ -112,6 +112,6 @@ if __name__ == "__main__":
             if selected == INFINITE or selected == BEST_RECORD:
                 record_score(selected, {"user": "hanum", "score": round(SCORE)}, record)
                 break
-            else:
+            else: # select mode 일 떄
                 record_score(SELECT, {"user": "hanum", "score": round(SCORE), "game": selected}, record)
                 break

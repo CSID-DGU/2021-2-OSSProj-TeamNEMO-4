@@ -279,7 +279,7 @@ def show_rank_menu():
                 return BEST_RECORD
         if button_select_game.collidepoint((mx, my)):
             if click:
-                select_game_rank_menu()
+                return select_game_rank_menu()
         if button_back.collidepoint((mx, my)):
             if click:
                 running = False
@@ -335,16 +335,16 @@ def select_game_menu():
 
         if button_mugunghwa.collidepoint((mx, my)):
             if click:
-                return "select_mode_mugunghwa"
+                return SELECT_MUGUNGHWA
         if button_dalgona.collidepoint((mx, my)):
             if click:
-                return "select_mode_dalgona"
+                return SELECT_DALGONA
         if button_tug_of_war.collidepoint((mx, my)):
             if click:
-                return "select_mode_tug"
+                return SELECT_TUG
         if button_marble_game.collidepoint((mx, my)):
             if click:
-                return "select_mode_marble"
+                return SELECT_MARBLE
         if button_back.collidepoint((mx, my)):
             if click:
                 running = False
