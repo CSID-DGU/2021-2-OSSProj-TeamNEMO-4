@@ -175,11 +175,11 @@ class Point:
 
     def draw(self):
         if self.clicked and not self.wrong_point:
-            pygame.draw.circle(self.game_display, BLACK, [self.x, self.y], self.radius, UNCLICKED_POINT_SIZE)
+            pygame.draw.circle(self.game_display, BLACK, [self.x*(self.game_display.get_width()/800), self.y*(self.game_display.get_height()/800)], self.radius, UNCLICKED_POINT_SIZE)
         elif not self.clicked and not self.wrong_point:
-            pygame.draw.circle(self.game_display, BROWN, [self.x, self.y], self.radius, CLICKED_POINT_SIZE)
+            pygame.draw.circle(self.game_display, BROWN, [self.x*(self.game_display.get_width()/800), self.y*(self.game_display.get_height()/800)], self.radius, CLICKED_POINT_SIZE)
         elif not self.clicked and self.wrong_point:
-            pygame.draw.circle(self.game_display, RED, [self.x, self.y], self.radius, UNCLICKED_POINT_SIZE)
+            pygame.draw.circle(self.game_display, RED, [self.x*(self.game_display.get_width()/800), self.y*(self.game_display.get_height()/800)], self.radius, UNCLICKED_POINT_SIZE)
 
     def punching(self):
         self.is_clicked()
