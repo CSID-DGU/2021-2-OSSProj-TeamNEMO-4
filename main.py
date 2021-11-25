@@ -120,4 +120,5 @@ if __name__ == "__main__":
             record_score(selected, {"user": user_name, "score": round(SCORE)}, worst_record)
         else:  # select mode 일 떄
             record_score(SELECT, {"user": user_name, "score": round(SCORE), "game": selected}, worst_record)
+    main_menu()
 
