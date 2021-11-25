@@ -5,12 +5,12 @@ from Games.Mugunghwa.Mugunghwa_Game import start_game as start_mugunghwa_game
 from Games.Dalgona.dalgona_game import start_game as start_dalgona_game
 from Games.MarbleGame.marble_game import start_game as start_marble_game
 from Games.TugOfWar.TugOfWar import start_game as start_tug_game
-from Games.game_menu import main_menu
+from Games.game_menu import main_menu, draw_input_box
+
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
 LEVEL_UP_STEP = 1
-
 
 if __name__ == "__main__":
     SCORE = 0
@@ -101,7 +101,8 @@ if __name__ == "__main__":
         elapsed_time = (pygame.time.get_ticks() - ticks) / 1000
         pygame.display.update()
         clock.tick(60)
-        timer = 4 - elapsed_time
+        timer = 3 - elapsed_time
+        # 스코어 3초 동안 보여주고 다음 step 으로
         if timer <= 0:
             break
 
@@ -114,7 +115,10 @@ if __name__ == "__main__":
         worst_record = record
 
     if ranks:
+        user_name = draw_input_box()
         if selected == INFINITE or selected == BEST_RECORD:
-            record_score(selected, {"user": "hanum", "score": round(SCORE)}, worst_record)
-        else: # select mode 일 떄
-            record_score(SELECT, {"user": "hanum", "score": round(SCORE), "game": selected}, worst_record)
+            record_score(selected, {"user": user_name, "score": round(SCORE)}, worst_record)
+        else:  # select mode 일 떄
+            record_score(SELECT, {"user": user_name, "score": round(SCORE), "game": selected}, worst_record)
+    main_menu()
+

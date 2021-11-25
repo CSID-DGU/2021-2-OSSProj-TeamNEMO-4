@@ -57,6 +57,40 @@ def button(x, y, image):
     return button
 
 
+# 유저명 받기
+
+def draw_input_box():
+    input_box = pygame.Rect(screen.get_width() / 7, screen.get_height() * (3 / 4), screen.get_width() * 0.7,
+                            screen.get_height() / 8)
+    text = ''
+    while True:
+        screen.fill(PINK)
+        message_to_screen_center(screen, '기록 갱신! 축하합니다!', WHITE, korean_font,
+                                 SCREEN_WIDTH / 3,
+                                 ref_w,
+                                 ref_h)
+        message_to_screen_center(screen, f'명예의 전당에 이름을 등록하세요. ', WHITE, korean_font_small_size,
+                                 SCREEN_WIDTH / 2,
+                                 ref_w,
+                                 ref_h)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    return text
+                elif event.key == pygame.K_BACKSPACE:
+                    text = text[:-1]
+                else:
+                    text += event.unicode
+        txt = korean_large_font.render(text, True, BLACK)
+        screen.blit(txt, (input_box.x + 10, input_box.y))
+        pygame.draw.rect(screen, GRAY, input_box, 5)
+        pygame.display.update()
+        mainClock.tick(MENU_TICK_RATE)
+
+
 # 메인 화면 함수
 
 def draw_main_menu():
@@ -87,7 +121,6 @@ def main_menu():
         pygame.display.set_caption("오징어 게임 - 메인 화면")
 
         mx, my = pygame.mouse.get_pos()  # 마우스 좌표 변수
-
         # 메인 화면 버튼 생성(모드 선택, 랭킹 보기, exit)
         message_to_screen_center(screen, '오징어 게임', WHITE, korean_large_font, screen.get_height() / 5, ref_w,
                                  ref_h)  # 리사이징을 위해 전체 화면 비율로 위치 지정
