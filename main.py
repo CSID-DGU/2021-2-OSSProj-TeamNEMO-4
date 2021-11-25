@@ -10,6 +10,7 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
 LEVEL_UP_STEP = 1
 
+
 if __name__ == "__main__":
     SCORE = 0
     LEVEL = 1

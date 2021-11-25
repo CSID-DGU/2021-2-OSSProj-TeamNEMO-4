@@ -34,7 +34,7 @@ class Game:
         self.half_height = height / 2
         self.center = [self.width / 2, self.height / 2]
         # Screen set-up
-        self.game_screen = pygame.display.set_mode((width, height))
+        self.game_screen = pygame.display.set_mode((width, height),pygame.RESIZABLE)
         self.game_screen.fill(PINK)
         self.shape = random.randrange(CIRCLE, STAR + 1)
         self.rectangle_size = width / RECTANGLE_SHAPE_SIZE_RATIO
@@ -86,25 +86,27 @@ class Game:
                 self.game_screen, "SCORE : " + str(round(score)), BLACK, level_font, self.width - 130, 40, self.ref_w,
                 self.ref_h)
 
-            pygame.draw.circle(self.game_screen, YELLOW_BROWN, self.center,
-                               int(self.width * DALGONA_SIZE_RATIO), int(self.width * DALGONA_SIZE_RATIO))
+            pygame.draw.ellipse(self.game_screen, YELLOW_BROWN, [(self.game_screen.get_width()/2)-int(self.width * DALGONA_SIZE_RATIO*self.game_screen.get_width()/800),
+                                (self.game_screen.get_height()/2)-int(self.height * DALGONA_SIZE_RATIO*self.game_screen.get_height()/800)
+                ,int(self.width * DALGONA_SIZE_RATIO*self.game_screen.get_width()/800)*2,int(self.height * DALGONA_SIZE_RATIO*self.game_screen.get_height()/800)*2],
+                                int(self.width * DALGONA_SIZE_RATIO*self.game_screen.get_width()/800))
 
             # 달고나 모양 그리기.
             if self.shape == CIRCLE:
-                pygame.draw.circle(self.game_screen, DARK_BROWN, self.center, int(self.width * CIRCLE_SHAPE_SIZE_RATIO),
-                                   int(self.width * SHAPE_WIDTH_RATIO))
+                pygame.draw.circle(self.game_screen, DARK_BROWN, (self.game_screen.get_width()/2,self.game_screen.get_height()/2), int(self.width * CIRCLE_SHAPE_SIZE_RATIO*self.game_screen.get_width()/800),
+                                   int(self.width * SHAPE_WIDTH_RATIO*self.game_screen.get_width()/800))
             elif self.shape == RECTANGLE:
                 pygame.draw.rect(self.game_screen, DARK_BROWN,
-                                 [self.half_width - self.half_rectangle, self.half_height - self.half_rectangle,
-                                  self.rectangle_size,
-                                  self.rectangle_size],
-                                 int(self.width * SHAPE_WIDTH_RATIO), border_radius=RECTANGLE_BORDER_RADIUS)
+                                 [(self.half_width - self.half_rectangle)*(self.game_screen.get_width()/800), (self.half_height - self.half_rectangle)*(self.game_screen.get_height()/800),
+                                  self.rectangle_size*(self.game_screen.get_width()/800),
+                                  self.rectangle_size*(self.game_screen.get_height()/800)],
+                                 int(self.width * SHAPE_WIDTH_RATIO*self.game_screen.get_width()/800), border_radius=RECTANGLE_BORDER_RADIUS)
             elif self.shape == TRIANGLE:
                 pygame.draw.polygon(self.game_screen, DARK_BROWN,
-                                    [[self.width / 2, self.height / 4],
-                                     [self.width / 4 + TRIANGLE_ERROR, self.height * (2 / 3)],
-                                     [self.width * (3 / 4) - TRIANGLE_ERROR, self.height * (2 / 3)]],
-                                    int(self.width * SHAPE_WIDTH_RATIO))
+                                    [[self.width / 2*(self.game_screen.get_width()/800), self.height / 4*(self.game_screen.get_height()/800)],
+                                     [(self.width / 4 + TRIANGLE_ERROR)*(self.game_screen.get_width()/800), self.height * (2 / 3)*(self.game_screen.get_height()/800)],
+                                     [(self.width * (3 / 4) - TRIANGLE_ERROR)*(self.game_screen.get_width()/800), self.height * (2 / 3)*(self.game_screen.get_height()/800)]],
+                                    int(self.width * SHAPE_WIDTH_RATIO*self.game_screen.get_width()/800))
             elif self.shape == STAR:
                 side_length = self.width / 2
                 half_side_length = side_length / 2
