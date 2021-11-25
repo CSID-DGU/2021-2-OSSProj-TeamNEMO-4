@@ -60,15 +60,18 @@ def button(x, y, image):
 # 유저명 받기
 
 def draw_input_box():
-    input_box = pygame.Rect(100, 100, 140, 32)
+    input_box = pygame.Rect(screen.get_width() / 7, screen.get_height() / 2, screen.get_width() * 0.7,
+                            screen.get_height() / 8)
     active = False
     color_active = WHITE
     color_inactive = GRAY
+    color = GRAY
     text = ''
     while True:
+        screen.fill(PINK)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return
+                break
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # box 를 클릭하면 active 를 토글. 허공을 클릭하면 active off
                 if input_box.collidepoint(event.pos):
@@ -86,12 +89,9 @@ def draw_input_box():
                     else:
                         text += event.unicode
         txt = korean_large_font.render(text, True, BLACK)
-        width = max(200, txt.get_width() + 10)
-        input_box.w = width
         screen.blit(txt, (input_box.x + 5, input_box.y + 5))
-        pygame.draw.rect(screen, GRAY, input_box, 2)
+        pygame.draw.rect(screen, color, input_box, 5)
         pygame.display.update()
-        clock.tick(60)
 
 
 # 메인 화면 함수
