@@ -299,9 +299,11 @@ class MarbleGame:
                 if event.type == pygame.QUIT:
                     # pygame.quit()
                     # sys.exit()
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+                        pygame.mixer.music.stop()
                         return
                 # 밑에 두 줄 전체화면 리사이징 문제로 주석처리
                 # if event.type == pygame.VIDEORESIZE:
@@ -492,6 +494,7 @@ class MarbleGame:
                 #     game_over_timer.__init__(60)
                 #     self.score = 0
                 #     self.reset_variable()
+                pygame.mixer.music.stop()
                 return
             if self.idx == TRUE_FALSE:  # 홀짝 판정 화면으로
                 self.draw_true_false()

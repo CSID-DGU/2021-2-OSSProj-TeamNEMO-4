@@ -132,12 +132,14 @@ class Game:
         while not game_over:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    pygame.mixer.music.stop()
                     return
 
             # 전체 타이머
             left_time = self.game_over_timer.time_checker()
             if left_time < 0:
                 self.lose_game()
+                pygame.mixer.music.stop()
                 return
             # 캐릭터 방향전환.
             dir_x, dir_y = self.get_PC_dir()
@@ -261,8 +263,10 @@ class Game:
 
         # did_win 이용해 승패 판단 후 다음 프로세스 진행.
         if did_win:
+            pygame.mixer.music.stop()
             return left_time
         else:
+            pygame.mixer.music.stop()
             return
 
     def get_PC_dir(self, dir_x=0, dir_y=0):

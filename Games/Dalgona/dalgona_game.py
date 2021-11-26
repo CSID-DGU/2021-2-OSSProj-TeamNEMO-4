@@ -74,6 +74,7 @@ class Game:
             left_time = game_over_timer.time_checker()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    pygame.mixer.music.stop()
                     return
 
             self.game_screen.fill(PINK)
@@ -216,6 +217,7 @@ class Game:
                                          self.ref_h)
                 pygame.display.update()
                 clock.tick(0.5)
+                pygame.mixer.music.stop()
                 return
 
             # 화면 리사이징
