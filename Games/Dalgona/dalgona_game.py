@@ -27,19 +27,20 @@ class Game:
     NPC_CHANGE_DIRECTION_TIME = 3
     NPC_SIZE = 150
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, current_screen):
         self.width = width
         self.height = height
         self.half_width = width / 2
         self.half_height = height / 2
         self.center = [self.width / 2, self.height / 2]
         # Screen set-up
-        self.game_screen = pygame.display.set_mode((width, height),pygame.RESIZABLE)
+        self.game_screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
         self.game_screen.fill(PINK)
         self.shape = random.randrange(CIRCLE, STAR + 1)
         self.rectangle_size = width / RECTANGLE_SHAPE_SIZE_RATIO
         self.half_rectangle = self.rectangle_size / 2
         self.notice_message = True
+        pygame.display.set_mode(current_screen, pygame.RESIZABLE)
 
         # bgm 실행
         try:
@@ -78,27 +79,36 @@ class Game:
             self.game_screen.fill(PINK)
 
             message_to_screen_left(
-                self.game_screen, 'Level:' + str(level), WHITE, level_font, self.game_screen.get_width()/11, self.game_screen.get_height()/30, self.ref_w,
+                self.game_screen, 'Level:' + str(level), WHITE, level_font, self.game_screen.get_width() / 11,
+                                  self.game_screen.get_height() / 30, self.ref_w,
                 self.ref_h)
             message_to_screen_left(
-                self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, self.game_screen.get_width()/4.8, self.game_screen.get_height()/14, self.ref_w, self.ref_h)
+                self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font,
+                                  self.game_screen.get_width() / 4.8, self.game_screen.get_height() / 14, self.ref_w,
+                self.ref_h)
             message_to_screen_left(
-                self.game_screen, "SCORE : " + str(round(score)), BLACK, level_font, self.game_screen.get_width()/1.2, self.game_screen.get_height()/23, self.ref_w,
+                self.game_screen, "SCORE : " + str(round(score)), BLACK, level_font, self.game_screen.get_width() / 1.2,
+                                  self.game_screen.get_height() / 23, self.ref_w,
                 self.ref_h)
 
-            pygame.draw.circle(self.game_screen, YELLOW_BROWN, (self.game_screen.get_width()/2,self.game_screen.get_height()/2),
-                               int(self.width * DALGONA_SIZE_RATIO*self.game_screen.get_width()/SCREEN_WIDTH), int(self.width * DALGONA_SIZE_RATIO*self.game_screen.get_width()/SCREEN_WIDTH))
+            pygame.draw.circle(self.game_screen, YELLOW_BROWN,
+                               (self.game_screen.get_width() / 2, self.game_screen.get_height() / 2),
+                               int(self.width * DALGONA_SIZE_RATIO * self.game_screen.get_width() / SCREEN_WIDTH),
+                               int(self.width * DALGONA_SIZE_RATIO * self.game_screen.get_width() / SCREEN_WIDTH))
 
             # 달고나 모양 그리기.
             if self.shape == CIRCLE:
                 pygame.draw.circle(self.game_screen, DARK_BROWN,
                                    (self.game_screen.get_width() / 2, self.game_screen.get_height() / 2),
-                                   int(self.width * CIRCLE_SHAPE_SIZE_RATIO * self.game_screen.get_width() / SCREEN_WIDTH),
+                                   int(
+                                       self.width * CIRCLE_SHAPE_SIZE_RATIO * self.game_screen.get_width() / SCREEN_WIDTH),
                                    int(self.width * SHAPE_WIDTH_RATIO * self.game_screen.get_width() / SCREEN_HEIGHT))
             elif self.shape == RECTANGLE:
                 pygame.draw.rect(self.game_screen, DARK_BROWN,
-                                 [(self.half_width - self.half_rectangle) * (self.game_screen.get_width() / SCREEN_WIDTH),
-                                  (self.half_height - self.half_rectangle) * (self.game_screen.get_height() / SCREEN_HEIGHT),
+                                 [(self.half_width - self.half_rectangle) * (
+                                         self.game_screen.get_width() / SCREEN_WIDTH),
+                                  (self.half_height - self.half_rectangle) * (
+                                          self.game_screen.get_height() / SCREEN_HEIGHT),
                                   self.rectangle_size * (self.game_screen.get_width() / SCREEN_WIDTH),
                                   self.rectangle_size * (self.game_screen.get_height() / SCREEN_HEIGHT)],
                                  int(self.width * SHAPE_WIDTH_RATIO * self.game_screen.get_width() / SCREEN_WIDTH),
@@ -109,7 +119,8 @@ class Game:
                                       self.height / 4 * (self.game_screen.get_height() / SCREEN_HEIGHT)],
                                      [(self.width / 4 + TRIANGLE_ERROR) * (self.game_screen.get_width() / SCREEN_WIDTH),
                                       self.height * (2 / 3) * (self.game_screen.get_height() / SCREEN_HEIGHT)],
-                                     [(self.width * (3 / 4) - TRIANGLE_ERROR) * (self.game_screen.get_width() / SCREEN_WIDTH),
+                                     [(self.width * (3 / 4) - TRIANGLE_ERROR) * (
+                                             self.game_screen.get_width() / SCREEN_WIDTH),
                                       self.height * (2 / 3) * (self.game_screen.get_height() / SCREEN_HEIGHT)]],
                                     int(self.width * SHAPE_WIDTH_RATIO * self.game_screen.get_width() / SCREEN_WIDTH))
             elif self.shape == STAR:
@@ -118,18 +129,29 @@ class Game:
                 ratio = math.sqrt(3)
 
                 center = (self.width / 2, self.height / 2)
-                point1 = [center[0]* (self.game_screen.get_width() / SCREEN_WIDTH), (center[1] - (half_side_length * ratio * (2 / 3)))* (self.game_screen.get_height() / SCREEN_HEIGHT)]
-                point2 = [(center[0] - side_length / 2)* (self.game_screen.get_width() / SCREEN_WIDTH), (center[1] + (half_side_length / ratio))* (self.game_screen.get_height() / SCREEN_HEIGHT)]
-                point3 = [(center[0] + side_length / 2)* (self.game_screen.get_width() / SCREEN_WIDTH), (center[1] + (half_side_length / ratio))* (self.game_screen.get_height() / SCREEN_HEIGHT)]
-                reverse_point1 = [center[0]* (self.game_screen.get_width() / SCREEN_WIDTH), (center[1] + (half_side_length * ratio * (2 / 3)))* (self.game_screen.get_height() / SCREEN_HEIGHT)]
-                reverse_point2 = [(center[0] - side_length / 2)* (self.game_screen.get_width() / SCREEN_WIDTH), (center[1] - (half_side_length / ratio))* (self.game_screen.get_height() / SCREEN_HEIGHT)]
-                reverse_point3 = [(center[0] + side_length / 2)* (self.game_screen.get_width() / SCREEN_WIDTH), (center[1] - (half_side_length / ratio))* (self.game_screen.get_height() / SCREEN_HEIGHT)]
+                point1 = [center[0] * (self.game_screen.get_width() / SCREEN_WIDTH),
+                          (center[1] - (half_side_length * ratio * (2 / 3))) * (
+                                  self.game_screen.get_height() / SCREEN_HEIGHT)]
+                point2 = [(center[0] - side_length / 2) * (self.game_screen.get_width() / SCREEN_WIDTH),
+                          (center[1] + (half_side_length / ratio)) * (self.game_screen.get_height() / SCREEN_HEIGHT)]
+                point3 = [(center[0] + side_length / 2) * (self.game_screen.get_width() / SCREEN_WIDTH),
+                          (center[1] + (half_side_length / ratio)) * (self.game_screen.get_height() / SCREEN_HEIGHT)]
+                reverse_point1 = [center[0] * (self.game_screen.get_width() / SCREEN_WIDTH),
+                                  (center[1] + (half_side_length * ratio * (2 / 3))) * (
+                                          self.game_screen.get_height() / SCREEN_HEIGHT)]
+                reverse_point2 = [(center[0] - side_length / 2) * (self.game_screen.get_width() / SCREEN_WIDTH),
+                                  (center[1] - (half_side_length / ratio)) * (
+                                          self.game_screen.get_height() / SCREEN_HEIGHT)]
+                reverse_point3 = [(center[0] + side_length / 2) * (self.game_screen.get_width() / SCREEN_WIDTH),
+                                  (center[1] - (half_side_length / ratio)) * (
+                                          self.game_screen.get_height() / SCREEN_HEIGHT)]
 
                 pygame.draw.polygon(self.game_screen, DARK_BROWN,
-                                    [point1, point2, point3], int(self.width * SHAPE_WIDTH_RATIO*self.game_screen.get_width() / SCREEN_WIDTH))
+                                    [point1, point2, point3],
+                                    int(self.width * SHAPE_WIDTH_RATIO * self.game_screen.get_width() / SCREEN_WIDTH))
                 pygame.draw.polygon(self.game_screen, DARK_BROWN,
                                     [reverse_point1, reverse_point2, reverse_point3],
-                                    int(self.width * SHAPE_WIDTH_RATIO*self.game_screen.get_width() / SCREEN_WIDTH))
+                                    int(self.width * SHAPE_WIDTH_RATIO * self.game_screen.get_width() / SCREEN_WIDTH))
 
             dalgona.draw()
 
@@ -158,7 +180,7 @@ class Game:
             elif NPC_timer > 0 and level == STARTING_LEVEL and self.notice_message:
                 # 1 레벨, NPC 의 첫 진로변경 전까지 안내 메세지 렌더링.
                 message_to_screen_center(self.game_screen, '빨간 점을 피해 달고나를 뽑으세요. ', WHITE, korean_font_small_size,
-                                         self.game_screen.get_height()/2,
+                                         self.game_screen.get_height() / 2,
                                          self.ref_w,
                                          self.ref_h)
 
@@ -170,15 +192,15 @@ class Game:
 
                 if select_mode:
                     message_to_screen_center(self.game_screen, '다음 레벨로 이동합니다. ', WHITE, korean_font,
-                                             self.game_screen.get_height()/2,
+                                             self.game_screen.get_height() / 2,
                                              self.ref_w,
                                              self.ref_h)
                 else:
                     message_to_screen_center(self.game_screen, '다음 게임은 줄다리기입니다. ', WHITE, korean_font,
-                                             self.game_screen.get_height()/2,
+                                             self.game_screen.get_height() / 2,
                                              self.ref_w,
                                              self.ref_h)
-                #self.harf_width 제거
+                # self.harf_width 제거
 
                 pygame.display.update()
                 clock.tick(0.5)
@@ -189,7 +211,8 @@ class Game:
                     game_over_image.get_width() * (self.game_screen.get_width() / SCREEN_WIDTH),
                     game_over_image.get_height() * (self.game_screen.get_height() / SCREEN_HEIGHT)))
                 self.game_screen.blit(game_over_image, SCREEN_STARTING_POINT)
-                message_to_screen_center(self.game_screen, "탈 락", RED, korean_font, self.game_screen.get_height() / 2, self.ref_w,
+                message_to_screen_center(self.game_screen, "탈 락", RED, korean_font, self.game_screen.get_height() / 2,
+                                         self.ref_w,
                                          self.ref_h)
                 pygame.display.update()
                 clock.tick(0.5)
@@ -209,7 +232,8 @@ class Game:
 
 def start_game(level, score, select_mode):
     pygame.init()
-    new_game = Game(SCREEN_WIDTH, SCREEN_HEIGHT)
+    current_screen = pygame.display.get_window_size()
+    new_game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, current_screen)
     return new_game.start_game(level, score, select_mode)
 
     # pygame.quit()

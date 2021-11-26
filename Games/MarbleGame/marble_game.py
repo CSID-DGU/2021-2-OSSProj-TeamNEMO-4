@@ -73,7 +73,7 @@ class MarbleGame:
     img_minus = pygame.image.load(get_abs_path(MINUS_LOCATION))
     gganbuplay = False
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, current_screen):
         pygame.display.set_caption(SCREEN_TITLE)
         self.width = width
         self.height = height
@@ -82,6 +82,7 @@ class MarbleGame:
         self.ref_w, self.ref_h = self.game_screen.get_size()
         self.game_screen.fill(PINK)
         self.game_over_timer = GameOverTimer(60)
+        pygame.display.set_mode(current_screen, pygame.RESIZABLE)
 
     def reset_variable(self):
         self.player_marbles = 10
@@ -159,8 +160,8 @@ class MarbleGame:
 
     def draw_true_false(self):
         # if self.screen_buffer <= self.marble_game_timer - 20:
-        self.imgBGbase=pygame.transform.scale(self.imgBGbase,
-                                               (self.game_screen.get_width(), self.game_screen.get_height()))
+        self.imgBGbase = pygame.transform.scale(self.imgBGbase,
+                                                (self.game_screen.get_width(), self.game_screen.get_height()))
         self.game_screen.blit(self.imgBGbase, STARTING_POINT)
 
         self.imgHand4 = pygame.transform.scale(self.imgHand4,
@@ -187,7 +188,8 @@ class MarbleGame:
                         self.ref_h)
                 else:
                     message_to_screen_center(
-                        self.game_screen, '틀렸습니다 !', RED, korean_large_font, self.game_screen.get_height() / 2, self.ref_w,
+                        self.game_screen, '틀렸습니다 !', RED, korean_large_font, self.game_screen.get_height() / 2,
+                        self.ref_w,
                         self.ref_h)
 
         if self.betting_success:
@@ -301,8 +303,8 @@ class MarbleGame:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
                         return
-                #밑에 두 줄 전체화면 리사이징 문제로 주석처리
-                #if event.type == pygame.VIDEORESIZE:
+                # 밑에 두 줄 전체화면 리사이징 문제로 주석처리
+                # if event.type == pygame.VIDEORESIZE:
                 #    self.game_screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
 
             if self.idx == TITLE:  # 0은 타이틀 화면
@@ -433,13 +435,17 @@ class MarbleGame:
 
                 # 게임 정보 렌더
                 message_to_screen_left(
-                    self.game_screen, 'Level:' + str(level), WHITE, level_font, self.game_screen.get_width()/11, self.game_screen.get_height()/30, self.ref_w,
+                    self.game_screen, 'Level:' + str(level), WHITE, level_font, self.game_screen.get_width() / 11,
+                                      self.game_screen.get_height() / 30, self.ref_w,
                     self.ref_h)
                 message_to_screen_left(
-                    self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, self.game_screen.get_width()/4.8, self.game_screen.get_height()/14, self.ref_w,
+                    self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font,
+                                      self.game_screen.get_width() / 4.8, self.game_screen.get_height() / 14,
+                    self.ref_w,
                     self.ref_h)
                 message_to_screen_left(
-                    self.game_screen, "SCORE : " + str(round(score)), BLACK, level_font, self.game_screen.get_width()/1.2, self.game_screen.get_height()/23,
+                    self.game_screen, "SCORE : " + str(round(score)), BLACK, level_font,
+                                      self.game_screen.get_width() / 1.2, self.game_screen.get_height() / 23,
                     self.ref_w,
                     self.ref_h)
 
@@ -515,9 +521,7 @@ class MarbleGame:
 # if __name__ == '__main__':
 def start_game(level, score, best_record_mode=False, select_mode=False):
     pygame.init()
-    new_game = MarbleGame(SCREEN_WIDTH, SCREEN_HEIGHT)
+    current_screen = pygame.display.get_window_size()
+    new_game = MarbleGame(SCREEN_WIDTH, SCREEN_HEIGHT, current_screen)
     score = new_game.start_marble_game(level, score, best_record_mode, select_mode)
     return score
-
-    # pygame.quit()
-    # quit()

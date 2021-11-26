@@ -23,7 +23,7 @@ class TugOfWar:
     POWER_OF_ENEMY = 0.1  # 난이도. 상대가 줄을 당기는 힘. 레벨이 곱해져 상승한다.
     MY_POWER = 0.2
 
-    def __init__(self, title, width, height):
+    def __init__(self, title, width, height, current_screen):
         self.title = title
         self.width = width
         self.height = height
@@ -44,6 +44,7 @@ class TugOfWar:
         except Exception as e:
             print(e)
             print("사운드 로드 오류")
+        pygame.display.set_mode(current_screen, pygame.RESIZABLE)
 
     def start_game(self, level, score, best_record_mode, select_mode=False):
         score = self.run_game_loop(level, score, best_record_mode, select_mode)
@@ -68,7 +69,8 @@ class TugOfWar:
             self.screen.fill(BLACK)
             # 문구 넣기
             message_to_screen_center(
-                self.screen, '줄 다리기 게임을 통과했습니다', BLUE, korean_font, self.screen.get_height() / 4, self.ref_w, self.ref_h)
+                self.screen, '줄 다리기 게임을 통과했습니다', BLUE, korean_font, self.screen.get_height() / 4, self.ref_w,
+                self.ref_h)
             message_to_screen_center(
                 self.screen, '시작화면으로 이동 : R', BLUE, korean_font, self.screen.get_height() / 3, self.ref_w, self.ref_h)
             message_to_screen_center(
@@ -154,13 +156,16 @@ class TugOfWar:
 
             # 현재 레벨, 게임 오버 타이머 화면 좌측 상단에 render
             message_to_screen_left(
-                self.screen, 'Level : ' + str(level), WHITE, level_font, self.screen.get_width()/11, self.screen.get_height()/30, self.ref_w,
+                self.screen, 'Level : ' + str(level), WHITE, level_font, self.screen.get_width() / 11,
+                             self.screen.get_height() / 30, self.ref_w,
                 self.ref_h)
             message_to_screen_left(
-                self.screen, "GAME OVER : " + str(left_time), WHITE, level_font, self.screen.get_width()/4.8, self.screen.get_height()/14, self.ref_w,
+                self.screen, "GAME OVER : " + str(left_time), WHITE, level_font, self.screen.get_width() / 4.8,
+                             self.screen.get_height() / 14, self.ref_w,
                 self.ref_h)
             message_to_screen_left(
-                self.screen, "SCORE : " + str(round(score)), WHITE, level_font, self.screen.get_width()/1.2, self.screen.get_height()/23, self.ref_w,
+                self.screen, "SCORE : " + str(round(score)), WHITE, level_font, self.screen.get_width() / 1.2,
+                             self.screen.get_height() / 23, self.ref_w,
                 self.ref_h)
             message_to_screen_center(
                 self.screen, '승리까지 {} M'.format(int(num_of_press_key_to_clear - num_of_pressed)), WHITE,
@@ -172,7 +177,8 @@ class TugOfWar:
             if hold_timer > 0:
                 self.screen.blit(holding_characters, ((num_of_press_key_to_clear - num_of_pressed), 0))
                 message_to_screen_center(
-                    self.screen, "Space 누르고 버티기", WHITE, korean_font, self.screen.get_height() * (2 / 3), self.ref_w, self.ref_h)
+                    self.screen, "Space 누르고 버티기", WHITE, korean_font, self.screen.get_height() * (2 / 3), self.ref_w,
+                    self.ref_h)
 
             # hit time
             if hold_timer <= 0:
@@ -182,7 +188,8 @@ class TugOfWar:
                     hit_time_init = False
                 hit_time_checker = round(hit_time - (hold_timer) * (-1), 1)
                 message_to_screen_center(
-                    self.screen, "← → 연타 !", WHITE, korean_large_font, self.screen.get_height() * (2 / 3), self.ref_w, self.ref_h)
+                    self.screen, "← → 연타 !", WHITE, korean_large_font, self.screen.get_height() * (2 / 3), self.ref_w,
+                    self.ref_h)
 
                 if hit_time_checker <= 0:  # 연타시간 종료 후 버티기 타이머 재설정.
                     hit_time_init = True
@@ -297,6 +304,7 @@ class TugOfWar:
 
 def start_game(level, score, best_record_mode=False, select_mode=False):
     pygame.init()
-    new_game = TugOfWar(SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
+    current_screen = pygame.display.get_window_size()
+    new_game = TugOfWar(SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT, current_screen)
     score = new_game.start_game(level, score, best_record_mode, select_mode)
     return score
