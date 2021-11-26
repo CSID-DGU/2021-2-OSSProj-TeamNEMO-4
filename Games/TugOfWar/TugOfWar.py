@@ -59,11 +59,14 @@ class TugOfWar:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    pygame.mixer.music.stop()
                     return True
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_r:
+                        pygame.mixer.music.stop()
                         return True
                     elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+                        pygame.mixer.music.stop()
                         return False
             # 배경 설정
             self.screen.fill(BLACK)
@@ -93,11 +96,14 @@ class TugOfWar:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    pygame.mixer.music.stop()
                     return False
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_r:
+                        pygame.mixer.music.stop()
                         return True
                     elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+                        pygame.mixer.music.stop()
                         return False
             # 배경 넣기
             self.screen.fill(BLACK)
@@ -299,6 +305,7 @@ class TugOfWar:
                 self.screen, '탈 락', RED, korean_font, self.screen.get_height() / 2, self.ref_w, self.ref_h)
             pygame.display.update()
             clock.tick(0.5)
+            pygame.mixer.music.stop()
             return
 
 
