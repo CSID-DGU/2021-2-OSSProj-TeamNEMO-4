@@ -33,13 +33,13 @@ class Game:
     TIMER_UNIT = 1000
     LEVEL_UP_STEP = 0.5
 
-    def __init__(self, image_path, title, width, height):
+    def __init__(self, image_path, title, width, height, current_screen):
         self.title = title
         self.width = width
         self.height = height
         self.half_width = width / 2
         self.one_third_screen = (width / 3, height / 3)
-        self.game_screen = pygame.display.set_mode((width, height),pygame.RESIZABLE)  # 게임 스크린.
+        self.game_screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)  # 게임 스크린.
         self.game_screen.fill(WHITE)
         pygame.display.set_caption(title)  # 창 제목을 설정한다.
         background_image = pygame.image.load(image_path)
@@ -69,9 +69,11 @@ class Game:
         except Exception as e:
             print(e)
             print("사운드 로드 오류")
+        pygame.display.set_mode(current_screen, pygame.RESIZABLE)
 
     # npc 생성을 위한 메소드.
-    def create_npc(self, kind_of_npc,game_screen=pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT),pygame.RESIZABLE)):
+    def create_npc(self, kind_of_npc,
+                   game_screen=pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)):
         if kind_of_npc == NPC_1_CODE:
             size = self.npc_1_size
         elif kind_of_npc == NPC_2_CODE:
@@ -88,10 +90,11 @@ class Game:
     def lose_game(self):
         game_over_image = pygame.image.load(get_abs_path(GAME_OVER_LOCATION))
         game_over_image = pygame.transform.scale(game_over_image, (
-                game_over_image.get_width() * (self.game_screen.get_width() / SCREEN_WIDTH), game_over_image.get_height() * (self.game_screen.get_height() / SCREEN_HEIGHT)))
+            game_over_image.get_width() * (self.game_screen.get_width() / SCREEN_WIDTH),
+            game_over_image.get_height() * (self.game_screen.get_height() / SCREEN_HEIGHT)))
         self.game_screen.blit(game_over_image, SCREEN_STARTING_POINT)
         message_to_screen_center(
-            self.game_screen, '탈 락', RED, korean_font, self.game_screen.get_width()/2, self.ref_w, self.ref_h)
+            self.game_screen, '탈 락', RED, korean_font, self.game_screen.get_width() / 2, self.ref_w, self.ref_h)
         pygame.display.update()
         clock.tick(0.5)
 
@@ -140,8 +143,9 @@ class Game:
             dir_x, dir_y = self.get_PC_dir()
             # Redraw screen
             self.game_screen.fill(WHITE)
-            #게임 탈락 화면에서 배경 이미지가 튀어나오는 문제 수정
-            self.image=pygame.transform.scale(self.image,(self.game_screen.get_width(),self.game_screen.get_height()))
+            # 게임 탈락 화면에서 배경 이미지가 튀어나오는 문제 수정
+            self.image = pygame.transform.scale(self.image,
+                                                (self.game_screen.get_width(), self.game_screen.get_height()))
             self.game_screen.blit(self.image, SCREEN_STARTING_POINT)
 
             # 술래 render
@@ -169,13 +173,16 @@ class Game:
 
             # 현재 레벨, 게임 오버 타이머 화면 좌측 상단에 render
             message_to_screen_left(
-                self.game_screen, 'Level:' + str(level), WHITE, level_font, self.game_screen.get_width()/11, self.game_screen.get_height()/30, self.ref_w,
+                self.game_screen, 'Level:' + str(level), WHITE, level_font, self.game_screen.get_width() / 11,
+                                  self.game_screen.get_height() / 30, self.ref_w,
                 self.ref_h)
             message_to_screen_left(
-                self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, self.game_screen.get_width()/4.8, self.game_screen.get_height()/14, self.ref_w,
+                self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font,
+                                  self.game_screen.get_width() / 4.8, self.game_screen.get_height() / 14, self.ref_w,
                 self.ref_h)
             message_to_screen_left(
-                self.game_screen, "SCORE : " + str(round(score)), BLACK, level_font, self.game_screen.get_width()/1.2, self.game_screen.get_height()/23, self.ref_w,
+                self.game_screen, "SCORE : " + str(round(score)), BLACK, level_font, self.game_screen.get_width() / 1.2,
+                                  self.game_screen.get_height() / 23, self.ref_w,
                 self.ref_h)
 
             try:
@@ -197,7 +204,7 @@ class Game:
             # "볼륨을 높여주세요" 알림
             if self.volume_notice and level == STARTING_LEVEL:
                 message_to_screen_center(self.game_screen, '볼륨을 키워 주세요', WHITE, korean_font,
-                                         self.game_screen.get_height()/2,
+                                         self.game_screen.get_height() / 2,
                                          self.ref_w,
                                          self.ref_h)
 
@@ -283,7 +290,7 @@ class Game:
         # 술래와 충돌했을 때 (게임 클리어) -> DOLL_MESSAGE 를 반환해 게임 승리를 상위 함수로 전달.
         if player.detect_collision(DOLL):
             message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
-                                     self.game_screen.get_height()/3,
+                                     self.game_screen.get_height() / 3,
                                      self.ref_w,
                                      self.ref_h)
             if select_mode:
@@ -304,7 +311,8 @@ class Game:
 # Start the game up
 def start_game(level, score, select_mode):
     pygame.init()
-    new_game = Game(get_abs_path(BACKGROUND_LOCATION), SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
+    current_screen = pygame.display.get_window_size()
+    new_game = Game(get_abs_path(BACKGROUND_LOCATION), SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT, current_screen)
     return new_game.start_game(level, score, select_mode)
 
     # After game is finished quit the program
