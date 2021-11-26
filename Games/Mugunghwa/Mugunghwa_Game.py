@@ -80,9 +80,9 @@ class Game:
             size = self.npc_3_size
         return game_object.NPC(size, size, kind_of_npc)
 
-    def start_game(self, level, score):
+    def start_game(self, level, score, select_mode):
         npc = self.create_npc(NPC_1_CODE)
-        score = self.run_game_loop(level, score)
+        score = self.run_game_loop(level, score, select_mode)
         return score
 
     def lose_game(self):
@@ -95,7 +95,7 @@ class Game:
         pygame.display.update()
         clock.tick(0.5)
 
-    def run_game_loop(self, level, score):
+    def run_game_loop(self, level, score, select_mode):
         game_over = False
         did_win = True
         # 무궁화 SOUND EFFECTS
@@ -177,14 +177,14 @@ class Game:
 
             try:
                 collision = self.detect_all_collisions(
-                    player, npc_1, npc_2, npc_3, DOLL)
+                    player, npc_1, npc_2, npc_3, DOLL, select_mode)
             except:
                 try:
                     collision = self.detect_all_collisions(
-                        player, npc_1, npc_2, 0, DOLL)
+                        player, npc_1, npc_2, 0, DOLL, select_mode)
                 except:
                     collision = self.detect_all_collisions(
-                        player, npc_1, 0, 0, DOLL)
+                        player, npc_1, 0, 0, DOLL, select_mode)
 
             # 무궁화 SOUND EFFECTS
             # 게임 내내 반복된다.
@@ -258,7 +258,7 @@ class Game:
             dir_x = 1
         return dir_x, dir_y
 
-    def detect_all_collisions(self, player, npc_1, npc_2, npc_3, DOLL):
+    def detect_all_collisions(self, player, npc_1, npc_2, npc_3, DOLL, select_mode):
         dead = 0
         dead += player.detect_collision(npc_3)
         dead += player.detect_collision(npc_2)
@@ -274,20 +274,26 @@ class Game:
                                      self.game_screen.get_height()/3,
                                      self.ref_w,
                                      self.ref_h)
-            message_to_screen_center(self.game_screen, '다음 게임은 달고나 게임입니다. ', WHITE, korean_font,
-                                     self.game_screen.get_height()/2,
-                                     self.ref_w,
-                                     self.ref_h)
+            if select_mode:
+                message_to_screen_center(self.game_screen, '다음 레벨로 이동합니다. ', WHITE, korean_font,
+                                         self.game_screen.get_height() / 2,
+                                         self.ref_w,
+                                         self.ref_h)
+            else:
+                message_to_screen_center(self.game_screen, '다음 게임은 달고나 게임입니다. ', WHITE, korean_font,
+                                         self.game_screen.get_height() / 2,
+                                         self.ref_w,
+                                         self.ref_h)
             pygame.display.update()
             clock.tick(0.5)
             return DOLL_MESSAGE
 
 
 # Start the game up
-def start_game(level, score):
+def start_game(level, score, select_mode):
     pygame.init()
     new_game = Game(get_abs_path(BACKGROUND_LOCATION), SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
-    return new_game.start_game(level, score)
+    return new_game.start_game(level, score, select_mode)
 
     # After game is finished quit the program
     # pygame.quit()
