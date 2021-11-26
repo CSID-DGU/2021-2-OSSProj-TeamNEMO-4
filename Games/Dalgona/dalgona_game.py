@@ -52,7 +52,7 @@ class Game:
         self.npc_size = width / NPC_SIZE_RATIO
         pygame.event.get()
 
-    def start_game(self, level, score):
+    def start_game(self, level, score, select_mode):
         # walking around NPC
         npc = NPC(self.npc_size, self.npc_size, KIND_OF_NPC)  # 화면을 돌아다닐 npc 생성.
 
@@ -167,11 +167,19 @@ class Game:
                                          self.game_screen.get_height() / 3,
                                          self.ref_w,
                                          self.ref_h)
-                message_to_screen_center(self.game_screen, '다음 게임은 줄다리기입니다. ', WHITE, korean_font,
-                                         self.game_screen.get_height()/2,
-                                         self.ref_w,
-                                         self.ref_h)
+
+                if select_mode:
+                    message_to_screen_center(self.game_screen, '다음 레벨로 이동합니다. ', WHITE, korean_font,
+                                             self.game_screen.get_height()/2,
+                                             self.ref_w,
+                                             self.ref_h)
+                else:
+                    message_to_screen_center(self.game_screen, '다음 게임은 줄다리기입니다. ', WHITE, korean_font,
+                                             self.game_screen.get_height()/2,
+                                             self.ref_w,
+                                             self.ref_h)
                 #self.harf_width 제거
+
                 pygame.display.update()
                 clock.tick(0.5)
                 return round(left_time)
@@ -199,10 +207,10 @@ class Game:
             clock.tick(FPS_RATE)
 
 
-def start_game(level, score):
+def start_game(level, score, select_mode):
     pygame.init()
     new_game = Game(SCREEN_WIDTH, SCREEN_HEIGHT)
-    return new_game.start_game(level, score)
+    return new_game.start_game(level, score, select_mode)
 
     # pygame.quit()
     # quit()

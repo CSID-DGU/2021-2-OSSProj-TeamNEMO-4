@@ -21,12 +21,12 @@ if __name__ == "__main__":
         if selected == INFINITE or selected == BEST_RECORD:
             top_five = get_score(selected)
             while True:
-                mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
+                mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE, select_mode=False)
                 if mugunghwa_score:
                     SCORE += mugunghwa_score
                 else:
                     break
-                dalgona_score = start_dalgona_game(LEVEL, SCORE)
+                dalgona_score = start_dalgona_game(LEVEL, SCORE, select_mode=False)
                 if dalgona_score:
                     SCORE += dalgona_score
                 else:
@@ -47,7 +47,7 @@ if __name__ == "__main__":
         elif selected == SELECT_MUGUNGHWA:
             top_five = get_score(SELECT, selected)
             while True:
-                mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE)
+                mugunghwa_score = start_mugunghwa_game(LEVEL, SCORE, select_mode=True)
                 if mugunghwa_score:
                     SCORE += mugunghwa_score
                 else:
@@ -56,7 +56,7 @@ if __name__ == "__main__":
         elif selected == SELECT_DALGONA:
             top_five = get_score(SELECT, selected)
             while True:
-                dalgona_score = start_dalgona_game(LEVEL, SCORE)
+                dalgona_score = start_dalgona_game(LEVEL, SCORE, select_mode=True)
                 if dalgona_score:
                     SCORE += dalgona_score
                 else:
