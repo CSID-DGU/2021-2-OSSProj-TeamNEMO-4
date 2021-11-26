@@ -71,7 +71,7 @@ class Game:
             print("사운드 로드 오류")
 
     # npc 생성을 위한 메소드.
-    def create_npc(self, kind_of_npc,game_screen=pygame.display.set_mode((800,800),pygame.RESIZABLE)):
+    def create_npc(self, kind_of_npc,game_screen=pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT),pygame.RESIZABLE)):
         if kind_of_npc == NPC_1_CODE:
             size = self.npc_1_size
         elif kind_of_npc == NPC_2_CODE:
@@ -88,7 +88,7 @@ class Game:
     def lose_game(self):
         game_over_image = pygame.image.load(get_abs_path(GAME_OVER_LOCATION))
         game_over_image = pygame.transform.scale(game_over_image, (
-                game_over_image.get_width() * (self.game_screen.get_width() / 800), game_over_image.get_height() * (self.game_screen.get_height() / 800)))
+                game_over_image.get_width() * (self.game_screen.get_width() / SCREEN_WIDTH), game_over_image.get_height() * (self.game_screen.get_height() / SCREEN_HEIGHT)))
         self.game_screen.blit(game_over_image, SCREEN_STARTING_POINT)
         message_to_screen_center(
             self.game_screen, '탈 락', RED, korean_font, self.game_screen.get_width()/2, self.ref_w, self.ref_h)
@@ -140,7 +140,10 @@ class Game:
             dir_x, dir_y = self.get_PC_dir()
             # Redraw screen
             self.game_screen.fill(WHITE)
+            #게임 탈락 화면에서 배경 이미지가 튀어나오는 문제 수정
+            self.image=pygame.transform.scale(self.image,(self.game_screen.get_width(),self.game_screen.get_height()))
             self.game_screen.blit(self.image, SCREEN_STARTING_POINT)
+
             # 술래 render
             DOLL.draw(self.game_screen)
 
@@ -237,6 +240,15 @@ class Game:
             elif collision == DOLL_MESSAGE:
                 # 목표물 도달시 did_win = True 상태로 while 문 탈출.
                 break
+
+            # 화면 리사이징
+            re_x = self.game_screen.get_width()
+            re_y = self.game_screen.get_height()
+            if (re_x / re_y) != 1.0:
+                resize_screen = pygame.display.set_mode((re_x, re_x), pygame.RESIZABLE)
+            if re_x > SCREEN_WIDTH or re_y > SCREEN_HEIGHT:
+                resize_screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+
             pygame.display.update()
             clock.tick(self.TICK_RATE)
 

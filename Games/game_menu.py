@@ -48,11 +48,11 @@ def fade_in(fade, draw_function):
 
 # 버튼 생성 함수
 def button(x, y, image):
-    button = image.get_rect()
-    button.topleft = (x, y)
     img_button = image
     img_button = pygame.transform.scale(img_button, (image.get_width() * (screen.get_width() / SCREEN_WIDTH),
                                                      image.get_height() * (screen.get_height() / SCREEN_HEIGHT)))
+    button = img_button.get_rect() #리사이징된 버튼으로 클릭범위도 리사이징
+    button.topleft = (x, y)
     screen.blit(img_button, (x, y))
     return button
 
@@ -87,6 +87,13 @@ def draw_input_box():
         txt = korean_large_font.render(text, True, BLACK)
         screen.blit(txt, (input_box.x + 10, input_box.y))
         pygame.draw.rect(screen, GRAY, input_box, 5)
+
+        # 화면 리사이징(고정)
+        re_x = screen.get_width()
+        re_y = screen.get_height()
+        if re_x != SCREEN_WIDTH or re_y != SCREEN_HEIGHT:
+            resize_screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+
         pygame.display.update()
         mainClock.tick(MENU_TICK_RATE)
 
@@ -155,10 +162,16 @@ def main_menu():
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
                     click = True
+        #화면 리사이징
+        re_x = screen.get_width()
+        re_y = screen.get_height()
+        if (re_x / re_y) != (SCREEN_WIDTH/SCREEN_HEIGHT):
+            resize_screen = pygame.display.set_mode((re_x, re_x), pygame.RESIZABLE)
+        if re_x>SCREEN_WIDTH or re_y>SCREEN_HEIGHT:
+            resize_screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT), pygame.RESIZABLE)
 
         pygame.display.update()
         mainClock.tick(MENU_TICK_RATE)
-
 
 def draw_select_mode_menu():
     return (
@@ -222,7 +235,13 @@ def select_mode_menu():
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
                     click = True
-
+        #화면 리사이징
+        re_x = screen.get_width()
+        re_y = screen.get_height()
+        if (re_x / re_y) != (SCREEN_WIDTH/SCREEN_HEIGHT):
+            resize_screen = pygame.display.set_mode((re_x, re_x), pygame.RESIZABLE)
+        if re_x>SCREEN_WIDTH or re_y>SCREEN_HEIGHT:
+            resize_screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT), pygame.RESIZABLE)
         pygame.display.update()
         mainClock.tick(MENU_TICK_RATE)
 
@@ -283,8 +302,17 @@ def render_rank(mode):
                                  korean_font_small_size, screen.get_height() * (1 / 6),
                                  ref_w,
                                  ref_h)
+        #화면 리사이징
+        re_x = screen.get_width()
+        re_y = screen.get_height()
+        if (re_x / re_y) != (SCREEN_WIDTH/SCREEN_HEIGHT):
+            resize_screen = pygame.display.set_mode((re_x, re_x), pygame.RESIZABLE)
+        if re_x>SCREEN_WIDTH or re_y>SCREEN_HEIGHT:
+            resize_screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT), pygame.RESIZABLE)
+
         pygame.display.update()
         mainClock.tick(MENU_TICK_RATE)
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -333,6 +361,14 @@ def show_rank_menu():
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
                     click = True
+
+        #화면 리사이징
+        re_x = screen.get_width()
+        re_y = screen.get_height()
+        if (re_x / re_y) != (SCREEN_WIDTH/SCREEN_HEIGHT):
+            resize_screen = pygame.display.set_mode((re_x, re_x), pygame.RESIZABLE)
+        if re_x>SCREEN_WIDTH or re_y>SCREEN_HEIGHT:
+            resize_screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT), pygame.RESIZABLE)
 
         pygame.display.update()
         mainClock.tick(MENU_TICK_RATE)
@@ -399,6 +435,14 @@ def select_game_menu():
                 if event.button == 1:
                     click = True
 
+        #화면 리사이징
+        re_x = screen.get_width()
+        re_y = screen.get_height()
+        if (re_x / re_y) != (SCREEN_WIDTH/SCREEN_HEIGHT):
+            resize_screen = pygame.display.set_mode((re_x, re_x), pygame.RESIZABLE)
+        if re_x>SCREEN_WIDTH or re_y>SCREEN_HEIGHT:
+            resize_screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT), pygame.RESIZABLE)
+
         pygame.display.update()
         mainClock.tick(MENU_TICK_RATE)
 
@@ -458,6 +502,13 @@ def select_game_rank_menu():
                 if event.button == 1:
                     click = True
 
-        pygame.display.update()
+        #화면 리사이징
+        re_x = screen.get_width()
+        re_y = screen.get_height()
+        if (re_x / re_y) != (SCREEN_WIDTH/SCREEN_HEIGHT):
+            resize_screen = pygame.display.set_mode((re_x, re_x), pygame.RESIZABLE)
+        if re_x>SCREEN_WIDTH or re_y>SCREEN_HEIGHT:
+            resize_screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT), pygame.RESIZABLE)
 
+        pygame.display.update()
         mainClock.tick(MENU_TICK_RATE)

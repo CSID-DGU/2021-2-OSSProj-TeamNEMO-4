@@ -6,7 +6,7 @@ from Games.Dalgona.dalgona_game import start_game as start_dalgona_game
 from Games.MarbleGame.marble_game import start_game as start_marble_game
 from Games.TugOfWar.TugOfWar import start_game as start_tug_game
 from Games.game_menu import main_menu, draw_input_box
-
+from Games.Dalgona.dalgona_game import *
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
@@ -82,7 +82,7 @@ if __name__ == "__main__":
                 LEVEL += LEVEL_UP_STEP
 
         pygame.init()
-        screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),pygame.RESIZABLE)
         ref_w, ref_h = screen.get_size()
         RUNNING = True
         ticks = pygame.time.get_ticks()
@@ -92,13 +92,22 @@ if __name__ == "__main__":
                     RUNNING = False
             screen.fill(PINK)
             message_to_screen_center(screen, '게임 종료', WHITE, korean_font,
-                                     SCREEN_WIDTH / 3,
+                                     screen.get_height() / 3,
                                      ref_w,
                                      ref_h)
             message_to_screen_center(screen, f'점수는 {round(SCORE)} 점입니다. ', WHITE, korean_font,
-                                     SCREEN_WIDTH / 2,
+                                     screen.get_height() / 2,
                                      ref_w,
                                      ref_h)
+
+            # 화면 리사이징
+            re_x = screen.get_width()
+            re_y = screen.get_height()
+            if (re_x / re_y) != (SCREEN_WIDTH / SCREEN_HEIGHT):
+                resize_screen = pygame.display.set_mode((re_x, re_x), pygame.RESIZABLE)
+            if re_x > SCREEN_WIDTH or re_y > SCREEN_HEIGHT:
+                resize_screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+
             elapsed_time = (pygame.time.get_ticks() - ticks) / 1000
             pygame.display.update()
             clock.tick(60)
