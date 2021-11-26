@@ -114,7 +114,7 @@ class MarbleGame:
         self.imgNPC = pygame.transform.scale(self.imgNPC, (self.game_screen.get_width(), self.game_screen.get_height()))
         self.game_screen.blit(self.imgNPC, STARTING_POINT)
         message_to_screen_center(
-            self.game_screen, '탈 락', RED, korean_font, self.width / 2, self.ref_w, self.ref_h)
+            self.game_screen, '탈 락', RED, korean_font, self.game_screen.get_height() / 2, self.ref_w, self.ref_h)
         pygame.display.update()
         clock.tick(0.5)
         if self.screen_buffer <= self.marble_game_timer - 20:
@@ -124,7 +124,7 @@ class MarbleGame:
         self.game_screen.fill(PINK)
         if best_record_mode:
             message_to_screen_center(self.game_screen, '축하합니다 통과했습니다! ', WHITE, korean_font,
-                                     self.width / 2,
+                                     self.game_screen.get_height() / 2,
                                      self.ref_w,
                                      self.ref_h)
             pygame.display.update()
@@ -133,11 +133,11 @@ class MarbleGame:
 
         elif select_mode:
             message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
-                                     self.width / 3,
+                                     self.game_screen.get_height() / 3,
                                      self.ref_w,
                                      self.ref_h)
             message_to_screen_center(self.game_screen, '다음 레벨로 이동합니다.  ', WHITE, korean_font,
-                                     self.width / 2,
+                                     self.game_screen.get_height() / 2,
                                      self.ref_w,
                                      self.ref_h)
             pygame.display.update()
@@ -146,11 +146,11 @@ class MarbleGame:
 
         else:
             message_to_screen_center(self.game_screen, '통과!', WHITE, korean_font,
-                                     self.width / 3,
+                                     self.game_screen.get_height() / 3,
                                      self.ref_w,
                                      self.ref_h)
             message_to_screen_center(self.game_screen, '다음 게임은 무궁화 게임입니다. ', WHITE, korean_font,
-                                     self.width / 2,
+                                     self.game_screen.get_height() / 2,
                                      self.ref_w,
                                      self.ref_h)
             pygame.display.update()
@@ -159,6 +159,8 @@ class MarbleGame:
 
     def draw_true_false(self):
         # if self.screen_buffer <= self.marble_game_timer - 20:
+        self.imgBGbase=pygame.transform.scale(self.imgBGbase,
+                                               (self.game_screen.get_width(), self.game_screen.get_height()))
         self.game_screen.blit(self.imgBGbase, STARTING_POINT)
 
         self.imgHand4 = pygame.transform.scale(self.imgHand4,
@@ -181,11 +183,11 @@ class MarbleGame:
                     self.game_screen.blit(self.imgHand1, STARTING_POINT)
                 if self.betting_success:
                     message_to_screen_center(
-                        self.game_screen, '정답 !', RED, korean_large_font, self.width / 2, self.ref_w,
+                        self.game_screen, '정답 !', RED, korean_large_font, self.game_screen.get_height() / 2, self.ref_w,
                         self.ref_h)
                 else:
                     message_to_screen_center(
-                        self.game_screen, '틀렸습니다 !', RED, korean_large_font, self.width / 2, self.ref_w,
+                        self.game_screen, '틀렸습니다 !', RED, korean_large_font, self.game_screen.get_height() / 2, self.ref_w,
                         self.ref_h)
 
         if self.betting_success:
@@ -299,8 +301,9 @@ class MarbleGame:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
                         return
-                if event.type == pygame.VIDEORESIZE:
-                    self.game_screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+                #밑에 두 줄 전체화면 리사이징 문제로 주석처리
+                #if event.type == pygame.VIDEORESIZE:
+                #    self.game_screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
 
             if self.idx == TITLE:  # 0은 타이틀 화면
                 self.draw_title()
@@ -430,19 +433,19 @@ class MarbleGame:
 
                 # 게임 정보 렌더
                 message_to_screen_left(
-                    self.game_screen, 'Level:' + str(level), WHITE, level_font, 70, 30, self.ref_w,
+                    self.game_screen, 'Level:' + str(level), WHITE, level_font, self.game_screen.get_width()/11, self.game_screen.get_height()/30, self.ref_w,
                     self.ref_h)
                 message_to_screen_left(
-                    self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w,
+                    self.game_screen, "GAME OVER : " + str(left_time), WHITE, level_font, self.game_screen.get_width()/4.8, self.game_screen.get_height()/14, self.ref_w,
                     self.ref_h)
                 message_to_screen_left(
-                    self.game_screen, "SCORE : " + str(round(score)), BLACK, level_font, self.width - 130, 40,
+                    self.game_screen, "SCORE : " + str(round(score)), BLACK, level_font, self.game_screen.get_width()/1.2, self.game_screen.get_height()/23,
                     self.ref_w,
                     self.ref_h)
 
                 message_to_screen_left(self.game_screen, "내 구슬", WHITE,
                                        korean_font,
-                                       self.game_screen.get_width() / 7, self.game_screen.get_height() / 3 + 50,
+                                       self.game_screen.get_width() / 7, self.game_screen.get_height() / 2.5,
                                        self.ref_w,
                                        self.ref_h)
                 message_to_screen_left(self.game_screen, str(self.player_marbles), WHITE,
@@ -452,7 +455,7 @@ class MarbleGame:
                                        self.ref_h)
                 message_to_screen_left(self.game_screen, "상대 구슬 ", WHITE,
                                        korean_font,
-                                       self.game_screen.get_width() / 1.2, self.game_screen.get_height() / 3 + 50,
+                                       self.game_screen.get_width() / 1.2, self.game_screen.get_height() / 2.5,
                                        self.ref_w,
                                        self.ref_h)
                 message_to_screen_left(self.game_screen, str(self.computer_marbles), WHITE,
@@ -488,6 +491,15 @@ class MarbleGame:
                 self.draw_true_false()
             if self.idx == GGANBU:
                 self.draw_gganbu()
+
+            # 화면 리사이징
+            re_x = self.game_screen.get_width()
+            re_y = self.game_screen.get_height()
+            if (re_x / re_y) != (SCREEN_WIDTH / SCREEN_HEIGHT):
+                resize_screen = pygame.display.set_mode((re_x, re_x), pygame.RESIZABLE)
+            if re_x > SCREEN_WIDTH or re_y > SCREEN_HEIGHT:
+                resize_screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+
             pygame.display.update()
             clock.tick(15)
 

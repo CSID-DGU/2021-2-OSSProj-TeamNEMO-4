@@ -68,20 +68,22 @@ class TugOfWar:
             self.screen.fill(BLACK)
             # 문구 넣기
             message_to_screen_center(
-                self.screen, '줄 다리기 게임을 통과했습니다', BLUE, korean_font, SCREEN_HEIGHT / 4, self.ref_w, self.ref_h)
+                self.screen, '줄 다리기 게임을 통과했습니다', BLUE, korean_font, self.screen.get_height() / 4, self.ref_w, self.ref_h)
             message_to_screen_center(
-                self.screen, '시작화면으로 이동 : R', BLUE, korean_font, SCREEN_HEIGHT / 3, self.ref_w, self.ref_h)
+                self.screen, '시작화면으로 이동 : R', BLUE, korean_font, self.screen.get_height() / 3, self.ref_w, self.ref_h)
             message_to_screen_center(
-                self.screen, '게임 종료 : Q', BLUE, korean_font, SCREEN_HEIGHT / 2, self.ref_w, self.ref_h)
+                self.screen, '게임 종료 : Q', BLUE, korean_font, self.screen.get_height() / 2, self.ref_w, self.ref_h)
             pygame.display.update()
 
     # 실패 화면
     def lose_game(self):
         game_over_image = pygame.image.load(get_abs_path(GAME_OVER_LOCATION))
-        game_over_image = pygame.transform.scale(game_over_image, (self.width, self.height))
+        game_over_image = pygame.transform.scale(game_over_image, (
+            game_over_image.get_width() * (self.screen.get_width() / SCREEN_WIDTH),
+            game_over_image.get_height() * (self.screen.get_height() / SCREEN_HEIGHT)))
         self.screen.blit(game_over_image, (0, 0))
         message_to_screen_center(
-            self.screen, '탈 락', RED, korean_font, self.width / 2, self.ref_w, self.ref_h)
+            self.screen, '탈 락', RED, korean_font, self.screen.get_height() / 2, self.ref_w, self.ref_h)
         pygame.display.update()
         clock.tick(0.5)
 
@@ -99,9 +101,9 @@ class TugOfWar:
             self.screen.fill(BLACK)
             # 문구 넣기
             message_to_screen_center(
-                self.screen, '재시도 : R', RED, korean_font, self.height * 3 / 8, self.ref_w, self.ref_h)
+                self.screen, '재시도 : R', RED, korean_font, self.screen.get_height() * 3 / 8, self.ref_w, self.ref_h)
             message_to_screen_center(
-                self.screen, '시작화면으로 이동 : Q', RED, korean_font, self.height / 2, self.ref_w, self.ref_h)
+                self.screen, '시작화면으로 이동 : Q', RED, korean_font, self.screen.get_height() / 2, self.ref_w, self.ref_h)
             pygame.display.update()
 
     def run_game_loop(self, level, score, best_record_mode, select_mode):
@@ -152,13 +154,13 @@ class TugOfWar:
 
             # 현재 레벨, 게임 오버 타이머 화면 좌측 상단에 render
             message_to_screen_left(
-                self.screen, 'Level : ' + str(level), WHITE, level_font, 70, 30, self.ref_w,
+                self.screen, 'Level : ' + str(level), WHITE, level_font, self.screen.get_width()/11, self.screen.get_height()/30, self.ref_w,
                 self.ref_h)
             message_to_screen_left(
-                self.screen, "GAME OVER : " + str(left_time), WHITE, level_font, 165, 65, self.ref_w,
+                self.screen, "GAME OVER : " + str(left_time), WHITE, level_font, self.screen.get_width()/4.8, self.screen.get_height()/14, self.ref_w,
                 self.ref_h)
             message_to_screen_left(
-                self.screen, "SCORE : " + str(round(score)), WHITE, level_font, self.width - 130, 40, self.ref_w,
+                self.screen, "SCORE : " + str(round(score)), WHITE, level_font, self.screen.get_width()/1.2, self.screen.get_height()/23, self.ref_w,
                 self.ref_h)
             message_to_screen_center(
                 self.screen, '승리까지 {} M'.format(int(num_of_press_key_to_clear - num_of_pressed)), WHITE,
@@ -170,7 +172,7 @@ class TugOfWar:
             if hold_timer > 0:
                 self.screen.blit(holding_characters, ((num_of_press_key_to_clear - num_of_pressed), 0))
                 message_to_screen_center(
-                    self.screen, "Space 누르고 버티기", WHITE, korean_font, self.height * (2 / 3), self.ref_w, self.ref_h)
+                    self.screen, "Space 누르고 버티기", WHITE, korean_font, self.screen.get_height() * (2 / 3), self.ref_w, self.ref_h)
 
             # hit time
             if hold_timer <= 0:
@@ -180,7 +182,7 @@ class TugOfWar:
                     hit_time_init = False
                 hit_time_checker = round(hit_time - (hold_timer) * (-1), 1)
                 message_to_screen_center(
-                    self.screen, "← → 연타 !", WHITE, korean_large_font, self.height * (2 / 3), self.ref_w, self.ref_h)
+                    self.screen, "← → 연타 !", WHITE, korean_large_font, self.screen.get_height() * (2 / 3), self.ref_w, self.ref_h)
 
                 if hit_time_checker <= 0:  # 연타시간 종료 후 버티기 타이머 재설정.
                     hit_time_init = True
@@ -222,7 +224,7 @@ class TugOfWar:
             elif (num_of_press_key_to_clear - num_of_pressed) > condition_of_game_over:
                 message_to_screen_center(
                     self.screen, '상대편 승리', RED, korean_large_font,
-                    self.height / 2, self.ref_w, self.ref_h)
+                    self.screen.get_height() / 2, self.ref_w, self.ref_h)
                 pygame.display.update()
                 clock.tick(1)
                 self.lose_game()
@@ -232,13 +234,22 @@ class TugOfWar:
                 # self.level_clear()
                 did_win = True
                 break
+
+            # 화면 리사이징
+            re_x = self.screen.get_width()
+            re_y = self.screen.get_height()
+            if (re_x / re_y) != (SCREEN_WIDTH / SCREEN_HEIGHT):
+                resize_screen = pygame.display.set_mode((re_x, re_x), pygame.RESIZABLE)
+            if re_x > SCREEN_WIDTH or re_y > SCREEN_HEIGHT:
+                resize_screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+
             pygame.display.update()
             clock.tick(FPS_RATE)
 
         if did_win:
             if best_record_mode:
                 message_to_screen_center(self.screen, '축하합니다 통과했습니다! ', WHITE, korean_font,
-                                         self.width / 2,
+                                         self.screen.get_height() / 2,
                                          self.ref_w,
                                          self.ref_h)
                 pygame.display.update()
@@ -246,11 +257,11 @@ class TugOfWar:
                 return left_time
             elif select_mode:
                 message_to_screen_center(self.screen, '통과!', WHITE, korean_font,
-                                         self.height / 3,
+                                         self.screen.get_height() / 3,
                                          self.ref_w,
                                          self.ref_h)
                 message_to_screen_center(self.screen, '다음 레벨로 이동합니다. ', WHITE, korean_font,
-                                         self.width / 2,
+                                         self.screen.get_height() / 2,
                                          self.ref_w,
                                          self.ref_h)
                 pygame.display.update()
@@ -258,11 +269,11 @@ class TugOfWar:
                 return left_time
             else:
                 message_to_screen_center(self.screen, '통과!', WHITE, korean_font,
-                                         self.height / 3,
+                                         self.screen.get_height() / 3,
                                          self.ref_w,
                                          self.ref_h)
                 message_to_screen_center(self.screen, '다음 게임은 구슬홀짝입니다. ', WHITE, korean_font,
-                                         self.width / 2,
+                                         self.screen.get_height() / 2,
                                          self.ref_w,
                                          self.ref_h)
                 pygame.display.update()
@@ -273,10 +284,12 @@ class TugOfWar:
         #     self.run_game_loop(1)
         else:
             game_over_image = pygame.image.load(get_abs_path(GAME_OVER_LOCATION))
-            game_over_image = pygame.transform.scale(game_over_image, (self.width, self.height))
+            game_over_image = pygame.transform.scale(game_over_image, (
+                game_over_image.get_width() * (self.screen.get_width() / SCREEN_WIDTH),
+                game_over_image.get_height() * (self.screen.get_height() / SCREEN_HEIGHT)))
             self.screen.blit(game_over_image, (0, 0))
             message_to_screen_center(
-                self.screen, '탈 락', RED, korean_font, self.width / 2, self.ref_w, self.ref_h)
+                self.screen, '탈 락', RED, korean_font, self.screen.get_height() / 2, self.ref_w, self.ref_h)
             pygame.display.update()
             clock.tick(0.5)
             return

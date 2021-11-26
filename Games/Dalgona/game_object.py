@@ -164,8 +164,8 @@ class Point:
         self.wrong_point = wrong_point
 
     def is_clicked(self):
-        mouse_x_pos = pygame.mouse.get_pos()[0]
-        mouse_y_pos = pygame.mouse.get_pos()[1]
+        mouse_x_pos = pygame.mouse.get_pos()[0]*(SCREEN_WIDTH/self.game_display.get_width()) #마우스 좌표 리사이징
+        mouse_y_pos = pygame.mouse.get_pos()[1]*(SCREEN_HEIGHT/self.game_display.get_height())
 
         if self.x + self.radius > mouse_x_pos > self.x - self.radius and self.y + self.radius > \
                 mouse_y_pos > self.y - self.radius:
@@ -175,11 +175,11 @@ class Point:
 
     def draw(self):
         if self.clicked and not self.wrong_point:
-            pygame.draw.circle(self.game_display, BLACK, [self.x, self.y], self.radius, UNCLICKED_POINT_SIZE)
+            pygame.draw.circle(self.game_display, BLACK, [self.x*(self.game_display.get_width()/SCREEN_WIDTH), self.y*(self.game_display.get_height()/SCREEN_HEIGHT)], self.radius, UNCLICKED_POINT_SIZE)
         elif not self.clicked and not self.wrong_point:
-            pygame.draw.circle(self.game_display, BROWN, [self.x, self.y], self.radius, CLICKED_POINT_SIZE)
+            pygame.draw.circle(self.game_display, BROWN, [self.x*(self.game_display.get_width()/SCREEN_WIDTH), self.y*(self.game_display.get_height()/SCREEN_HEIGHT)], self.radius, CLICKED_POINT_SIZE)
         elif not self.clicked and self.wrong_point:
-            pygame.draw.circle(self.game_display, RED, [self.x, self.y], self.radius, UNCLICKED_POINT_SIZE)
+            pygame.draw.circle(self.game_display, RED, [self.x*(self.game_display.get_width()/SCREEN_WIDTH), self.y*(self.game_display.get_height()/SCREEN_HEIGHT)], self.radius, UNCLICKED_POINT_SIZE)
 
     def punching(self):
         self.is_clicked()
