@@ -4,6 +4,7 @@ from pygame.locals import *
 
 from db import *
 
+
 # 화면 구성
 mainClock = pygame.time.Clock()
 pygame.init()
@@ -272,26 +273,40 @@ def render_rank(mode):
         score = get_score(SELECT, mode)
 
     while running:
+        mx, my = pygame.mouse.get_pos()  # 마우스 좌표 변수
+        click = False
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
         screen.fill(PINK)
         # for 문 버그로 직접 작성 - 왜그런지 모르겠
         message_to_screen_center(screen, '명예의 전당', WHITE,
                                  korean_font, screen.get_height() * (1 / 12),
                                  ref_w,
                                  ref_h)
+        '''
         message_to_screen_center(screen, '뒤로 가려면 esc', BLUE,
                                  korean_font_small_size, screen.get_height() * (11 / 12),
                                  ref_w,
                                  ref_h)
+        '''
         message_to_screen_center(screen, f'5 위  {score[4]["user"]} : {score[4]["score"]}', WHITE,
-                                 korean_font_small_size, screen.get_height() * (5 / 6),
+                                 korean_font_small_size, screen.get_height() * (4.4 / 6),
                                  ref_w,
                                  ref_h)
         message_to_screen_center(screen, f'4 위  {score[3]["user"]} : {score[3]["score"]}', WHITE,
-                                 korean_font_small_size, screen.get_height() * (4 / 6),
+                                 korean_font_small_size, screen.get_height() * (3.6 / 6),
                                  ref_w,
                                  ref_h)
         message_to_screen_center(screen, f'3 위  {score[2]["user"]} : {score[2]["score"]}', WHITE,
-                                 korean_font_small_size, screen.get_height() * (3 / 6),
+                                 korean_font_small_size, screen.get_height() * (2.8 / 6),
                                  ref_w,
                                  ref_h)
         message_to_screen_center(screen, f'2 위  {score[1]["user"]} : {score[1]["score"]}', WHITE,
@@ -299,9 +314,15 @@ def render_rank(mode):
                                  ref_w,
                                  ref_h)
         message_to_screen_center(screen, f'1 위  {score[0]["user"]} : {score[0]["score"]}', WHITE,
-                                 korean_font_small_size, screen.get_height() * (1 / 6),
+                                 korean_font_small_size, screen.get_height() * (1.2 / 6),
                                  ref_w,
                                  ref_h)
+        #뒤로가기 버튼
+        button_back = button(screen.get_width() / 3, screen.get_height() / 1.25, img_back_button)
+        if button_back.collidepoint((mx, my)):
+            if click:
+                running = False
+
         #화면 리사이징
         re_x = screen.get_width()
         re_y = screen.get_height()
@@ -312,15 +333,6 @@ def render_rank(mode):
 
         pygame.display.update()
         mainClock.tick(MENU_TICK_RATE)
-
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    running = False
-
 
 def show_rank_menu():
     click = False  # 클릭 판단 변수
