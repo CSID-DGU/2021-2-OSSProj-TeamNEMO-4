@@ -48,7 +48,7 @@ class Game:
         except Exception as e:
             print(e)
 
-        self.ref_w, self.ref_h = self.game_screen.get_size()
+        self.ref_w, self.ref_h = SCREEN_WIDTH,SCREEN_HEIGHT
         self.pin_image = pygame.image.load(get_abs_path(PIN_LOCATION))
         self.npc_size = width / NPC_SIZE_RATIO
         pygame.event.get()
