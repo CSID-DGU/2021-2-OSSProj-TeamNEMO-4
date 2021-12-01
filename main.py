@@ -82,8 +82,8 @@ if __name__ == "__main__":
                 LEVEL += LEVEL_UP_STEP
 
         pygame.init()
+        ref_w, ref_h = SCREEN_WIDTH,SCREEN_HEIGHT
         screen = pygame.display.set_mode(pygame.display.get_window_size(),pygame.RESIZABLE)
-        ref_w, ref_h = screen.get_size()
         RUNNING = True
         ticks = pygame.time.get_ticks()
         while RUNNING:

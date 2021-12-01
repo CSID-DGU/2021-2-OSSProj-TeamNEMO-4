@@ -61,20 +61,20 @@ def button(x, y, image):
 # 유저명 받기
 
 def draw_input_box():
-    input_box = pygame.Rect(screen.get_width() / 7, screen.get_height() * (3 / 4), screen.get_width() * 0.7,
-                            screen.get_height() / 8)
     text = ''
+    ref_w, ref_h = SCREEN_WIDTH, SCREEN_HEIGHT
     while True:
         screen.fill(PINK)
         message_to_screen_center(screen, '기록 갱신! 축하합니다!', WHITE, korean_font,
-                                 SCREEN_WIDTH / 3,
+                                 screen.get_height() / 3,
                                  ref_w,
                                  ref_h)
         message_to_screen_center(screen, f'명예의 전당에 이름을 등록하세요. ', WHITE, korean_font_small_size,
-                                 SCREEN_WIDTH / 2,
+                                 screen.get_height() / 2,
                                  ref_w,
                                  ref_h)
-
+        input_box = pygame.Rect(screen.get_width() / 7, screen.get_height()/1.33, screen.get_width()/1.43,
+                                screen.get_height() / 8)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
@@ -85,14 +85,15 @@ def draw_input_box():
                     text = text[:-1]
                 else:
                     text += event.unicode
-        txt = korean_large_font.render(text, True, BLACK)
-        screen.blit(txt, (input_box.x + 10, input_box.y))
+        message_to_screen_center(screen,text,BLACK,korean_large_font, screen.get_height()/1.24,ref_w,ref_h)
         pygame.draw.rect(screen, GRAY, input_box, 5)
 
         # 화면 리사이징(고정)
         re_x = screen.get_width()
         re_y = screen.get_height()
-        if re_x != SCREEN_WIDTH or re_y != SCREEN_HEIGHT:
+        if (re_x / re_y) != (SCREEN_WIDTH / SCREEN_HEIGHT):
+            resize_screen = pygame.display.set_mode((re_x, re_x), pygame.RESIZABLE)
+        if re_x > SCREEN_WIDTH or re_y > SCREEN_HEIGHT:
             resize_screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
 
         pygame.display.update()
