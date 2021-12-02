@@ -62,4 +62,8 @@
 5. 홀짝 게임 - 버튼 이미지 2개 [ https://365PSD.com ]
 6. 달고나 게임 - 바늘 [ https://claenPNG.com ]
 
-** 그 외 게임 내 모든 이미지는 Team NEMO 에서 자체 제작하였습니다. 
+** 그 외 게임 내 모든 이미지는 Team NEMO 에서 자체 제작하였습니다.
+
+[ Font ]
+
+- SIL 라이선스 프리텐다드 폰트 [ https://noonnu.cc/font_page/694 ]
