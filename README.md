@@ -67,3 +67,15 @@
 [ Font ]
 
 - SIL 라이선스 프리텐다드 폰트 [ https://noonnu.cc/font_page/694 ]
+
+<hr>
+
+BGM on 을 원할 시
+<br>
+무궁화게임 사운드트랙
+
+- Way back then
+- Pink Soldiers
+- Needles and Dalgona
+
+음원을 구입해 각 게임 Sound 폴더에 위치시킨 후 사용 바랍니다.
